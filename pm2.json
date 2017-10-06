@@ -1,0 +1,23 @@
+{
+  "name": "vulcano",
+  "script": "app.js",
+  "max_memory_restart": "800M",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "env_production": {
+    "NODE_ENV": "production"
+  },
+  "deploy": {
+    "production": {
+      "user": "",
+      "port": "22",
+      "host": [],
+      "ref": "origin/production",
+      "repo": "",
+      "path": "/home/server/app",
+      "pre-setup": "echo 'commands or local script path to be run on the host before the setup process starts'",
+      "post-deploy": "echo 'post-deploy'"
+    }
+  }
+}

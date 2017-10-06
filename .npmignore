@@ -1,0 +1,7 @@
+# IGNORE ALL #
+###############
+*
+!README.md
+!package.json
+!LICENSE
+!.gitignore

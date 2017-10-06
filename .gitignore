@@ -1,0 +1,58 @@
+# Local Files #
+###############
+local.js
+
+# NodeJS & Bower Components #
+#############################
+node_modules
+bower_components
+npm-debug.log
+
+# OS generated files #
+######################
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+*.map
+.DS_Store
+Thumbs.db
+*.env
+*.dev
+.DS_Store
+*.lock
+
+# Editor folders #
+########################
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+nbproject
+.netbeans.xml
+.private
+.idea
+*.sublime-project
+*.sublime-workspace
+_notes
+dwsync.xml
+*.komodoproject
+.komodotools
+
+# Docker
+#Dockerfile
+#docker-compose.yml
+
+# Project
+public/css/app.css
+public/css/app.css.map
+public/js/app.js
+public/js/app.js.map

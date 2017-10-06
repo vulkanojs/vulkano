@@ -1,0 +1,12 @@
+{
+    "verbose": true,
+    "ignore": [
+        "public/*",
+        "cms/*",
+        "nbproject/*",
+        "client/*"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    }
+}
