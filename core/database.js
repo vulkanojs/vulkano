@@ -69,6 +69,16 @@ module.exports = function () {
         delete schema.statics.afterUpdate;
       }
 
+      // findOneAndUpdate
+      if (current.beforeFindOneAndUpdate) {
+        schema.pre('findOneAndUpdate', current.beforeFindOneAndUpdate);
+        delete schema.statics.beforeFindOneAndUpdate;
+      }
+      if (current.afterFindByIdAndUpdate) {
+        schema.post('findOneAndUpdate', current.afterFindOneAndUpdate);
+        delete schema.statics.afterFindOneAndUpdate;
+      }
+
       // Remove
       if (current.beforeRemove) {
         schema.pre('remove', current.beforeRemove);
