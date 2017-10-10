@@ -26,6 +26,36 @@ module.exports = {
   // Total items
   total_items: 0,
 
+  serializeQuery: function (_props, query) {
+
+    const props = typeof _props === 'object' ? _props : {sort: null, search: []};
+    const page = query.page || 1;
+    const per_page = Number(query.per_page) || 30;
+    const fields = query.fields || props.fields || [];
+    const sort = query.sort || props.sort || null;
+    const search = query.search || null;
+    const result = _.omit({page, per_page, fields, sort, search}, (value) => {
+      return !value;
+    });
+
+    // Filter by search
+    if (search) {
+      let searchBy = props.searchBy || [];
+      let items = [];
+      searchBy.forEach( (item) => {
+        let row = {};
+        row[item] = new RegExp(search, 'i');
+        items.push(row);
+      });
+      if (items.length > 0) {
+        result.search = { $or: items };
+      }
+    }
+
+    return Object.assign(result, props.filter || {});
+
+  },
+
   // Convert records to paginate
   get: function (Model, criteria, populate, cb) {
 
@@ -64,6 +94,11 @@ module.exports = {
     });
 
     delete criteria.sort;
+
+    if(criteria.search) {
+      criteria = _.extend(criteria, criteria.search);
+      delete criteria.search;
+    }
 
     if (_this.page === 'all') {
 
