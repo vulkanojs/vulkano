@@ -32,12 +32,20 @@ delete config.local;
 app.config = Object.assign(config, {settings: settings});
 
 // Include all components
+const services = require('./services')();
 const database = require('./database');
 const controllers = require('./controllers');
-const services = require('./services')();
 const server = require('./server');
 
 module.exports = function () {
+
+  console.log('');
+  console.log('');
+  console.log('------------------------------');
+  console.log('');
+  console.log('VULCANO - MVC');
+  console.log('');
+  console.log('------------------------------');
 
   // Database
   (new database());

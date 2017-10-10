@@ -29,7 +29,7 @@ module.exports = function () {
 
   if (!mongoose.connection.readyState) {
     console.log("Database Environment:", connection);
-    mongoose.connect(toConnect);
+    mongoose.connect(toConnect, { useMongoClient: true });
   }
 
   const db = mongoose.connection;
