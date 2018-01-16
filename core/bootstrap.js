@@ -31,6 +31,13 @@ delete config.local;
 // General Settings
 app.config = Object.assign(config, {settings: settings});
 
+// Override custom config with the localfile
+for (const key in settings) {
+  if (app.config[key] !== undefined) {
+    app.config[key] = Object.assign(config[key], settings[key]);
+  }
+}
+
 // Include all components
 const services = require('./services')();
 const database = require('./database');
