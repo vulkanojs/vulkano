@@ -50,6 +50,7 @@ module.exports = {
     const server = express();
 
     // Settings
+    server.enable('trust proxy');
     server.use(morgan('dev', {
       skip: function (req, res) {
         return res.statusCode < 400;
@@ -61,6 +62,11 @@ module.exports = {
     server.use(helmet());
     server.use(responses);
     server.use(express.static(`${process.cwd()}/public`));
+    server.use((req, res, next) => {
+      let proto = req.connection.encrypted ? 'https' : 'http';
+      req.protocol = (req.headers['x-forwarded-proto'] || proto).split(/\s*,\s*/)[0];
+      next();
+    });
     server.options('*', function (req, res) {
 
       /**
