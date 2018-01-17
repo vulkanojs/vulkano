@@ -9,6 +9,7 @@ global.app = {};
 
 global._ = require('underscore');
 const path = require('path');
+const moment = require('moment');
 
 global.Promise = require('bluebird');
 
@@ -27,6 +28,8 @@ let settings = Object.assign(config.settings, config.env ? config.env[env] || {
 
 delete config.env;
 delete config.local;
+
+settings.host = (settings.host || '').replace(/(^\w+:|^)\/\//, '');
 
 // General Settings
 app.config = Object.assign(config, {settings: settings});
@@ -66,13 +69,18 @@ module.exports = function () {
   // Server Routes
   app.server.routes = _({}).extend(app.config.routes || {});
 
-  // Start Express
-  app.server.start(function () {
-    let mode = app.PRODUCTION ? 'production' : 'development';
-    if (config.bootstrap && typeof config.bootstrap === 'function') {
-      config.bootstrap();
-    }
-    console.log('Node app is running on port', app.server.get('port'), 'in:', mode, 'mode');
-  });
+  let mode = app.PRODUCTION ? 'production' : 'development';
+  if (config.bootstrap && typeof config.bootstrap === 'function') {
+    config.bootstrap( function () {
+
+      // Start Express
+      app.server.start(function () {
+        console.log('Node app is running on port', app.server.get('port'), 'in:', mode, 'mode');
+        console.log('Startup Time:', moment(moment().diff(global.STARTTIME)).format('ss.SSS'), 'sec');
+      });
+    });
+  } else {
+    console.log('Missing the boostrap file to start app: config/bootstrap.js');
+  }
 
 };
