@@ -12,6 +12,9 @@
  *   => `pm2 start pm2.json`
  */
 
+const moment = require('moment');
+global.STARTTIME = moment();
+
 (function () {
 
   const bootstrap = require('./core/bootstrap');
