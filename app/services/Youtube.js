@@ -8,8 +8,9 @@ const path = require('path');
 const fs = require('fs');
 const SCOPES = ['https://www.googleapis.com/auth/youtube'];
 const CREDENTIALS_DIR = path.resolve(__dirname, '../config/credentials/');
-const TOKEN = CREDENTIALS_DIR + '/youtube_token.json';
-const CREDENTIALS = require(CREDENTIALS_DIR + '/client_secret.json');
+
+// const TOKEN = CREDENTIALS_DIR + '/youtube_token.json';
+// const CREDENTIALS = require(CREDENTIALS_DIR + '/client_secret.json');
 
 module.exports = {
 
