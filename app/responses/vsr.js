@@ -24,7 +24,6 @@ module.exports = function VSRPromise(prom, okcode) {
     //executing promise
     prom.then(function (r) {
 
-      console.log('entra', output.statusCode);
       if (output.statusCode >= 400) {
         return Promise.reject(r);
       }
