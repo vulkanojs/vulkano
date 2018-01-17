@@ -1,6 +1,6 @@
 {
   "name": "vulcano",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A MVC framework using Express 4",
   "license": "MIT",
   "engines": {
