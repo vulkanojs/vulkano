@@ -2,7 +2,6 @@
 
 const _ = require('underscore');
 const path = require('path');
-const moment = require('moment');
 const Promise = require('bluebird');
 const rename = Promise.promisify(require('fs').rename);
 const sharp = require('sharp');
@@ -12,12 +11,16 @@ module.exports = {
 
     file: function (f, opts) {
 
-        const { title, description } = opts || {};
-        let file = this.isUploaded(f, opts.name || null);
+        const { title, description, localPath, uploadToCloud, allowed } = opts || {};
+        let fileName = opts && opts.name ? opts.name : null;
+        let file = this.isUploaded(f, fileName);
         let type = 'file';
-        let name = opts.name || '';
         const ext = this.getExtension(file);
-        const enableCloud = app.config.aws.isEnabled || false;
+        let name = (fileName || file.originalname || '').replace('.' + ext, '');
+        let enableCloud = (app.config.aws && app.config.aws.isEnabled) ? true : false;
+        if (uploadToCloud === false) {
+          enableCloud = false;
+        }
 
         return Promise.try( () => {
 
@@ -36,16 +39,22 @@ module.exports = {
                 throw new VSError('The MIME type of the selected file is not allowed: ' + file.mimetype, 400);
             }
 
-            if(_.contains(['gif', 'jpg', 'jpeg', 'png', 'jpe'], ext)) {
+            if (allowed && Array.isArray(allowed)) {
+              if (!_.contains(allowed, ext)) {
+                throw new VSError('The extension file is not allowed: ' + ext, 400);
+              }
+            }
+
+            if (_.contains(['gif', 'jpg', 'jpeg', 'png', 'jpe'], ext)) {
                 type = 'image';
                 name = uuid.v4();
-            } else if(_.contains(['quicktime', 'ogg', 'webm', 'mp4', '3gp', 'mov', 'm4v', 'avi', 'mpg'], ext)) {
+            } else if (_.contains(['quicktime', 'ogg', 'webm', 'mp4', '3gp', 'mov', 'm4v', 'avi', 'mpg'], ext)) {
                 type = 'video';
                 name = uuid.v4();
             }
 
             // name file
-            file.originalname = name + '.' + ext;
+            file.originalname = name.replace(/\s/g, '_') + '.' + ext;
 
             let filePath = path.normalize(process.cwd() + '/' + file.path);
             let filePublic = path.normalize(process.cwd() + '/public/files/' + file.originalname);
@@ -60,7 +69,7 @@ module.exports = {
                     } else {
                         return this.uploadFileS3(file, ext);
                     }
-                } else if(type === 'image') {
+                } else if (type === 'image') {
                     return this.processImage(file, ext);
                 } else {
                     return this.processFile(file, ext);
@@ -72,6 +81,10 @@ module.exports = {
                     name: file.originalname,
                     url: r.url
                 };
+
+                if (localPath === true) {
+                  result.path = path.normalize(process.cwd() + '/public/files/' + file.originalname);
+                }
 
                 if (type === 'image') {
                     result = Object.assign(result, {
@@ -114,8 +127,9 @@ module.exports = {
      * @param {type} path
      * @returns {Boolean}
      */
-    isWritable: function (path) {
+    isWritable: function (_path) {
 
+        // TODO: Check if the folder has permissions
         return true;
 
     },
@@ -155,11 +169,11 @@ module.exports = {
         // quicktime, ogg, webm, mp4, 3gp, mov, m4v, avi, mpg
         const videos = ['video/quicktime', 'video/ogg', 'video/webm', 'video/mp4', 'video/x-mp4', 'video/3gp', 'video/x-3gp', 'video/mov', 'video/x-mov', 'video/m4v', 'video/x-m4v', 'video/avi', 'video/x-avi', 'video/mpg', 'video/x-mpg'];
 
-        // pdf, doc, docx, xls, xlsx, ppt, pptx
-        const files = ['application/pdf', 'application/x-pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+        // pdf, doc, docx, xls, xlsx, xlsb, ppt, pptx, csv
+        const files = ['application/pdf', 'application/x-pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'text/csv', 'application/vnd.ms-excel.sheet.binary.macroenabled.12'];
 
-        // zip, rar
-        const zip = ['application/zip', 'application/x-rar', 'application/gzip'];
+        // zip, rar, txt
+        const zip = ['application/zip', 'application/x-rar', 'application/gzip', 'text/plain'];
 
         const validType = [...images, ...videos, ...files, ...zip];
         return _.find( validType, (item) => {
@@ -189,7 +203,7 @@ module.exports = {
             return {
                 name: file.orinalname,
                 url: `//${app.config.settings.host}/files/${file.originalname}`,
-                thumbnail: `//${app.config.settings.host}/files/${  (file.originalname).replace('.' + ext, '-thumbnail.' + ext)}`,
+                thumbnail: `//${app.config.settings.host}/files/${ (file.originalname).replace('.' + ext, '-thumbnail.' + ext)}`,
                 medium: `//${app.config.settings.host}/files/${ (file.originalname).replace('.' + ext, '-medium.' + ext) }`,
                 large: `//${app.config.settings.host}/files/${ (file.originalname).replace('.' + ext, '-large.' + ext) }`
             };
@@ -278,3 +292,4 @@ module.exports = {
     }
 
 };
+
