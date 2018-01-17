@@ -1,6 +1,7 @@
 {
     "verbose": true,
     "ignore": [
+        ".git/*",
         "public/*",
         "cms/*",
         "nbproject/*",
