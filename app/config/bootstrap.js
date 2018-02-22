@@ -1,11 +1,8 @@
-/* global Setting */
-
 /**
  * Local Bootstrap
- * @returns {undefined}
  */
 
-module.exports = function(start) {
+module.exports = (start) => {
 
   // Start app
   start();

@@ -3,15 +3,15 @@
 const helper = require('sendgrid').mail;
 const sg = require('sendgrid')(app.config.sendgrid ? app.config.sendgrid.apiKey || '' : '');
 const nunjucks = require('nunjucks');
-const moment = require('moment');
 const Promise = require('bluebird');
+
 module.exports = {
 
-  example: function (payload) {
-    let msg = {};
+  example: (payload) => {
+    const msg = {};
     msg.to = payload.to || 'argordmel@gmail.com';
     msg.subject = payload.subject || 'This is a email test';
-    return new Promise(function (resolve, reject) {
+    return new Promise( (resolve, reject) => {
       nunjucks.render('emails/example.html', payload.data || {}, (err, data) => {
         return (err) ? reject(err) : resolve(data);
       });
@@ -24,10 +24,11 @@ module.exports = {
   },
 
   // builds a new message
-  _build: function (msg) {
+  _build: (_msg) => {
+    const msg = _msg || {};
 
     if (!msg.mailtype) {
-      msg.mailtype = "text/html";
+      msg.mailtype = 'text/html';
     }
 
     if (!msg.from) {
@@ -40,23 +41,19 @@ module.exports = {
 
     const fromEmail = new helper.Email(msg.from, msg.fromname);
     const toEmail = new helper.Email(msg.to);
-    const subject = msg.subject;
+    const { subject } = msg;
     const content = new helper.Content(msg.mailtype, msg.content);
     const personalization = new helper.Personalization();
     if (msg.cc) {
       if (Array.isArray(msg.cc)) {
-        msg.cc.forEach(function (email) {
-          personalization.addCc(email);
-        });
+        msg.cc.forEach( email => personalization.addCc(email) );
       } else {
         personalization.addCc(msg.cc);
       }
     }
     const mail = new helper.Mail(fromEmail, subject, toEmail, content);
     if (msg.attachments && Array.isArray(msg.attachments)) {
-      msg.attachments.forEach(function (file) {
-        mail.addAttachment(file || {});
-      });
+      msg.attachments.forEach( file => mail.addAttachment(file || {}));
     }
     const message = mail.toJSON();
     return message;
@@ -64,7 +61,7 @@ module.exports = {
   },
 
   // sends a mail/send request to sendgrid
-  _send: function (msg) {
+  _send: (msg) => {
 
     const request = sg.emptyRequest({
       method: 'POST',
@@ -72,9 +69,7 @@ module.exports = {
       body: this._build(msg)
     });
     return new Promise((resolve, reject) => {
-      sg.API(request, (err, response) => {
-        return (err) ? reject(err) : resolve(response);
-      });
+      sg.API(request, (err, response) => ((err) ? reject(err) : resolve(response)));
     });
 
   }

@@ -5,7 +5,6 @@
  */
 
 const path = require('path');
-const _ = require('underscore');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -14,65 +13,71 @@ const AllControllers = require('include-all')({
   optional: true
 });
 
-module.exports = function () {
+module.exports = function loadControllersApplication() {
 
-  let routes = {};
-  for (let controller in AllControllers) {
+  const routes = {};
+  Object.keys(AllControllers).forEach((controller) => {
+
+    const methods = ['get', 'post', 'put', 'delete'];
     let moduleName = '';
-    let parts = [];
-    let methods = ['get', 'post', 'put', 'delete'];
     let method = 'get';
-    let path = '';
+    let pathToRoute = '';
     let controllerName = controller.replace('Controller', '').toLowerCase();
-    let current = AllControllers[controller];
-    for (let route in current) {
+    const current = AllControllers[controller];
+
+    Object.keys(AllControllers).forEach((route) => {
+
       if (route.split('Controller').length > 1) {
         moduleName = controllerName;
-        let submodules = AllControllers[moduleName];
-        for (let subcontroller in submodules) {
+        const submodules = AllControllers[moduleName] || [];
+
+        Object.keys(submodules).forEach((subcontroller) => {
+
           controllerName = subcontroller.replace('Controller', '').toLowerCase();
-          subcurrent = submodules[subcontroller];
-          for (let subroute in subcurrent) {
-            parts = subroute.split(' ');
-            if (parts.length > 1) {
-              method = parts[0].toLowerCase();
-              path = parts[1];
-            } else {
-              path = parts[0];
+          const subcurrent = submodules[subcontroller] || [];
+
+          Object.keys(subcurrent).forEach((subroute) => {
+
+            const tmpParts = subroute.split(' ');
+            pathToRoute = (tmpParts.length > 1) ? tmpParts[1] : tmpParts[0];
+            if (tmpParts.length > 1) {
+              method = tmpParts[0].toLowerCase();
             }
-            let isAbsolute = (path.substring(0, 1) === '/') ? true : false;
+            const isAbsolute = (pathToRoute.substring(0, 1) === '/');
             if (!isAbsolute) {
-              if (methods.indexOf(path.toLowerCase()) >= 0) {
-                method = path.toLowerCase();
-                path = '/' + moduleName + '/' + controllerName + '/';
+              if (methods.indexOf(pathToRoute.toLowerCase()) >= 0) {
+                method = pathToRoute.toLowerCase();
+                pathToRoute = `/${moduleName}/${controllerName}/`;
               } else {
-                path = '/' + moduleName + '/' + controllerName + '/' + path.replace(/GET|POST|DELETE|PUT/i, '');
+                pathToRoute = `/${moduleName}/${controllerName}/${pathToRoute.replace(/GET|POST|DELETE|PUT/i, '')}`;
               }
             }
-            routes[method + ' ' + path] = subcurrent[subroute];
-          }
-        }
+            routes[`${method} ${pathToRoute}`] = subcurrent[subroute];
+
+          });
+
+        });
       } else {
-        parts = route.split(' ');
-        if (parts.length > 1) {
-          method = parts[0].toLowerCase();
-          path = parts[1];
-        } else {
-          path = parts[0];
+        const tmpParts = route.split(' ');
+        pathToRoute = (tmpParts.length > 1) ? tmpParts[1] : tmpParts[0];
+        if (tmpParts.length > 1) {
+          method = tmpParts[0].toLowerCase();
         }
-        let isAbsolute = (path.substring(0, 1) === '/') ? true : false;
+        const isAbsolute = (pathToRoute.substring(0, 1) === '/');
         if (!isAbsolute) {
-          if (methods.indexOf(path.toLowerCase()) >= 0) {
-            method = path.toLowerCase();
-            path = '/' + controllerName + '/';
+          if (methods.indexOf(pathToRoute.toLowerCase()) >= 0) {
+            method = pathToRoute.toLowerCase();
+            pathToRoute = `/${controllerName}/`;
           } else {
-            path = '/' + controllerName + '/' + path.replace(/GET|POST|DELETE|PUT/i, '');
+            pathToRoute = `/${controllerName}/${pathToRoute.replace(/GET|POST|DELETE|PUT/i, '')}`;
           }
         }
-        routes[method + ' ' + path] = current[route];
+        routes[`${method} ${pathToRoute}`] = current[route];
       }
-    }
-  }
+    });
+
+  });
+
   return routes;
 
-}();
+};

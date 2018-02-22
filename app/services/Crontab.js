@@ -1,9 +1,8 @@
 const Cron = require('cron').CronJob;
-const Promise = require('bluebird');
 
 module.exports = {
 
-  schedule: function (start, task, end) {
+  schedule: (start, task, end) => {
 
     const config = {
       cronTime: start,

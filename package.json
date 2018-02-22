@@ -29,6 +29,7 @@
     "blueimp-file-upload": "^9.19.1",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
+    "cron": "^1.3.0",
     "crossroads": "^0.12.2",
     "ejs": "^2.5.5",
     "exceljs": "^0.8.3",
@@ -73,6 +74,7 @@
     "timeago.js": "^3.0.2",
     "underscore": "^1.8.3",
     "uuid": "^3.1.0",
+    "webpack": "^2.6.1",
     "yargs": "^11.0.0"
   },
   "repository": {
@@ -116,7 +118,6 @@
     "mocha": "^5.0.1",
     "node-sass": "^4.5.3",
     "postcss": "^6.0.19",
-    "rimraf": "^2.6.1",
-    "webpack": "^2.6.1"
+    "rimraf": "^2.6.1"
   }
 }

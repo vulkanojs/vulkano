@@ -13,11 +13,11 @@
  */
 
 const moment = require('moment');
+
 global.STARTTIME = moment();
 
-(function () {
+const bootstrap = require('./core/bootstrap');
 
-  const bootstrap = require('./core/bootstrap');
-  const app = new bootstrap();
-
-})();
+(function startApplication() {
+  bootstrap();
+}());

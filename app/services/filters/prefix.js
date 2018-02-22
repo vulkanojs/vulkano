@@ -7,13 +7,15 @@
  */
 module.exports = {
 
-  exec: function (str, opt) {
+  exec: (_str, opt) => {
+
+    const str = _str || '';
 
     if (str.indexOf(opt) === 0) {
       return str;
-    } else {
-      return opt + str;
     }
+
+    return opt + str;
 
   }
 

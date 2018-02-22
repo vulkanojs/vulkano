@@ -21,10 +21,11 @@ const config = require('include-all')({
 });
 
 // Environment
-app.PRODUCTION = process.env.NODE_ENV !== 'production' ? false : true;
+app.PRODUCTION = process.env.NODE_ENV !== 'production';
 const env = (app.PRODUCTION) ? 'production' : 'development';
 
-let settings = Object.assign(config.settings, config.env ? config.env[env] || {} : {}, config.local || {});
+const envSettings = Object.assign(config.env ? config.env[env] || {} : {}, config.local || {});
+const settings = Object.assign(config.settings, envSettings);
 
 delete config.env;
 delete config.local;
@@ -32,22 +33,22 @@ delete config.local;
 settings.host = (settings.host || '').replace(/(^\w+:|^)\/\//, '');
 
 // General Settings
-app.config = Object.assign(config, {settings: settings});
+app.config = Object.assign(config, { settings });
 
 // Override custom config with the localfile
-for (const key in settings) {
+Object.keys(settings).forEach((key) => {
   if (app.config[key] !== undefined) {
     app.config[key] = Object.assign(config[key], settings[key]);
   }
-}
+});
 
 // Include all components
-const services = require('./services')();
-const database = require('./database');
-const controllers = require('./controllers');
+require('./services')();
+require('./database')();
+const controllers = require('./controllers')();
 const server = require('./server');
 
-module.exports = function () {
+module.exports = function loadBootstrapApplication() {
 
   console.log('');
   console.log('');
@@ -57,24 +58,22 @@ module.exports = function () {
   console.log('');
   console.log('------------------------------');
 
-  // Database
-  (new database());
-
   // Routes
   app.routes = controllers;
 
   // Server Config
-  app.server = _({}).extend(server, app.config.settings || {});
+  app.server = _({}).extend(server, app.config.settings || {});
 
   // Server Routes
   app.server.routes = _({}).extend(app.config.routes || {});
 
-  let mode = app.PRODUCTION ? 'production' : 'development';
+  const mode = app.PRODUCTION ? 'production' : 'development';
   if (config.bootstrap && typeof config.bootstrap === 'function') {
-    config.bootstrap( function () {
+    config.bootstrap(() => {
 
       // Start Express
-      app.server.start(function () {
+      app.server.start(() => {
+
         console.log('Node app is running on port', app.server.get('port'), 'in:', mode, 'mode');
         console.log('Startup Time:', moment(moment().diff(global.STARTTIME)).format('ss.SSS'), 'sec');
       });

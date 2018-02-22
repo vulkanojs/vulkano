@@ -18,29 +18,32 @@ const AllFilters = require('include-all')({
 
 module.exports = {
 
-  get: function (str, filters, opts) {
+  get: (str, filters, opts) => {
 
-    var _this = this;
+    const _this = this;
+    let result = null;
 
     if (Array.isArray(filters)) {
-      filters.forEach(function (filter) {
-        var f = _this.load(filter);
-        str = (!f) ? '' : f.exec(str, opts);
+      filters.forEach((filter) => {
+        const f = _this.load(filter);
+        result = (!f) ? '' : f.exec(str, opts);
       });
-      return str;
-    } else {
-      var f = _this.load(filters);
-      return (!f) ? '' : f.exec(str, opts);
+      return result;
     }
+
+    const f = _this.load(filters);
+    return (!f) ? '' : f.exec(str, opts);
 
   },
 
-  load: function (filter) {
+  load: (filter) => {
+
     if (!AllFilters[filter]) {
-      console.error("FILTER", filter, "NOT FOUND INTO /app/services/filters");
+      console.error('FILTER', filter, 'NOT FOUND INTO /app/services/filters');
       return false;
     }
     return AllFilters[filter];
+
   }
 
 };

@@ -9,10 +9,9 @@
  */
 module.exports = {
 
-  exec: function (str, opt) {
-
-    return Filter.get(str, ['rtrim', 'ltrim'], opt);
-
+  exec: (_str, opt) => {
+    const str = Filter.get(_str, ['rtrim', 'ltrim'], opt);
+    return str;
   }
 
 };

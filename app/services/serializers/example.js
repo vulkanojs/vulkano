@@ -3,7 +3,7 @@
 module.exports = {
 
   topLevelLinks: {
-    self: app.config.host + '/api/example'
+    self: `${app.config.host}/api/example`
   },
 
   attributes: ['name', 'age']

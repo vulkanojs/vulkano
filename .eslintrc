@@ -11,5 +11,16 @@
       "es6": true,
       "jquery": true,
       "mocha": true
+  },
+  "rules": {
+    "comma-dangle": [0],
+    "guard-for-in": [0],
+    "no-console": [0],
+    "no-underscore-dangle": [0],
+    "no-throw-literal": [0],
+    "no-unneeded-ternary": [0],
+    "padded-blocks": [0],
+    "space-in-parens": [0]
   }
+
 }

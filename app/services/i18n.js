@@ -1,17 +1,20 @@
-/* global VSError, app */
+/* global app */
 
 const i18next = require('i18next');
 const moment = require('moment');
 require('moment/min/locales.min');
+
 moment.locale('es');
 
-module.exports = function() {
+module.exports = (() => {
+
+  const { en, es } = app.config.locales;
 
   // Change translations
   i18next.init({
     lng: 'es',
     fallbackLng: 'en',
-    resources: { en: { translation: app.config.locales.en }, es: { translation: app.config.locales.es } }
+    resources: { en: { translation: en }, es: { translation: es } }
   });
 
   // catch the event and make changes accordingly
@@ -25,4 +28,4 @@ module.exports = function() {
 
   return i18next;
 
-}();
+})();

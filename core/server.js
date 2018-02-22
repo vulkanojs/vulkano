@@ -3,12 +3,11 @@
 /**
  * Server.js
  */
-const http = require('http');
+
 const express = require('express');
 const socketio = require('socket.io');
 const _ = require('underscore');
 const nunjucks = require('nunjucks');
-const ejs = require('ejs');
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -16,6 +15,7 @@ const compression = require('compression');
 const multer = require('multer');
 const helmet = require('helmet');
 const responses = require('./responses');
+const JWT = require('../app/services/Jwt');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -30,44 +30,43 @@ module.exports = {
 
   routes: {},
 
-  start: function (cb) {
+  start: function loadServerApplication(cb) {
 
-    const jwtMiddleware = require('../app/services/Jwt');
-    const cors = app.config.cors || {};
-    const jwt = app.config.jwt || {};
-    const views = app.server.views || {};
-    const port = process.env.PORT || parseInt(app.server.port) || 5000;
+    const jwtMiddleware = JWT;
+    const { cors, jwt } = app.config;
+    const views = app.server.views || {};
+    const port = process.env.PORT || app.server.port || 5000;
     const sockets = app.server.sockets || {};
 
     // Middleware
-    const middleware = app.config.middleware || function (req, res, next) {
+    const middleware = app.config.middleware || ((req, res, next) => {
       next();
-    };
+    });
 
     // Uploader
-    const upload = multer({dest: app.server.uploadPath});
+    const upload = multer({ dest: app.server.uploadPath });
 
     const server = express();
 
     // Settings
     server.enable('trust proxy');
     server.use(morgan('dev', {
-      skip: function (req, res) {
-        return res.statusCode < 400;
-      }
+      skip: ((req, res) => res.statusCode < 400)
     }));
     server.use(compression());
     server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({extended: true}));
+    server.use(bodyParser.urlencoded({ extended: true }));
     server.use(helmet());
     server.use(responses);
     server.use(express.static(`${process.cwd()}/public`));
     server.use((req, res, next) => {
-      let proto = req.connection.encrypted ? 'https' : 'http';
-      req.protocol = (req.headers['x-forwarded-proto'] || proto).split(/\s*,\s*/)[0];
+      const proto = req.connection.encrypted ? 'https' : 'http';
+      const forwarded = req.headers['x-forwaded-proto'] || null;
+      const currentProtocol = (forwarded || proto).split(/\s*,\s*/)[0];
+      req.protocol = currentProtocol;
       next();
     });
-    server.options('*', function (req, res) {
+    server.options('*', (req, res) => {
 
       /**
        * CORS
@@ -97,7 +96,7 @@ module.exports = {
       const envNunjucks = nunjucks.configure(views.path, {
         express: server,
         autoescape: true,
-        watch: app.PRODUCTION ? false : true
+        watch: !app.PRODUCTION
       });
 
       app.server.views._engine = envNunjucks;
@@ -106,25 +105,25 @@ module.exports = {
 
       if (views.globals && Array.isArray(views.globals)) {
         views.globals.forEach((global) => {
-          for (let i in global) {
+          Object.keys(global || []).forEach((i) => {
             envNunjucks.addGlobal(i, global[i]);
-          }
+          });
         });
       }
 
       if (views.filters && Array.isArray(views.filters)) {
         views.filters.forEach((filter) => {
-          for (let i in filter) {
+          Object.keys(filter || []).forEach((i) => {
             envNunjucks.addFilter(i, filter[i]);
-          }
+          });
         });
       }
 
       if (views.extensions && Array.isArray(views.extensions)) {
         views.extensions.forEach((extension) => {
-          for (let i in extension) {
+          Object.keys(extension || []).forEach((i) => {
             envNunjucks.addExtension(i, extension[i]);
-          }
+          });
         });
       }
     } else {
@@ -142,10 +141,11 @@ module.exports = {
       }));
 
       // JWT  Handler error
-      server.use(function (err, req, res, next) {
+      server.use((err, req, res, next) => {
         if (err && err.name === 'UnauthorizedError') {
-          res.status(401).jsonp({success: false, error: 'Invalid token'});
+          res.status(401).jsonp({ success: false, error: 'Invalid token' });
         }
+        next();
       });
 
     }
@@ -155,7 +155,7 @@ module.exports = {
      */
     if (cors.enable) {
 
-      server.use(cors.path, function (req, res, next) {
+      server.use(cors.path, (req, res, next) => {
 
         // Enable CORS.
         let tmpCorsHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
@@ -175,78 +175,84 @@ module.exports = {
       });
     }
 
-    let routes = app.routes;
+    const { routes } = app;
     let method;
-    let path;
+    let pathToRoute;
     let handler;
-    for (let route in routes) {
-      let parts = route.split(' ');
+    Object.keys(routes).forEach((route) => {
+      const parts = route.split(' ');
+      const [methodToRun, pathToRun] = parts;
+      method = methodToRun;
       if (parts.length > 1) {
-        method = parts[0];
-        path = parts[1];
-      } else {
-        method = parts[0];
+        pathToRoute = pathToRun;
       }
       handler = routes[route];
       if (method === 'post') {
-        server[method](path, upload.any(), middleware, handler);
+        server[method](pathToRoute, upload.any(), middleware, handler);
       } else {
-        server[method](path, middleware, handler);
+        server[method](pathToRoute, middleware, handler);
       }
-    }
+    });
 
-    for (let i in this.routes) {
+    Object.keys(this.routes).forEach((i) => {
 
-      let fullPath = this.routes[i].split('.');
-      let module, controller, action;
+      const fullPath = this.routes[i].split('.');
+      const [moduleToRun, controllerToRun, actionToRun] = fullPath;
+      let module;
+      let controller;
+      let action;
+
       if (fullPath.length > 2) { // Has folder
-        module = fullPath[0];
-        controller = fullPath[1];
-        action = fullPath[2];
+        module = moduleToRun;
+        controller = controllerToRun;
+        action = actionToRun;
       } else {
         module = null;
-        controller = fullPath[0];
-        action = fullPath[1];
+        controller = moduleToRun;
+        action = controllerToRun;
       }
 
-      let parts = i.split(' ');
-      let path = parts.pop();
+      const parts = i.split(' ');
+      const pathToRun = parts.pop();
       let option = (parts[0] !== undefined) ? parts[0].toLowerCase() : 'get';
       if (option !== 'get' && option !== 'post' && option !== 'put' && option !== 'delete') {
         option = 'get';
       }
 
-      let toExecute = (module) ? (AllControllers[module][controller][action]) : AllControllers[controller][action];
+      const runWithModule = (module) ? AllControllers[module] : AllControllers;
+      const toExecute = runWithModule[controller][action];
       if (toExecute) {
         if (option === 'post') {
-          server[option](path || '/', upload.any(), middleware, toExecute);
+          server[option](pathToRun || '/', upload.any(), middleware, toExecute);
         } else {
-          server[option](path || '/', middleware, toExecute);
+          server[option](pathToRun || '/', middleware, toExecute);
         }
       } else {
         console.log('-----');
-        console.error('Warning: Controller not found:', (module) ? module + '.' + controller + '.' + action : controller + '.' + action);
+        console.error('Warning: Controller not found:', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`);
         console.log('-----');
       }
 
-    }
+    });
 
     // HTTP 404
-    server.use(function (req, res, next) {
-      if (+res.statusCode >= 500 && +res.statusCode < 600)
+    server.use((req, res, next) => {
+      if (+res.statusCode >= 500 && +res.statusCode < 600) {
         throw new Error();
-      res.status(404).render(views.path + '/_shared/error/404.html');
+      }
+      res.status(404).render(`${views.path}/_shared/errors/404.html`);
+      next();
     });
 
     // HTTP 5XX
-    server.use(function (err, req, res, next) {
-      let status = err.status || res.statusCode || 500;
+    server.use((err, req, res, next) => {
+      const status = err.status || res.statusCode || 500;
       res.status(status);
       if (!res.xhr) {
         if (+status > 400 && +status < 500) {
-          res.render(server.get('views') + '/_shared/errors/404.html', {content: err.stack});
+          res.render(`${server.get('views')}/_shared/errors/404.html`, { content: err.stack });
         } else {
-          res.render(server.get('views') + '/_shared/errors/500.html', {content: err.stack});
+          res.render(`${server.get('views')}/_shared/errors/500.html`, { content: err.stack });
         }
       } else {
         res.jsonp({
@@ -255,6 +261,7 @@ module.exports = {
           data: (app.PRODUCTION) ? {} : (err.stack || {})
         });
       }
+      next();
     });
 
     // Server Start
@@ -263,7 +270,7 @@ module.exports = {
 
       // next line is the money
       server.set('socketio', io);
-      io.on('connection', function (socket) {
+      io.on('connection', (socket) => {
         server.set('socket', socket);
       });
 
@@ -271,13 +278,13 @@ module.exports = {
 
       cb();
     } else {
-      server.listen(server.get('port'), function () {
+      server.listen(server.get('port'), () => {
         app.server = _.extend(app.server, server);
         cb();
       });
     }
 
-    return;
+    return true;
 
   }
 

@@ -39,9 +39,7 @@ module.exports = {
     engine: 'nunjucks', // or ejs
     globals: [
       {
-        moment: () => {
-          return moment();
-        }
+        moment: () => moment()
       }
     ]
   }

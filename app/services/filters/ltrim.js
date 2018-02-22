@@ -7,13 +7,16 @@
  */
 module.exports = {
 
-  exec: function (str, opt) {
+  exec: (_str, opt) => {
+    let str = _str || '';
     if (opt) {
-      while (str.charAt(0) === opt)
+      while (str.charAt(0) === opt) {
         str = str.substr(1, str.length - 1);
+      }
     } else {
-      while (str.charAt(0) === " ")
+      while (str.charAt(0) === ' ') {
         str = str.substr(1, str.length - 1);
+      }
     }
     return str;
   }

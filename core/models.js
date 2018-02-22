@@ -18,47 +18,47 @@ const AllModels = require('include-all')({
 
 const Callbacks = {
 
-  beforeSave: function (next) {
+  beforeSave: (next) => {
     next();
   },
 
-  beforeUpdate: function (next) {
+  beforeUpdate: (next) => {
     next();
   },
 
-  beforeRemove: function (next) {
+  beforeRemove: (next) => {
     next();
   },
 
-  beforeValidate: function (next) {
+  beforeValidate: (next) => {
     next();
   },
 
-  afterSave: function (doc) {
+  afterSave: () => {
 
   },
 
-  afterUpdate: function () {
+  afterUpdate: () => {
 
   },
 
-  afterRemove: function () {
+  afterRemove: () => {
 
   },
 
-  afterValidate: function () {
+  afterValidate: () => {
 
   }
 
 };
 
-module.exports = function () {
+module.exports = function loadModelsApplication() {
 
-  let models = {};
-  for (let i in AllModels) {
-    let current = AllModels[i];
+  const models = {};
+  Object.keys(AllModels).forEach((i) => {
+    const current = AllModels[i];
     models[i] = _({}).extend(Callbacks, ActiveRecord, current);
-  }
+  });
   return models;
 
-}();
+};

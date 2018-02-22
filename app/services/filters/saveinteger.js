@@ -7,11 +7,12 @@
  */
 module.exports = {
 
-  exec: function (str, opt) {
+  exec: (str) => {
 
-    var tmpFn = Number.isSafeInteger || function (value) {
-      return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
-    };
+    const tmpFn = Number.isSafeInteger || ((value) => {
+      const isValid = Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
+      return isValid;
+    });
 
     return tmpFn(str);
 

@@ -1,6 +1,6 @@
 /* global app */
 
-var Promise = require('bluebird');
+const Promise = require('bluebird');
 
 function VSError(msg, code) {
 
@@ -15,17 +15,15 @@ function VSError(msg, code) {
 }
 
 // Not Found Object
-VSError.notFound = function (n) {
-  var name = n ? n + ' ' : '';
-  return Promise.reject(new VSError(name + 'Not Found', 404));
+VSError.notFound = (n) => {
+  const name = n || 'Object';
+  return Promise.reject(new VSError(`${name} Not Found`, 404));
 };
 
 // Reject request
-VSError.reject = function (text, status) {
-  return Promise.reject(new VSError(text, status));
-};
+VSError.reject = (text, status) => Promise.reject(new VSError(text, status));
 
-//extending of native error object
+// Extending of native error object
 require('util').inherits(VSError, Error);
 
 module.exports = VSError;

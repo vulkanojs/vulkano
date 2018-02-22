@@ -5,42 +5,42 @@
  */
 
 global.mongoose = require('mongoose');
-const AllModels = require('./models');
+const AllModels = require('./models')();
 const _ = require('underscore');
 const Promise = require('bluebird');
 const paginate = require('mongoose-paginate');
+
 mongoose.Promise = Promise;
 
-module.exports = function () {
+module.exports = function loadDatabaseApplication() {
 
-  const config = app.config;
-  const connection = config.settings.connection;
-  const connections = config.connections;
+  const { config } = app;
+  const { connections, settings } = config;
+  const { connection } = settings;
   const toConnect = connections[connection];
 
   if (!connection) {
-    console.log("Ignoring database connection. Connection is empty.");
+    console.log('Ignoring database connection. Connection is empty.');
     return;
   }
 
   if (!toConnect) {
-    throw "Invalid conection to user MongoDB with source " + connection;
+    throw `Invalid conection to user MongoDB with source ${connection}`;
   }
 
   if (!mongoose.connection.readyState) {
-    console.log("Database Environment:", connection);
-    mongoose.connect(toConnect, { useMongoClient: true });
+    console.log('Database Environment:', connection);
+    mongoose.connect(toConnect);
   }
 
   const db = mongoose.connection;
+  Object.keys(AllModels).forEach((model) => {
 
-  for (let model in AllModels) {
-
-    let current = AllModels[model];
+    const current = AllModels[model];
     if (!current.attributes) {
       global[model] = current;
     } else {
-      let schema = mongoose.Schema(current.attributes);
+      const schema = mongoose.Schema(current.attributes);
       delete current.attributes;
       schema.statics = _.extend({}, current);
       schema.plugin(paginate);
@@ -103,8 +103,6 @@ module.exports = function () {
 
     }
 
-  }
-
-  return mongoose;
+  });
 
 };

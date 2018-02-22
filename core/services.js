@@ -5,7 +5,6 @@
  */
 
 const path = require('path');
-const _ = require('underscore');
 
 // Include all services
 const AllServices = require('include-all')({
@@ -14,13 +13,13 @@ const AllServices = require('include-all')({
   optional: true
 });
 
-module.exports = function () {
+module.exports = function loadServicesApplication() {
 
   delete AllServices.ActiveRecord;
   delete AllServices.AppController;
 
-  for (let service in AllServices) {
+  Object.keys(AllServices).forEach((service) => {
     global[service] = AllServices[service];
-  }
+  });
 
 };

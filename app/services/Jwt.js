@@ -6,17 +6,17 @@ const _ = require('underscore');
 
 module.exports = {
 
-  init: function (opts) {
+  init: (opts) => {
 
-    var key = app.config.jwt.key || '';
-    var header = app.config.jwt.header || 'x-token-auth';
-    var param = app.config.jwt.queryParameter || 'token';
-    var config = {
+    const key = app.config.jwt.key || '';
+    const header = app.config.jwt.header || 'x-token-auth';
+    const param = app.config.jwt.queryParameter || 'token';
+    const config = {
       secret: key,
       getToken: function fromHeaderOrQuerystring(req) {
         return req.headers[header] ||
                 req.headers[header.toUpperCase()] ||
-                req.query && req.query[param.toLowerCase()] ||
+                (req.query && req.query[param.toLowerCase()]) ||
                 null;
       }
     };
@@ -25,10 +25,6 @@ module.exports = {
 
   },
 
-  encode: function (data) {
-
-    return jwtSimple.encode(data, app.config.jwt.key || '');
-
-  }
+  encode: data => jwtSimple.encode(data, app.config.jwt.key || '')
 
 };

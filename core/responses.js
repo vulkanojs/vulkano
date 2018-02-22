@@ -1,21 +1,20 @@
 
 /* global __dirname */
 
-const fs = require('fs');
 const path = require('path');
 
-module.exports = function (req, res, next) {
+// Include all user's responses
+const AllResponses = require('include-all')({
+  dirname: path.normalize(path.join(__dirname, '../app/responses')),
+  optional: true
+});
 
-  // User path
-  let userPath = path.normalize(__dirname + "/../app/responses");
+module.exports = function loadResponsesApplication(req, res, next) {
 
-  //get custom reponses
-  let custom = fs.readdirSync(userPath);
-
-  //add user reponses
-  custom.forEach(function (response) {
-    let reponseName = response.split('.')[0];
-    res[reponseName] = require(userPath + '/' + response);
+  // add user reponses
+  Object.keys(AllResponses).forEach((response) => {
+    const reponseName = response.split('.')[0];
+    res[reponseName] = AllResponses[response];
   });
 
   next();

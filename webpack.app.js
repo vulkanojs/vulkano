@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const baseConfig = require('./webpack.base');
+
 const dev = process.env.NODE_ENV !== 'production';
 
 const plugins = [
@@ -10,16 +11,14 @@ const plugins = [
 ];
 
 if (!dev) {
-  plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
-    })
-  );
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: { warnings: false }
+  }));
 }
 
 module.exports = Object.assign(baseConfig, {
   entry: {
-    'app': './client/js/index.js'
+    app: './client/js/index.js'
   },
   output: {
     path: path.resolve(process.cwd(), './public/'),
