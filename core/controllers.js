@@ -80,7 +80,6 @@ module.exports = function loadControllersApplication() {
     });
   });
 
-  console.log(routes);
   return routes;
 
 };
