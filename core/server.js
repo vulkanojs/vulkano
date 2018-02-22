@@ -180,10 +180,11 @@ module.exports = {
     let pathToRoute;
     let handler;
     Object.keys(routes).forEach((route) => {
+
       const parts = route.split(' ');
       const [methodToRun, pathToRun] = parts;
       method = methodToRun;
-      if (parts.length > 1) {
+      if (pathToRun) {
         pathToRoute = pathToRun;
       }
       handler = routes[route];
@@ -192,9 +193,10 @@ module.exports = {
       } else {
         server[method](pathToRoute, middleware, handler);
       }
+
     });
 
-    Object.keys(this.routes).forEach((i) => {
+    Object.keys(this.routes || []).forEach((i) => {
 
       const fullPath = this.routes[i].split('.');
       const [moduleToRun, controllerToRun, actionToRun] = fullPath;
@@ -202,7 +204,7 @@ module.exports = {
       let controller;
       let action;
 
-      if (fullPath.length > 2) { // Has folder
+      if (actionToRun) { // Has folder
         module = moduleToRun;
         controller = controllerToRun;
         action = actionToRun;
