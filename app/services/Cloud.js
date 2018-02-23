@@ -47,12 +47,13 @@ module.exports = {
       ]
     });
     return client;
+
   },
 
   image: (file, ext) => {
 
-    const client = this.clientImage( (ext || 'jpg').toLowerCase() );
-    return new Promise( (resolve, reject) => {
+    const client = this.clientImage((ext || 'jpg').toLowerCase());
+    return new Promise((resolve, reject) => {
       client.upload(file, {}, (err, versions) => {
         if (err) {
           return reject(err);
@@ -63,7 +64,7 @@ module.exports = {
           medium: '',
           thumbnail: ''
         };
-        versions.forEach( (image) => {
+        versions.forEach((image) => {
           if (image.url.indexOf('-large') !== -1) {
             result.large = image.url;
           } else if (image.url.indexOf('-medium') !== -1) {
@@ -89,7 +90,7 @@ module.exports = {
     const s3 = new AWS.S3();
     const name = file.split('/').pop();
 
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       fs.readFile(file, (err, data) => {
         if (err) {
           reject(err);
@@ -111,5 +112,4 @@ module.exports = {
     });
 
   }
-
 };
