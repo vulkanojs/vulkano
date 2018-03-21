@@ -1,4 +1,4 @@
-/* global __dirname */
+/* global __dirname, Filter */
 
 /**
  * Filter
@@ -20,18 +20,17 @@ module.exports = {
 
   get: (str, filters, opts) => {
 
-    const _this = this;
     let result = null;
 
     if (Array.isArray(filters)) {
       filters.forEach((filter) => {
-        const f = _this.load(filter);
+        const f = Filter.load(filter);
         result = (!f) ? '' : f.exec(str, opts);
       });
       return result;
     }
 
-    const f = _this.load(filters);
+    const f = Filter.load(filters);
     return (!f) ? '' : f.exec(str, opts);
 
   },
