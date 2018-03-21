@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Emails */
 
 const helper = require('sendgrid').mail;
 const sg = require('sendgrid')(app.config.sendgrid ? app.config.sendgrid.apiKey || '' : '');
@@ -13,14 +13,31 @@ module.exports = {
     msg.subject = payload.subject || 'This is a email test';
     return new Promise( (resolve, reject) => {
       nunjucks.render('emails/example.html', payload.data || {}, (err, data) => {
-        return (err) ? reject(err) : resolve(data);
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
       });
     }).then((data) => {
       msg.content = data;
-      return this._send(msg);
+      return Emails._send(msg);
     }).catch((err) => {
       console.log(err);
     });
+  },
+
+  // sends a mail/send request to sendgrid
+  _send: (msg) => {
+
+    const request = sg.emptyRequest({
+      method: 'POST',
+      path: '/v3/mail/send',
+      body: Emails._build(msg)
+    });
+    return new Promise((resolve, reject) => {
+      sg.API(request, (err, response) => ((err) ? reject(err) : resolve(response)));
+    });
+
   },
 
   // builds a new message
@@ -57,20 +74,6 @@ module.exports = {
     }
     const message = mail.toJSON();
     return message;
-
-  },
-
-  // sends a mail/send request to sendgrid
-  _send: (msg) => {
-
-    const request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: this._build(msg)
-    });
-    return new Promise((resolve, reject) => {
-      sg.API(request, (err, response) => ((err) ? reject(err) : resolve(response)));
-    });
 
   }
 
