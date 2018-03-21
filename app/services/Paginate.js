@@ -1,3 +1,5 @@
+/* global Paginate, Utils */
+
 const _ = require('underscore');
 
 module.exports = {
@@ -48,7 +50,7 @@ module.exports = {
       const items = [];
       searchBy.forEach( (item) => {
         const row = {};
-        row[item] = new RegExp(search, 'i');
+        row[item] = new RegExp(['.*', Utils.accentToRegex(search), '*.'].join(''), 'i');
         items.push(row);
       });
       if (items.length > 0) {
@@ -66,7 +68,7 @@ module.exports = {
     let criteria = query || {};
 
     // Current instance
-    const _this = this;
+    const _this = Paginate;
 
     // Setup
     _this.page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
@@ -167,7 +169,7 @@ module.exports = {
 
   _set: (total, items) => {
 
-    const _this = this;
+    const _this = Paginate;
     _this.items = items;
     _this.cursor = (_this.page > 1) ? ((_this.page * _this.perPage) - (_this.perPage - 1)) : 1;
     _this.current = _this.page;
