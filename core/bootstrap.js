@@ -1,4 +1,4 @@
-/* global app, __dirname, _ */
+/* global app, __dirname */
 
 /**
  * Bootstrap.js
@@ -21,8 +21,8 @@ const config = require('include-all')({
 });
 
 // Environment
-app.PRODUCTION = process.env.NODE_ENV !== 'production';
-const env = (app.PRODUCTION) ? 'production' : 'development';
+app.PRODUCTION = (process.env.NODE_ENV || '').toLowerCase() === 'production';
+const env = (process.env.NODE_ENV || 'development').toLowerCase();
 
 const envSettings = Object.assign(config.env ? config.env[env] || {} : {}, config.local || {});
 const settings = Object.assign(config.settings, envSettings);
@@ -33,12 +33,12 @@ delete config.local;
 settings.host = (settings.host || '').replace(/(^\w+:|^)\/\//, '');
 
 // General Settings
-app.config = Object.assign(config, { settings });
+app.config = Object.assign({}, config, { settings });
 
 // Override custom config with the localfile
 Object.keys(settings).forEach((key) => {
   if (app.config[key] !== undefined) {
-    app.config[key] = Object.assign(config[key], settings[key]);
+    app.config[key] = Object.assign({}, config[key], settings[key]);
   }
 });
 
@@ -62,20 +62,27 @@ module.exports = function loadBootstrapApplication() {
   app.routes = controllers;
 
   // Server Config
-  app.server = _({}).extend(server, app.config.settings || {});
+  app.server = Object.assign({}, server, app.config.settings || {});
 
   // Server Routes
-  app.server.routes = _({}).extend(app.config.routes || {});
+  app.server.routes = Object.assign({}, app.config.routes || {});
 
-  const mode = app.PRODUCTION ? 'production' : 'development';
   if (config.bootstrap && typeof config.bootstrap === 'function') {
     config.bootstrap(() => {
 
       // Start Express
       app.server.start(() => {
 
-        console.log('Node app is running on port', app.server.get('port'), 'in:', mode, 'mode');
-        console.log('Startup Time:', moment(moment().diff(global.STARTTIME)).format('ss.SSS'), 'sec');
+        console.log(`Vulcano is running on port ${app.server.get('port')} in ${env} mode`);
+
+        if (!app.config.settings.connection) {
+          console.log('Ignoring database connection. Connection is empty.');
+        } else {
+          console.log(`Database Environment: ${app.config.settings.connection}`);
+        }
+
+        console.log(`Startup Time: ${moment(moment().diff(global.STARTTIME)).format('ss.SSS')} sec`);
+
       });
     });
   } else {

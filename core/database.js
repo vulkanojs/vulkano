@@ -19,7 +19,6 @@ module.exports = function loadDatabaseApplication() {
   const toConnect = connections[connection];
 
   if (!connection) {
-    console.log('Ignoring database connection. Connection is empty.');
     return;
   }
 
@@ -28,7 +27,6 @@ module.exports = function loadDatabaseApplication() {
   }
 
   if (!mongoose.connection.readyState) {
-    console.log('Database Environment:', connection);
     mongoose.connect(toConnect);
   }
 

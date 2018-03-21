@@ -196,7 +196,7 @@ module.exports = {
 
     });
 
-    Object.keys(this.routes || []).forEach((i) => {
+    Object.keys(this.routes || {}).forEach((i) => {
 
       const fullPath = this.routes[i].split('.');
       const [moduleToRun, controllerToRun, actionToRun] = fullPath;
