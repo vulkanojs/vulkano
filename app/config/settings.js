@@ -26,7 +26,7 @@ module.exports = {
   uploadPath: 'public/files',
 
   // Connection to Database
-  connection: 'development',
+  connection: null,
 
   // Custom Settings
   config: {
