@@ -13,6 +13,12 @@ module.exports = {
       type: Number,
       required: false
     }
-  }
+  },
+
+  indexes: [
+    {
+      name: 'text'
+    }
+  ]
 
 };

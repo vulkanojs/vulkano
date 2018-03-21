@@ -6,4 +6,7 @@
  */
 module.exports = {
 
+  // Global plugins for all models
+  plugins: []
+
 };

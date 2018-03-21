@@ -6,7 +6,6 @@
 
 global.mongoose = require('mongoose');
 const AllModels = require('./models')();
-const _ = require('underscore');
 const Promise = require('bluebird');
 const paginate = require('mongoose-paginate');
 
@@ -42,8 +41,26 @@ module.exports = function loadDatabaseApplication() {
     } else {
       const schema = mongoose.Schema(current.attributes);
       delete current.attributes;
-      schema.statics = _.extend({}, current);
+      schema.statics = Object.assign({}, current);
       schema.plugin(paginate);
+
+      // Indexes
+      if (current.indexes !== undefined) {
+        if (Array.isArray(current.indexes)) {
+          Object.keys(current.indexes).forEach( index => schema.index(current.indexes[index]));
+        } else if (typeof current.indexes === 'object') {
+          schema.index(current.indexes);
+        }
+      }
+
+      // Plugins
+      if (current.plugins !== undefined) {
+        if (Array.isArray(current.plugins)) {
+          Object.keys(current.plugins).forEach( index => schema.index(current.plugins[index]));
+        } else if (typeof current.plugins === 'object') {
+          schema.index(current.plugins);
+        }
+      }
 
       //
       // Callbacks
