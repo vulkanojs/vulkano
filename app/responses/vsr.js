@@ -19,14 +19,19 @@ module.exports = function VSRPromise(prom, okcode) {
 
     // Log error to console
     console.log('The response is not a promise');
-    return res.status(500).jsonp({ success: false, error: 'The response is not a promise.' });
+    return res.status(500).jsonp({
+      success: false,
+      error: {
+        detail: 'The response is not a promise.'
+      }
+    });
 
   }
 
   // Executing promise
   prom.then( (r) => {
 
-    if (output.statusCode >= 400) {
+    if ( (r.statusCode && r.statusCode >= 400) || output.statusCode >= 400) {
       return Promise.reject(r);
     }
 
