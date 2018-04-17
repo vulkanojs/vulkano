@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Cloud */
 
 const Promise = require('bluebird');
 const S3 = require('s3-uploader');
@@ -8,13 +8,18 @@ const AWS = require('aws-sdk');
 module.exports = {
 
   clientImage: (ext) => {
-    const client = new S3(app.config.aws.bucket, {
+
+    const {
+      aws
+    } = app.config;
+
+    const client = new S3(aws.bucket, {
       aws: {
-        path: `${app.config.aws.path}/`,
-        region: app.config.aws.region,
+        path: `${aws.path}/`,
+        region: aws.region,
         acl: 'public-read',
-        accessKeyId: app.config.aws.accessKeyId,
-        secretAccessKey: app.config.aws.secretAccessKey
+        accessKeyId: aws.accessKeyId,
+        secretAccessKey: aws.secretAccessKey
       },
       cleanup: {
         versions: false,
@@ -52,7 +57,7 @@ module.exports = {
 
   image: (file, ext) => {
 
-    const client = this.clientImage((ext || 'jpg').toLowerCase());
+    const client = Cloud.clientImage((ext || 'jpg').toLowerCase());
     return new Promise((resolve, reject) => {
       client.upload(file, {}, (err, versions) => {
         if (err) {
@@ -83,9 +88,13 @@ module.exports = {
 
   file: (file) => {
 
-    AWS.config.region = app.config.aws.region;
-    AWS.config.accessKeyId = app.config.aws.accessKeyId;
-    AWS.config.secretAccessKey = app.config.aws.secretAccessKey;
+    const {
+      aws
+    } = app.config;
+
+    AWS.config.region = aws.region;
+    AWS.config.accessKeyId = aws.accessKeyId;
+    AWS.config.secretAccessKey = aws.secretAccessKey;
 
     const s3 = new AWS.S3();
     const name = file.split('/').pop();
@@ -96,8 +105,8 @@ module.exports = {
           reject(err);
         }
         const params = {
-          Bucket: app.config.aws.bucket,
-          Key: `${app.config.aws.path}/${name}`,
+          Bucket: aws.bucket,
+          Key: `${aws.path}/${name}`,
           ACL: 'public-read',
           Body: data
         };
@@ -105,7 +114,7 @@ module.exports = {
           if (err2) {
             reject(err2);
           } else {
-            resolve(`https://s3-${app.config.aws.region}.amazonaws.com/${app.config.aws.bucket}/${app.config.aws.path}/${name}`);
+            resolve(`https://s3-${aws.region}.amazonaws.com/${aws.bucket}/${aws.path}/${name}`);
           }
         });
       });
