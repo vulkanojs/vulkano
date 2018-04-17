@@ -1,4 +1,4 @@
-/* global app, VSError, Youtube, Cloud */
+/* global app, VSError, Youtube, Cloud, Upload */
 
 const _ = require('underscore');
 const path = require('path');
@@ -6,6 +6,9 @@ const Promise = require('bluebird');
 const rename = Promise.promisify(require('fs').rename);
 const sharp = require('sharp');
 const uuid = require('uuid');
+const mime = require('mime');
+const fs = require('fs');
+const moment = require('moment');
 
 module.exports = {
 
@@ -19,10 +22,10 @@ module.exports = {
       allowed
     } = opts;
     const fileName = opts && opts.name ? opts.name : null;
-    const file = this.isUploaded(f, fileName);
-    const ext = this.getExtension(file);
+    const file = Upload.isUploaded(f, fileName);
+    const ext = Upload.getExtension(file);
     let type = 'file';
-    let name = (fileName || file.originalname || '').replace(`.${ext}`, '');
+    let name = (fileName || file.originalname || '').replace(`.${ext}`, '').replace(/\s/g, '_');
     let enableCloud = (app.config.aws && app.config.aws.enabled) ? true : false;
     if (uploadToCloud === false) {
       enableCloud = false;
@@ -36,12 +39,12 @@ module.exports = {
       }
 
       // Check if the folder is writable
-      if (!this.isWritable()) {
+      if (!Upload.isWritable(true)) {
         throw new VSError('The folder don\'t have permission to save the file', 500);
       }
 
       // Check mimetype
-      if (!this.isValidMimeType(file.mimetype, 'file')) {
+      if (!Upload.isValidMimeType(file)) {
         throw new VSError(`The MIME type of the selected file is not allowed: ${file.mimetype}`, 400);
       }
 
@@ -60,7 +63,13 @@ module.exports = {
       }
 
       // name file
-      file.originalname = `${name.replace(/\s/g, '_')}.${ext}`;
+      let fileTime = '';
+      if (type === 'file') {
+        fileTime = `_${moment().format('x')}`;
+      } else if (fs.existsSync(path.normalize(`${process.cwd()}/public/files/${name}.${ext}`))) {
+        fileTime = `_${moment().format('x')}`;
+      }
+      file.originalname = `${name}${fileTime}.${ext}`;
 
       const filePath = path.normalize(`${process.cwd()}/${file.path}`);
       const filePublic = path.normalize(`${process.cwd()}/public/files/${file.originalname}`);
@@ -69,15 +78,15 @@ module.exports = {
 
         if (enableCloud) {
           if (type === 'image') {
-            return this.uploadImageS3(file, ext);
+            return Upload.uploadImageS3(file, ext);
           } else if (type === 'video') {
-            return this.uploadYoutube(file, title, description);
+            return Upload.uploadYoutube(file, title, description);
           }
-          return this.uploadFileS3(file, ext);
+          return Upload.uploadFileS3(file, ext);
         } else if (type === 'image') {
-          return this.processImage(file, ext);
+          return Upload.processImage(file, ext);
         }
-        return this.processFile(file, ext);
+        return Upload.processFile(file, ext);
 
       }).then( (r) => {
 
@@ -129,7 +138,7 @@ module.exports = {
      * Check if a path is writable
      * TODO: Check if the folder has permissions
      *
-     * @param {type} path
+     * @param {type} _path
      * @returns {Boolean}
      */
   isWritable: _path => _path,
@@ -146,7 +155,7 @@ module.exports = {
     const extTemporal = (name || '').split('.').pop();
     let ext = (file.originalname || '').split('.').pop();
     if (!ext || ext === 'blob') {
-      const extMimeType = (this.isValidMimeType(file.mimetype) || '').split('/').pop();
+      const extMimeType = Upload.isValidMimeType(file).split('/').pop();
       if (!extMimeType) {
         ext = extTemporal || extMimeType;
       }
@@ -158,10 +167,12 @@ module.exports = {
   /**
      * Check mimetype image
      *
-     * @param {string} mimetype
+     * @param {object} file
      * @returns {string}
      */
-  isValidMimeType: (mimetype) => {
+  isValidMimeType: (file) => {
+
+    const mimetype = file.mimetype || mime.getType( file ? file.path || {} : '');
 
     // jpe?g, png, gif
     const images = ['image/jpeg', 'image/jpg', 'image/pjpeg', 'image/gif', 'image/png'];
