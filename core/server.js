@@ -16,6 +16,8 @@ const multer = require('multer');
 const helmet = require('helmet');
 const responses = require('./responses');
 const JWT = require('../app/services/Jwt');
+const timeout = require('connect-timeout');
+const useragent = require('express-useragent');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -53,6 +55,7 @@ module.exports = {
     server.use(morgan('dev', {
       skip: ((req, res) => res.statusCode < 400)
     }));
+    server.use(useragent.express());
     server.use(compression());
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
@@ -130,6 +133,15 @@ module.exports = {
       server.set('view engine', views.engine || 'ejs');
     }
 
+    function haltOnTimedout(req, res, next) {
+      if (!req.timedout) {
+        next();
+      }
+    }
+    server.use(timeout(app.server.timeout !== undefined ? app.server.timeout : 120000));
+    server.use(haltOnTimedout);
+
+
     /**
      * Json Web Token
      */
@@ -144,8 +156,9 @@ module.exports = {
       server.use((err, req, res, next) => {
         if (err && err.name === 'UnauthorizedError') {
           res.status(401).jsonp({ success: false, error: 'Invalid token' });
+        } else {
+          next();
         }
-        next();
       });
 
     }
@@ -238,16 +251,15 @@ module.exports = {
     });
 
     // HTTP 404
-    server.use((req, res, next) => {
+    server.use((req, res) => {
       if (+res.statusCode >= 500 && +res.statusCode < 600) {
         throw new Error();
       }
       res.status(404).render(`${views.path}/_shared/errors/404.html`);
-      next();
     });
 
     // HTTP 5XX
-    server.use((err, req, res, next) => {
+    server.use((err, req, res) => {
       const status = err.status || res.statusCode || 500;
       res.status(status);
       if (!res.xhr) {
@@ -263,7 +275,6 @@ module.exports = {
           data: (app.PRODUCTION) ? {} : (err.stack || {})
         });
       }
-      next();
     });
 
     // Server Start
@@ -279,14 +290,13 @@ module.exports = {
       app.server = server;
 
       cb();
-    } else {
-      server.listen(server.get('port'), () => {
-        app.server = _.extend(app.server, server);
-        cb();
-      });
+      return;
     }
 
-    return true;
+    server.listen(server.get('port'), () => {
+      app.server = _.extend(app.server, server);
+      cb();
+    });
 
   }
 
