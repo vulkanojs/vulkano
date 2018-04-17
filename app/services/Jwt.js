@@ -13,10 +13,10 @@ module.exports = {
     const config = {
       secret: key,
       getToken: function fromHeaderOrQuerystring(req) {
-        return req.headers[header] ||
-                req.headers[header.toUpperCase()] ||
-                (param && req.query && req.query[param.toLowerCase()]) ||
-                null;
+        return req.headers[header]
+          || req.headers[header.toUpperCase()]
+          || (param && req.query && req.query[param.toLowerCase()])
+          || null;
       }
     };
 
@@ -24,6 +24,8 @@ module.exports = {
 
   },
 
-  encode: data => jwtSimple.encode(data, app.config.jwt.key || '')
+  encode: data => jwtSimple.encode(data, app.config.jwt.key || ''),
+
+  decode: (token, customKey) => jwtSimple.decode(token, customKey || app.config.jwt.key || '')
 
 };
