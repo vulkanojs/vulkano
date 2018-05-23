@@ -55,6 +55,7 @@ $ npm install install
 ## Your App Folder
 
 ### Config
+You can create any config enviroments as needed. By default, vulcano runs with NODE_ENV=development, in development mode. In productions servers, you should change NODE_ENV to _production_.
 
 #### connections.js
 
