@@ -54,9 +54,9 @@ module.exports = function loadDatabaseApplication() {
       // Plugins
       if (current.plugins !== undefined) {
         if (Array.isArray(current.plugins)) {
-          Object.keys(current.plugins).forEach( index => schema.index(current.plugins[index]));
+          Object.keys(current.plugins).forEach( index => schema.plugin(current.plugins[index]));
         } else if (typeof current.plugins === 'object') {
-          schema.index(current.plugins);
+          schema.plugin(current.plugins);
         }
       }
 
