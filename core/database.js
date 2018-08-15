@@ -27,7 +27,7 @@ module.exports = function loadDatabaseApplication() {
   }
 
   if (!mongoose.connection.readyState) {
-    mongoose.connect(toConnect);
+    mongoose.connect(toConnect, { useMongoClient: true });
   }
 
   const db = mongoose.connection;
@@ -54,7 +54,7 @@ module.exports = function loadDatabaseApplication() {
       // Plugins
       if (current.plugins !== undefined) {
         if (Array.isArray(current.plugins)) {
-          Object.keys(current.plugins).forEach( index => schema.plugin(current.plugins[index]));
+          Object.keys(current.plugins).forEach( plugin => schema.plugin(current.plugins[plugin]));
         } else if (typeof current.plugins === 'object') {
           schema.plugin(current.plugins);
         }
@@ -89,7 +89,7 @@ module.exports = function loadDatabaseApplication() {
         schema.pre('findOneAndUpdate', current.beforeFindOneAndUpdate);
         delete schema.statics.beforeFindOneAndUpdate;
       }
-      if (current.afterFindByIdAndUpdate) {
+      if (current.afterFindOneAndUpdate) {
         schema.post('findOneAndUpdate', current.afterFindOneAndUpdate);
         delete schema.statics.afterFindOneAndUpdate;
       }
