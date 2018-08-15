@@ -1,3 +1,5 @@
+/* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
+
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const gulp = require('gulp');
@@ -8,7 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const browser = require('browser-sync');
 
-module.exports = function (settings) {
+module.exports = (settings) => {
 
   const dev = process.env.NODE_ENV !== 'production';
   const postcssList = [
@@ -22,18 +24,18 @@ module.exports = function (settings) {
 
   if (!dev) {
     postcssList.push(cssnano({
-       safe: true
+      safe: true
     }));
   }
 
   // Delete the "dist" folder
   // This happens every time a build starts
-  gulp.task('clean', function (done) {
+  gulp.task('clean', (done) => {
     done();
   });
 
   // Start a server with BrowserSync to preview the site in
-  gulp.task('server', function (done) {
+  gulp.task('server', (done) => {
     if (dev) {
       browser.init(settings.server);
     }
@@ -41,7 +43,7 @@ module.exports = function (settings) {
   });
 
   // Reload the browser with BrowserSync
-  gulp.task('reload', function (done) {
+  gulp.task('reload', (done) => {
     if (dev) {
       browser.reload();
     }
@@ -49,9 +51,9 @@ module.exports = function (settings) {
   });
 
 
-  gulp.task('sass', function () {
+  gulp.task('sass', () => {
 
-    let sassConfig = {
+    const sassConfig = {
       includePaths: settings.sass.includePaths,
       outputStyle: dev ? 'nested' : 'compressed',
       sourceMap: dev,
@@ -59,23 +61,20 @@ module.exports = function (settings) {
       sourceMapEmbed: dev
     };
 
-    return gulp.
-      src(settings.sass.files).
-      pipe( gif(dev, sourcemaps.init()) ).
-      pipe(
-        sass(sassConfig).
-        on('error', sass.logError)
-      ).
-      pipe( gif(dev, sourcemaps.write(undefined, { sourceRoot: null })) ).
-      pipe( postcss(postcssList) ).
-      pipe( rename({ dirname: '' }) ).
-      pipe( gulp.dest(settings.sass.output, { overwrite: true }) ).
-      pipe( gif(dev, browser.reload({ stream: true })) );
+    return gulp
+      .src(settings.sass.files)
+      .pipe( gif(dev, sourcemaps.init()) )
+      .pipe( sass(sassConfig).on('error', sass.logError) )
+      .pipe( gif(dev, sourcemaps.write(undefined, { sourceRoot: null })) )
+      .pipe( postcss(postcssList) )
+      .pipe( rename({ dirname: '' }) )
+      .pipe( gulp.dest(settings.sass.output, { overwrite: true }) )
+      .pipe( gif(dev, browser.reload({ stream: true })) );
 
   });
 
   // Watch for changes to static assets, pages, Sass, and JavaScript
-  gulp.task('watch', function () {
+  gulp.task('watch', () => {
 
     if (!dev) {
       return;
@@ -86,4 +85,5 @@ module.exports = function (settings) {
   });
 
   gulp.task('default', ['clean', 'server', 'sass', 'watch']);
+
 };
