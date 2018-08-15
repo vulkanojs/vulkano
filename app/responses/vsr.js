@@ -1,13 +1,18 @@
 /**
- * VULCANO STANDARD RESPONSE (VSR)
+ * VULKANO STANDARD RESPONSE (VSR)
  */
 
 const Promise = require('bluebird');
 
 module.exports = function VSRPromise(prom, okcode) {
 
-  const { req } = this;
-  const { res } = req;
+  const {
+    req
+  } = this;
+
+  const {
+    res
+  } = req;
 
   let code = okcode || 200;
   let output = {
@@ -32,7 +37,13 @@ module.exports = function VSRPromise(prom, okcode) {
   prom.then( (r) => {
 
     if ( (r.statusCode && r.statusCode >= 400) || output.statusCode >= 400) {
-      return Promise.reject(r);
+      if (r.statusCode && r.statusCode !== 402) {
+        return Promise.reject(r);
+      } else if ( output.statusCode >= 400 && output.statusCode !== 402 ) {
+        return Promise.reject(r);
+      }
+      output.statusCode = r.statusCode;
+      code = r.statusCode;
     }
 
     if (r && r.serialized) { // if the object has serialized? see services/Serializer
