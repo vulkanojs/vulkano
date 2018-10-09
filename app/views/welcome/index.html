@@ -1,138 +1,126 @@
-<!doctype html>
-<html class="no-js" lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VulkanoJS</title>
-    <link href="https://fonts.googleapis.com/css?family=Niramit" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
-  </head>
-  <body>
-    <div class="wrapper">
-        <header>
-          <div class="logo">
-            <img src="/img/vulkano-logo-optimized.png" alt="">
-          </div>
-          <div class="title">
-            <span class="title">Vulkano</span>
-            <span class="tagline">Awesome MVC framework for Node.js</span>
-          </div>
-        </header>
-        <h1>It works!</h1>
-        <p>
-          Welcome to Vulkano, your new favorite MVC framework for node.js.
-        </p>
-        <p>
-          Before getting started, please note: Vulkano is very oppinionated. This means, the Vulkano dev team has setup a
-          stack of elements for you to start working rigth away without to much setup. You can change as much as you need.
-          It is your project, anyway. Feel free to break things as needed.
-        </p>
-        <h2>Vulkano defaults</h2>
-        <ul>
-          <li>
-            <p>
-              For loading views, Vulkano uses Nunjucks by default. Support for ejs is in the box too. To change this setting,
-              please refer to <code>app/config/settings.js</code> for instructions.
-            </p>
-          </li>
-          <li>
-            <p>
-              For controllers, Vulkano uses standard Express routes. To configure the routes, go to <code>app/config/routes.js</code>.
-              To make things simpler, Vulkano will populate automatic routes to every file in the <code>app/controllers</code> directory
-              that follows the following convention: <code>exampleController.js</code>. Replace the <code>example</code> word with anything you need.
-            </p>
-            <p>
-              Inside controllers, name your functions as follows to get automatic routing:
-            </p>
-            <ul>
-                <li><code>get</code>: default method for the controller for the <code>get</code> http method. If you hit the <code>example/</code> route, it will load the <code>get</code> method. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
-                <li><code>'get :id'</code>: will load any route that matches <code>example/something</code> and will add <code>something</code> to <code>req.query.id</code>. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
-                <li><code>'get hello/:id'</code>: will load any route that matches <code>example/hello/something</code> and will add <code>something</code> to <code>req.query.id</code>. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
-              </ul>
-            <p>
-              To learn more about express routes, go to <a href="https://expressjs.com/en/guide/routing.html">https://expressjs.com/en/guide/routing.html</a>.
-            </p>
-          </li>
-          <li>
-            <p>
-              For models, Vulkano uses Mongoose. But Mongoose with a twist: if you add Example.js to the <code>app/models</code> folder it will attach all properties and methods to a
-              dinamically created Mongoose model. This is for you not to be creating mongoose models again and again and make your workflow a little bit easier by only defining the things
-              you need. Of course, this is not bulletproof and you can just create your own 'real' mongoose models anywhere you want.
-            </p>
-          </li>
-        </ul>
+{% extends "_shared/templates/welcome.html" %}
 
-        <h2>Vulkano happiness bits</h2>
-        <p>
-          Vulkano also have other tools to make your workday easier:
-        </p>
-        <ul>
-          <li>
-            <p>
-              <strong>Services:</strong> allows you build service libraries to use in your project. For example, a tool for automatic email proccessing, or to connect an external API,
-              or to modify strings. It's up to you.
-            </p>
-          </li>
-          <li>
-            <p>
-              <strong>Responses:</strong> allows you build your own responses formats. Very usefull to build APIs. By default, Vulkano packages it's own response template called
-              VSR (Vulkano standard response), that will fit most needs.
-            </p>
-          </li>
-          <li>
-            <p>
-              <strong>Custom configurations</strong>: Inside <code>app/config</code> you can control everything Vulkano. Just poke around. Also, if you need to create your own config files, drop them into
-              the <code>app/config</code> folder and access them in your code via the global <code>app.config.yourfile</code> variable. Just make sure you export the data you need in your configuration file.
-            </p>
-          </li>
-        </ul>
+{% block content %}
 
-        <h2>Front end defaults</h2>
-        <p>
-          Sure, you will need to change this. We use foundation from Zurb as the default CSS framework for Vulkano, but you can replace it (or remove it altogheter)
-          by anything you need.
-        </p>
-        <ul>
-          <li>
-            <p>
-              Serverside HTML templates are located in the <code>app/views</code> folder.
-            </p>
-          </li>
-          <li>
-            <p>You can have partials and templates. Combine them to build your views (see Nunjucks or EJS docs to lear more). Checkout the <code>app/views</code> folder to see moore.</p>
-          </li>
-          <li>
-            <p>Also, <code>app/views/errors</code> you can customize error pages for 500 and 404 status codes for http requests.</p>
-          </li>
-          <li>
-            <p>
-              Your public folder is located at <code>/public</code>. Your compiled styles and JS files will be written there.
-            </p>
-          </li>
-          <li>
-            <p>
-              If you modify sass files in <code>client/scss</code> while runing <code>npm run gulp</code>, your
-              styles will be parsed and compiled via Gulp. Browsersync is included in the box.
-              Checkout <code>/gulpfile.app.js</code> and <code>/gulp.base.js</code> to make this fit your needs.
-            </p>
-          </li>
-          <li>
-            <p>
-              If you modify js files in <code>client/js</code> while runing <code>npm run webpack</code>, your js files
-              will be proccessed and packed by Webpack. Please checkout <code>/webpack.app.js</code> and <code>/webpack.base.js</code>
-              to see more.
-            </p>
-          </li>
-        </ul>
-
-        <h2>NPM tasks</h2>
-        <p>Vulkano comes with some tasks preconfigured for you in the <code>/package.json</code> file.</p>
+<div class="wrapper">
+  <header>
+    <div class="logo">
+      <img src="/img/vulkano-logo-optimized.png" alt="">
     </div>
+    <div class="title">
+      <span class="title">Vulkano</span>
+      <span class="tagline">Awesome MVC framework for Node.js</span>
+    </div>
+  </header>
+  <h1>It works!</h1>
+  <p>
+    Welcome to Vulkano, your new favorite MVC framework for node.js.
+  </p>
+  <p>
+    Before getting started, please note: Vulkano is very oppinionated. This means, the Vulkano dev team has setup a
+    stack of elements for you to start working rigth away without to much setup. You can change as much as you need.
+    It is your project, anyway. Feel free to break things as needed.
+  </p>
+  <h2>Vulkano defaults</h2>
+  <ul>
+    <li>
+      <p>
+        For loading views, Vulkano uses Nunjucks by default. Support for ejs is in the box too. To change this setting,
+        please refer to <code>app/config/settings.js</code> for instructions.
+      </p>
+    </li>
+    <li>
+      <p>
+        For controllers, Vulkano uses standard Express routes. To configure the routes, go to <code>app/config/routes.js</code>.
+        To make things simpler, Vulkano will populate automatic routes to every file in the <code>app/controllers</code> directory
+        that follows the following convention: <code>exampleController.js</code>. Replace the <code>example</code> word with anything you need.
+      </p>
+      <p>
+        Inside controllers, name your functions as follows to get automatic routing:
+      </p>
+      <ul>
+        <li><code>get</code>: default method for the controller for the <code>get</code> http method. If you hit the <code>example/</code> route, it will load the <code>get</code> method. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
+        <li><code>'get :id'</code>: will load any route that matches <code>example/something</code> and will add <code>something</code> to <code>req.query.id</code>. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
+        <li><code>'get hello/:id'</code>: will load any route that matches <code>example/hello/something</code> and will add <code>something</code> to <code>req.query.id</code>. This also works with any http method (you can use <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code> in the same way).</li>
+      </ul>
+      <p>
+        To learn more about express routes, go to <a href="https://expressjs.com/en/guide/routing.html">https://expressjs.com/en/guide/routing.html</a>.
+      </p>
+    </li>
+    <li>
+      <p>
+        For models, Vulkano uses Mongoose. But Mongoose with a twist: if you add Example.js to the <code>app/models</code> folder it will attach all properties and methods to a
+        dinamically created Mongoose model. This is for you not to be creating mongoose models again and again and make your workflow a little bit easier by only defining the things
+        you need. Of course, this is not bulletproof and you can just create your own 'real' mongoose models anywhere you want.
+      </p>
+    </li>
+  </ul>
 
-    <script src="/js/vendors/jquery.min.js"></script>
-    <script src="/js/vendors/what-input.min.js"></script>
-    <script src="/js/vendors/foundation.min.js"></script>
-    <script src="/js/app.js"></script>
-  </body>
-</html>
+  <h2>Vulkano happiness bits</h2>
+  <p>
+    Vulkano also have other tools to make your workday easier:
+  </p>
+  <ul>
+    <li>
+      <p>
+        <strong>Services:</strong> allows you build service libraries to use in your project. For example, a tool for automatic email proccessing, or to connect an external API,
+        or to modify strings. It's up to you.
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>Responses:</strong> allows you build your own responses formats. Very usefull to build APIs. By default, Vulkano packages it's own response template called
+        VSR (Vulkano standard response), that will fit most needs.
+      </p>
+    </li>
+    <li>
+      <p>
+        <strong>Custom configurations</strong>: Inside <code>app/config</code> you can control everything Vulkano. Just poke around. Also, if you need to create your own config files, drop them into
+        the <code>app/config</code> folder and access them in your code via the global <code>app.config.yourfile</code> variable. Just make sure you export the data you need in your configuration file.
+      </p>
+    </li>
+  </ul>
+
+  <h2>Front end defaults</h2>
+  <p>
+    Sure, you will need to change this. We use foundation from Zurb as the default CSS framework for Vulkano, but you can replace it (or remove it altogheter)
+    by anything you need.
+  </p>
+  <ul>
+    <li>
+      <p>
+        Serverside HTML templates are located in the <code>app/views</code> folder.
+      </p>
+    </li>
+    <li>
+      <p>You can have partials and templates. Combine them to build your views (see Nunjucks or EJS docs to lear more). Checkout the <code>app/views</code> folder to see moore.</p>
+    </li>
+    <li>
+      <p>Also, <code>app/views/errors</code> you can customize error pages for 500 and 404 status codes for http requests.</p>
+    </li>
+    <li>
+      <p>
+        Your public folder is located at <code>/public</code>. Your compiled styles and JS files will be written there.
+      </p>
+    </li>
+    <li>
+      <p>
+        If you modify sass files in <code>client/scss</code> while runing <code>npm run gulp</code>, your
+        styles will be parsed and compiled via Gulp. Browsersync is included in the box.
+        Checkout <code>/gulpfile.app.js</code> and <code>/gulp.base.js</code> to make this fit your needs.
+      </p>
+    </li>
+    <li>
+      <p>
+        If you modify js files in <code>client/js</code> while runing <code>npm run webpack</code>, your js files
+        will be proccessed and packed by Webpack. Please checkout <code>/webpack.app.js</code> and <code>/webpack.base.js</code>
+        to see more.
+      </p>
+    </li>
+  </ul>
+
+  <h2>NPM tasks</h2>
+  <p>Vulkano comes with some tasks preconfigured for you in the <code>/package.json</code> file.</p>
+</div>
+
+{% endblock %}
