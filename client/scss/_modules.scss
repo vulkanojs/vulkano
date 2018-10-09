@@ -3,11 +3,11 @@
 @import 'foundation';
 
 @include foundation-global-styles;
-@include foundation-grid;
-@include foundation-flex-grid;
+// @include foundation-grid;
+// @include foundation-flex-grid;
 @include foundation-flex-classes;
 @include foundation-typography;
-@include foundation-forms;
+// @include foundation-forms;
 @include foundation-button;
 //@include foundation-accordion;
 //@include foundation-accordion-menu;
@@ -22,7 +22,7 @@
 //@include foundation-drilldown-menu;
 //@include foundation-dropdown;
 //@include foundation-dropdown-menu;
-@include foundation-responsive-embed;
+// @include foundation-responsive-embed;
 //@include foundation-label;
 //@include foundation-media-object;
 //@include foundation-off-canvas;

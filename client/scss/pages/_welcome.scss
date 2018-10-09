@@ -1,0 +1,77 @@
+body{
+  font-family: 'Niramit', sans-serif;
+}
+
+h1, h2, h3{
+  color: #af0404;
+}
+
+.wrapper{
+  width: 100%;
+  padding: 50px 50px 100px 50px;
+
+  @include breakpoint('medium'){
+    max-width: 1000px;
+    padding: 200px 50px 100px 50px;
+  }
+
+  p{
+    text-align: justify;
+  }
+}
+
+header{
+  width: 100%;
+  margin-bottom: 50px;
+
+  @include breakpoint('medium'){
+    float: left;
+    padding-right: 100px;
+  }
+
+  .logo{
+    width: 100%;
+    img{
+      max-width: 290px;
+      float: left;
+    }
+
+    @include breakpoint('medium'){
+      width: 300px;
+    }
+  }
+
+  .title{
+    width: 100%;
+
+    @include breakpoint('medium'){
+      width: calc(100% - 300px);
+      float: left;
+      margin-top: 70px;
+    }
+
+    span.title{
+      font-size: 4.5rem;
+      display: inline-block;
+      width: 100%;
+      color: #af0404;
+      @include breakpoint('medium'){
+        width: 100%;
+        // text-align: center;
+      }
+    }
+
+    span.tagline{
+      color: #af0404;
+      font-size: 1rem;
+      line-height: 1rem;
+      display: inline-block;
+
+      @include breakpoint('medium'){
+        width: 100%;
+        // text-align: center;
+      }
+    }
+  }
+
+}

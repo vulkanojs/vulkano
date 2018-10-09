@@ -8,7 +8,7 @@ module.exports = {
 
   get: (req, res) => {
 
-    res.vsr(Example.find());
+    res.render('welcome/index.html');
 
   },
 
