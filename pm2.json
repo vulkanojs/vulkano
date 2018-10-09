@@ -1,5 +1,5 @@
 {
-  "name": "vulcano",
+  "name": "vulkano",
   "script": "app.js",
   "max_memory_restart": "800M",
   "env": {

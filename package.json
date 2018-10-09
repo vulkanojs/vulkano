@@ -1,6 +1,6 @@
 {
-  "name": "vulcano",
-  "version": "0.3.0",
+  "name": "vulkano",
+  "version": "0.3.1",
   "description": "A MVC framework using Express 4",
   "license": "MIT",
   "engines": {
@@ -81,7 +81,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vulcan-estudios/vulcano"
+    "url": "https://github.com/vulkanojs/vulkanojs"
   },
   "keywords": [
     "node",

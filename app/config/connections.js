@@ -4,7 +4,7 @@
  */
 module.exports = {
 
-  ivanmel: 'mongodb://localhost/vulcano',
+  ivanmel: 'mongodb://localhost/vulkano',
 
   development: 'mongodb://server/database',
 

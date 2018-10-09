@@ -1,4 +1,4 @@
-# Vulcano
+# Vulkano
 
 ## Stack
 

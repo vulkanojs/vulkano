@@ -54,7 +54,7 @@ module.exports = function loadBootstrapApplication() {
   console.log('');
   console.log('------------------------------');
   console.log('');
-  console.log('VULCANO - MVC');
+  console.log('VULKANOJS - MVC');
   console.log('');
   console.log('------------------------------');
 
