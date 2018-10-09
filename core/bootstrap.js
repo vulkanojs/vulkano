@@ -54,7 +54,7 @@ module.exports = function loadBootstrapApplication() {
   console.log('');
   console.log('------------------------------');
   console.log('');
-  console.log('VULKANOJS - MVC');
+  console.log('          VULKANO');
   console.log('');
   console.log('------------------------------');
 
@@ -73,10 +73,10 @@ module.exports = function loadBootstrapApplication() {
       // Start Express
       app.server.start(() => {
 
-        console.log(`Vulcano is running on port ${app.server.get('port')} in ${env} mode`);
+        console.log(`Vulkano is running on port ${app.server.get('port')} in ${env} mode`);
 
         if (!app.config.settings.connection) {
-          console.log('Ignoring database connection. Connection is empty.');
+          console.log('The value for config.settings.connection is empty. Skipping database connection.');
         } else {
           console.log(`Database Environment: ${app.config.settings.connection}`);
         }
