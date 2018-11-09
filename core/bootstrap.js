@@ -30,7 +30,7 @@ const settings = Object.assign(config.settings, envSettings);
 delete config.env;
 delete config.local;
 
-settings.host = (settings.host || '').replace(/(^\w+:|^)\/\//, '');
+settings.host = (process.env.HOST || settings.host || '').replace(/(^\w+:|^)\/\//, '');
 
 // General Settings
 app.config = Object.assign({}, config, { settings });
