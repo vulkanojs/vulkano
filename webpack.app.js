@@ -2,21 +2,16 @@ const path = require('path');
 const webpack = require('webpack');
 const baseConfig = require('./webpack.base');
 
-const dev = process.env.NODE_ENV !== 'production';
+const env = process.env.NODE_ENV || 'development';
 
-const plugins = [
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(dev ? 'development' : 'production')
-  })
-];
+// Define Plugin
+const pluginDefinePlugin = new webpack.DefinePlugin({
+  'process.env.NODE_ENV': JSON.stringify(env)
+});
 
-if (!dev) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: { warnings: false }
-  }));
-}
+const plugins = [pluginDefinePlugin];
 
-module.exports = Object.assign(baseConfig, {
+const config = Object.assign(baseConfig, {
   entry: {
     app: './client/js/index.js'
   },
@@ -30,6 +25,8 @@ module.exports = Object.assign(baseConfig, {
       './node_modules/'
     ]
   },
-  devtool: dev ? 'source-map' : undefined,
+  devtool: env !== 'production' ? 'source-map' : undefined,
   plugins
 });
+
+module.exports = config;
