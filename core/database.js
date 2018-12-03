@@ -4,18 +4,30 @@
  * Database connection
  */
 
-global.mongoose = require('mongoose');
-const AllModels = require('./models')();
 const Promise = require('bluebird');
 const paginate = require('mongoose-paginate');
+
+global.mongoose = require('mongoose');
+
+const AllModels = require('./models')();
 
 mongoose.Promise = Promise;
 
 module.exports = function loadDatabaseApplication() {
 
-  const { config } = app;
-  const { connections, settings } = config;
-  const { connection } = settings;
+  const {
+    config
+  } = app;
+
+  const {
+    connections,
+    settings
+  } = config;
+
+  const {
+    connection
+  } = settings;
+
   const toConnect = connections[connection];
 
   if (!connection) {
@@ -26,8 +38,12 @@ module.exports = function loadDatabaseApplication() {
     throw `Invalid conection to user MongoDB with source ${connection}`;
   }
 
+  const connectionProps = {
+    useNewUrlParser: true
+  };
+
   if (!mongoose.connection.readyState) {
-    mongoose.connect(toConnect, { useMongoClient: true });
+    mongoose.connect(toConnect, connectionProps);
   }
 
   const db = mongoose.connection;
@@ -37,7 +53,21 @@ module.exports = function loadDatabaseApplication() {
     if (!current.attributes) {
       global[model] = current;
     } else {
-      const schema = mongoose.Schema(current.attributes);
+
+      // Allow trim all attributes
+      const attributes = {};
+      Object.keys(current.attributes).forEach( (attr) => {
+        const currentAttr = current.attributes[attr];
+        const type = currentAttr.type || '';
+        if ( type !== Boolean) {
+          if (currentAttr.trim !== false) {
+            currentAttr.trim = true;
+          }
+        }
+        attributes[attr] = currentAttr;
+      });
+
+      const schema = mongoose.Schema(attributes);
       delete current.attributes;
       schema.statics = Object.assign({}, current);
       schema.plugin(paginate);
@@ -45,7 +75,8 @@ module.exports = function loadDatabaseApplication() {
       // Indexes
       if (current.indexes !== undefined) {
         if (Array.isArray(current.indexes)) {
-          Object.keys(current.indexes).forEach( index => schema.index(current.indexes[index]));
+          const tmp = current.indexes;
+          Object.keys(tmp).forEach( index => schema.index(tmp[index]));
         } else if (typeof current.indexes === 'object') {
           schema.index(current.indexes);
         }
@@ -54,7 +85,8 @@ module.exports = function loadDatabaseApplication() {
       // Plugins
       if (current.plugins !== undefined) {
         if (Array.isArray(current.plugins)) {
-          Object.keys(current.plugins).forEach( plugin => schema.plugin(current.plugins[plugin]));
+          const tmp = current.plugins;
+          Object.keys(tmp).forEach( plugin => schema.plugin(tmp[plugin]));
         } else if (typeof current.plugins === 'object') {
           schema.plugin(current.plugins);
         }
