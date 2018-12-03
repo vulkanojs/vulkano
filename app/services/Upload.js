@@ -79,13 +79,17 @@ module.exports = {
         if (enableCloud) {
           if (type === 'image') {
             return Upload.uploadImageS3(file, ext);
-          } else if (type === 'video') {
+          }
+          if (type === 'video') {
             return Upload.uploadYoutube(file, title, description);
           }
           return Upload.uploadFileS3(file, ext);
-        } else if (type === 'image') {
+        }
+
+        if (type === 'image') {
           return Upload.processImage(file, ext);
         }
+
         return Upload.processFile(file, ext);
 
       }).then( (r) => {
@@ -297,4 +301,3 @@ module.exports = {
   }
 
 };
-

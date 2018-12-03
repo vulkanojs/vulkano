@@ -5,6 +5,7 @@
  */
 
 const express = require('express');
+const frameguard = require('frameguard');
 const socketio = require('socket.io');
 const _ = require('underscore');
 const nunjucks = require('nunjucks');
@@ -14,8 +15,6 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const multer = require('multer');
 const helmet = require('helmet');
-const responses = require('./responses');
-const JWT = require('../app/services/Jwt');
 const timeout = require('connect-timeout');
 const useragent = require('express-useragent');
 
@@ -25,6 +24,8 @@ const AllControllers = require('include-all')({
   filter: /(.+Controller)\.js$/,
   optional: true
 });
+const responses = require('./responses');
+const JWT = require('../app/services/Jwt');
 
 module.exports = {
 
@@ -35,7 +36,7 @@ module.exports = {
   start: function loadServerApplication(cb) {
 
     const jwtMiddleware = JWT;
-    const { cors, jwt } = app.config;
+    const { cors, jwt, settings } = app.config;
     const views = app.server.views || {};
     const port = process.env.PORT || app.server.port || 5000;
     const sockets = app.server.sockets || {};
@@ -69,6 +70,22 @@ module.exports = {
       req.protocol = currentProtocol;
       next();
     });
+
+    if (settings.config) {
+      if (!settings.config.poweredBy) {
+        server.disable('x-powered-by');
+      }
+      if (settings.config.frameguard) {
+        if (Array.isArray(settings.config.frameguard)) {
+          settings.config.frameguard.forEach( (frame) => {
+            server.use(frameguard(frame));
+          });
+        } else {
+          server.use(frameguard(settings.config.frameguard));
+        }
+      }
+    }
+
     server.options('*', (req, res) => {
 
       /**
