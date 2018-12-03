@@ -37,13 +37,18 @@ module.exports = function VSRPromise(prom, okcode) {
   prom.then( (r) => {
 
     if ( (r.statusCode && r.statusCode >= 400) || output.statusCode >= 400) {
+
       if (r.statusCode && r.statusCode !== 402) {
         return Promise.reject(r);
-      } else if ( output.statusCode >= 400 && output.statusCode !== 402 ) {
+      }
+
+      if ( output.statusCode >= 400 && output.statusCode !== 402 ) {
         return Promise.reject(r);
       }
+
       output.statusCode = r.statusCode;
       code = r.statusCode;
+
     }
 
     if (r && r.serialized) { // if the object has serialized? see services/Serializer
