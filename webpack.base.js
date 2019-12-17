@@ -37,13 +37,37 @@ const useESLintLoader = {
   }
 };
 
+// Underscore Loader
+const useUnderscoreLoader = {
+  test: /\.html$/,
+  use: {
+    loader: 'underscore-template-loader',
+    options: {
+      engine: 'underscore',
+      prependFilenameComment: __dirname,
+      evaluate: /{{([\s\S]+?)}}/g,
+      interpolate: /{{=([\s\S]+?)}}/g,
+      escape: /{{-([\s\S]+?)}}/g
+    }
+  }
+};
+
 module.exports = {
 
   mode: process.env.NODE_ENV || 'development',
 
+  stats: {
+    colors: true,
+    env: true
+  },
+
   module: {
 
-    rules: [useBabelLoader, useESLintLoader]
+    rules: [
+      useBabelLoader,
+      useESLintLoader,
+      useUnderscoreLoader
+    ]
 
   }
 

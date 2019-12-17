@@ -10,14 +10,17 @@
   },
   "deploy": {
     "production": {
-      "user": "",
+      "user": "username_to_connect_via_ssh",
       "port": "22",
-      "host": [],
+      "host": ["your_ip_addresss"],
       "ref": "origin/production",
-      "repo": "",
+      "repo": "your_ssh_git_repo",
       "path": "/home/server/app",
       "pre-setup": "echo 'commands or local script path to be run on the host before the setup process starts'",
-      "post-deploy": "echo 'post-deploy'"
+      "post-deploy": "npm install && pm2 startOrRestart pm2.json --env production --only @TODO APP NAME && pm2 save",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   }
 }

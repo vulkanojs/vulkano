@@ -1,13 +1,13 @@
 {
-    "verbose": true,
-    "ignore": [
-        ".git/*",
-        "public/*",
-        "cms/*",
-        "nbproject/*",
-        "client/*"
-    ],
-    "env": {
-        "NODE_ENV": "development"
-    }
+  "verbose": true,
+  "ignore": [
+    ".git/",
+    "public/",
+    "cms/",
+    "nbproject/",
+    "client/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  }
 }

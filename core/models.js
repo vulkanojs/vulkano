@@ -14,6 +14,7 @@ const AllModels = require('include-all')({
   excludeDirs: /^\.(git|svn)$/,
   optional: true
 });
+
 const ActiveRecord = require('../app/services/ActiveRecord');
 
 const Callbacks = {

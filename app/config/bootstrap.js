@@ -1,10 +1,17 @@
+/* global Promise */
+
 /**
  * Local Bootstrap
  */
 
 module.exports = (start) => {
 
-  // Start app
-  start();
+  Promise
+    .resolve()
+    .then( () => {
+
+      // Start app
+      start();
+    });
 
 };

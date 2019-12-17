@@ -8,6 +8,7 @@
 global.app = {};
 
 global._ = require('underscore');
+
 const path = require('path');
 const moment = require('moment');
 

@@ -13,7 +13,8 @@ const plugins = [pluginDefinePlugin];
 
 const config = Object.assign(baseConfig, {
   entry: {
-    app: './client/js/index.js'
+    app: './client/js/index.js',
+    vendors: './client/js/vendors.js'
   },
   output: {
     path: path.resolve(process.cwd(), './public/'),

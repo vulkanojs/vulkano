@@ -15,6 +15,7 @@ module.exports = (settings) => {
   const dev = process.env.NODE_ENV !== 'production';
   const postcssList = [
     autoprefixer({
+      overrideBrowserslist: true,
       browsers: [
         'last 10 version',
         '> 5%'
