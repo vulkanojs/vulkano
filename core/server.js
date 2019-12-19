@@ -17,6 +17,7 @@ const multer = require('multer');
 const helmet = require('helmet');
 const timeout = require('connect-timeout');
 const useragent = require('express-useragent');
+const webp = require('webp-middleware');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -48,8 +49,19 @@ module.exports = {
 
     // Uploader
     const upload = multer({ dest: app.server.uploadPath });
+    const cacheDir = `${process.cwd()}/public/cache-webp`;
 
     const server = express();
+
+    const webpConfig = {
+      quality: 80,
+      preset: 'photo'
+    };
+
+    // Cache only in production
+    if (app.PRODUCTION) {
+      webpConfig.cacheDir = cacheDir;
+    }
 
     // Settings
     server.enable('trust proxy');
@@ -62,6 +74,7 @@ module.exports = {
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(helmet());
     server.use(responses);
+    server.use(webp(`${process.cwd()}/public`, webpConfig));
     server.use(express.static(`${process.cwd()}/public`));
     server.use((req, res, next) => {
       const proto = req.connection.encrypted ? 'https' : 'http';
