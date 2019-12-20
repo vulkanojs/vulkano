@@ -8,7 +8,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "dev": "node ./node_modules/concurrently/bin/concurrently './node_modules/nodemon/bin/nodemon.js --inspect' 'npm run gulp' 'npm run webpack'",
+    "dev": "node ./node_modules/concurrently/bin/concurrently './node_modules/nodemon/bin/nodemon.js --inspect' 'npm run webpack' 'npm run gulp'",
     "start": "node app.js",
     "pm2": "./node_modules/pm2/bin/pm2 start pm2.json",
     "test": "npm run test:integration",
