@@ -8,14 +8,14 @@ gulpBase({
 
   scripts: {
     files: [
-      './public/**/*.js',
-      './views/**/*.html'
+      'public/**/*.js',
+      'views/**/*.html'
     ]
   },
 
   sass: {
     files: [
-      './client/scss/**/*.scss'
+      'client/scss/**/*.scss'
     ],
     includePaths: [
       './',

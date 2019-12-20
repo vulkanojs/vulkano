@@ -37,7 +37,9 @@ module.exports = (settings) => {
   // Start a server with BrowserSync to preview the site in
   gulp.task('server', (done) => {
     if (dev) {
-      browser.init(settings.server);
+      setTimeout( () => {
+        browser.init(settings.server);
+      }, 5000);
     }
     done();
   });
