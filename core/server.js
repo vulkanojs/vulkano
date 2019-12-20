@@ -55,13 +55,9 @@ module.exports = {
 
     const webpConfig = {
       quality: 80,
-      preset: 'photo'
+      preset: 'photo',
+      cacheDir
     };
-
-    // Cache only in production
-    if (app.PRODUCTION) {
-      webpConfig.cacheDir = cacheDir;
-    }
 
     // Settings
     server.enable('trust proxy');
