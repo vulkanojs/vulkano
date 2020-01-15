@@ -12,7 +12,8 @@ const browser = require('browser-sync');
 
 module.exports = (settings) => {
 
-  const dev = process.env.NODE_ENV !== 'production';
+  const dev = String(process.env.NODE_ENV || 'development').toLowerCase() !== 'production';
+  
   const postcssList = [
     autoprefixer({
       overrideBrowserslist: [
