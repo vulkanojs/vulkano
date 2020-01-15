@@ -54,7 +54,7 @@ const useUnderscoreLoader = {
 
 module.exports = {
 
-  mode: process.env.NODE_ENV || 'development',
+  mode: String(process.env.NODE_ENV || 'development').toLowerCase(),
 
   stats: {
     colors: true,
