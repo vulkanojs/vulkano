@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const baseConfig = require('./webpack.base');
 
-const env = process.env.NODE_ENV || 'development';
+const env = String(process.env.NODE_ENV || 'development').toLowerCase();
 
 // Define Plugin
 const pluginDefinePlugin = new webpack.DefinePlugin({
