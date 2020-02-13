@@ -9,7 +9,7 @@ gulpBase({
   scripts: {
     files: [
       'public/**/*.js',
-      'views/**/*.html'
+      'app/views/**/*.html'
     ]
   },
 
