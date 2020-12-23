@@ -42,7 +42,7 @@ module.exports = {
       fields,
       sort,
       search
-    }, value => !value );
+    }, (value) => !value );
 
     // Filter by search
     if (search) {
@@ -63,7 +63,9 @@ module.exports = {
   },
 
   // Convert records to paginate
-  get: (Model, query, populate) => {
+  get: (Model, query, hasPopulate) => {
+
+    const populate = hasPopulate || [];
 
     let criteria = query || {};
 
@@ -72,10 +74,11 @@ module.exports = {
 
     // Setup
     _this.page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
-    _this.perPage = +criteria.per_page || 50;
+    _this.perPage = +criteria.per_page || +criteria.perPage || 50;
 
     delete criteria.page;
     delete criteria.per_page;
+    delete criteria.perPage;
 
     const fields = [];
     if (Array.isArray(criteria.fields)) {
@@ -132,7 +135,7 @@ module.exports = {
 
     }
 
-    return Model.count(_.extend(criteria, {})).then( (total) => {
+    return Model.countDocuments(_.extend(criteria, {})).then( (total) => {
 
       const opts = { page: _this.page, limit: _this.perPage };
 
@@ -161,7 +164,10 @@ module.exports = {
 
       const criteriaModel = _.extend(criteria, {});
       const optsModel = _.extend(opts, sort);
-      return Model.paginate(criteriaModel, optsModel).then( data => _this._set(total, data.docs) );
+
+      return Model
+        .paginate(criteriaModel, optsModel)
+        .then( (data) => _this._set(total, data.docs) );
 
     });
 
