@@ -11,6 +11,7 @@ global._ = require('underscore');
 
 const path = require('path');
 const moment = require('moment');
+const merge = require('deepmerge');
 
 global.Promise = require('bluebird');
 
@@ -25,23 +26,24 @@ const config = require('include-all')({
 app.PRODUCTION = (process.env.NODE_ENV || '').toLowerCase() === 'production';
 const env = (process.env.NODE_ENV || 'development').toLowerCase();
 
-const envSettings = Object.assign(config.env ? config.env[env] || {} : {}, config.local || {});
-const settings = Object.assign(config.settings, envSettings);
+// Local Config
+const localConfig = config.local || {};
 
-delete config.env;
-delete config.local;
+// NODE_ENV
+const environmentConfig = config.env ? config.env[env] || {} : {};
 
-settings.host = (process.env.HOST || settings.host || '').replace(/(^\w+:|^)\/\//, '');
+// All config merged (default, NODE_ENV (folder env), local.js file)
+const allConfig = merge.all([
+  config,
+  environmentConfig,
+  localConfig
+]);
+
+delete allConfig.env;
+delete allConfig.local;
 
 // General Settings
-app.config = Object.assign({}, config, { settings });
-
-// Override custom config with the localfile
-Object.keys(settings).forEach((key) => {
-  if (app.config[key] !== undefined) {
-    app.config[key] = Object.assign({}, config[key], settings[key]);
-  }
-});
+app.config = allConfig;
 
 // Include all components
 require('./services')();

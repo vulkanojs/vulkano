@@ -35,6 +35,7 @@
     "connect-timeout": "^1.9.0",
     "cron": "^1.7.2",
     "crossroads": "^0.12.2",
+    "deepmerge": "^4.2.2",
     "ejs": "^3.0.1",
     "exceljs": "^3.5.0",
     "express": "^4.17.1",

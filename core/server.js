@@ -37,10 +37,16 @@ module.exports = {
   start: function loadServerApplication(cb) {
 
     const jwtMiddleware = JWT;
-    const { cors, jwt, settings } = app.config;
+
+    const {
+      cors,
+      jwt,
+      settings,
+      sockets
+    } = app.config;
+
     const views = app.server.views || {};
     const port = process.env.PORT || app.server.port || 5000;
-    const sockets = app.server.sockets || {};
 
     // Middleware
     const middleware = app.config.middleware || ((req, res, next) => {
@@ -54,9 +60,9 @@ module.exports = {
     const server = express();
 
     const webpConfig = {
-      quality: 80,
-      preset: 'photo',
-      cacheDir
+      quality: app.config.webp.quality || 80,
+      preset: app.config.webp.preset || 'photo',
+      cacheDir: app.config.webp.cacheDir || cacheDir
     };
 
     // Settings
@@ -70,7 +76,11 @@ module.exports = {
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(helmet());
     server.use(responses);
-    server.use(webp(`${process.cwd()}/public`, webpConfig));
+
+    if ( app.config.webp.enabled) {
+      server.use(webp(`${process.cwd()}/public`, webpConfig));
+    }
+
     server.use(express.static(`${process.cwd()}/public`));
     server.use((req, res, next) => {
       const proto = req.connection.encrypted ? 'https' : 'http';
@@ -167,7 +177,6 @@ module.exports = {
     server.use(timeout(app.server.timeout !== undefined ? app.server.timeout : 120000));
     server.use(haltOnTimedout);
 
-
     /**
      * Json Web Token
      */
@@ -214,10 +223,14 @@ module.exports = {
       });
     }
 
-    const { routes } = app;
+    const {
+      routes
+    } = app;
+
     let method;
     let pathToRoute;
     let handler;
+
     Object.keys(routes).forEach((route) => {
 
       const parts = route.split(' ');
@@ -238,7 +251,13 @@ module.exports = {
     Object.keys(this.routes || {}).forEach((i) => {
 
       const fullPath = this.routes[i].split('.');
-      const [moduleToRun, controllerToRun, actionToRun] = fullPath;
+
+      const [
+        moduleToRun,
+        controllerToRun,
+        actionToRun
+      ] = fullPath;
+
       let module;
       let controller;
       let action;
@@ -304,13 +323,82 @@ module.exports = {
     });
 
     // Server Start
-    if (sockets.enable) {
+    if (sockets.enabled) {
+
       const io = socketio.listen(server.listen(port));
+
+      io.set('heartbeat timeout', +sockets.timeout || 4000);
+      io.set('heartbeat interval', +sockets.interval || 2000);
 
       // next line is the money
       server.set('socketio', io);
       io.on('connection', (socket) => {
+
+        if ( typeof sockets.onConnect === 'function') {
+          sockets.onConnect({ socket, body: {} });
+        }
+
+        const socketEvents = sockets.events || {};
+
+        Object.keys(socketEvents).forEach( (i) => {
+
+          const checkPath = socketEvents[i] || '';
+
+          let toExecute = null;
+          let module = null;
+          let controller = null;
+          let action = null;
+
+          if (typeof checkPath === 'function') {
+
+            toExecute = checkPath;
+
+          } else {
+
+            const fullPath = checkPath.split('.');
+
+            if (fullPath.length > 2) { // Has folder
+
+              [
+                module,
+                controller,
+                action
+              ] = fullPath;
+
+            } else {
+
+              [
+                controller,
+                action
+              ] = fullPath;
+
+            }
+
+            try {
+              toExecute = module
+                ? (AllControllers[module][controller][action])
+                : AllControllers[controller][action];
+            } catch (e) {
+              toExecute = null;
+            }
+
+          }
+
+          if (toExecute) {
+            socket.on(i, (body) => {
+              toExecute({ socket, body: body || {} });
+            });
+          } else {
+            console.log('-----');
+            console.error('Warning: Controller not found', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, 'to socket event', i);
+            console.log('-----');
+          }
+
+        });
+
         server.set('socket', socket);
+        app.socket = socket;
+
       });
 
       app.server = server;
