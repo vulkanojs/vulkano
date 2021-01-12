@@ -331,11 +331,12 @@ module.exports = {
       io.set('heartbeat interval', +sockets.interval || 2000);
 
       // next line is the money
+      global.io = io;
       server.set('socketio', io);
       io.on('connection', (socket) => {
 
         if ( typeof sockets.onConnect === 'function') {
-          sockets.onConnect({ socket, body: {} });
+          sockets.onConnect(socket);
         }
 
         const socketEvents = sockets.events || {};
