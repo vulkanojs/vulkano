@@ -3,7 +3,10 @@
 module.exports = {
 
   // Enable sockets
-  enabled: true,
+  enabled: false,
+
+  // Cors
+  cors: '*:*',
 
   // Socket timeout
   timeout: 4000,

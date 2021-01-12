@@ -330,6 +330,10 @@ module.exports = {
       io.set('heartbeat timeout', +sockets.timeout || 4000);
       io.set('heartbeat interval', +sockets.interval || 2000);
 
+      if (sockets.cors) {
+        io.origins( sockets.cors);
+      }
+
       // next line is the money
       global.io = io;
       server.set('socketio', io);
