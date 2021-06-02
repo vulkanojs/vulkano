@@ -18,6 +18,7 @@ const helmet = require('helmet');
 const timeout = require('connect-timeout');
 const useragent = require('express-useragent');
 const webp = require('webp-middleware');
+const cookieParser = require('cookie-parser');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -42,7 +43,8 @@ module.exports = {
       cors,
       jwt,
       settings,
-      sockets
+      sockets,
+      cookies
     } = app.config;
 
     const views = app.server.views || {};
@@ -72,6 +74,10 @@ module.exports = {
     }));
     server.use(useragent.express());
     server.use(compression());
+    if (cookies && cookies.enabled) {
+      const cookiesSecretKey = cookies && cookies.secret ? cookies.secret : '';
+      server.use(cookieParser(cookiesSecretKey));
+    }
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(helmet());
