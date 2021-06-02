@@ -9,7 +9,8 @@ gulpBase({
   scripts: {
     files: [
       'public/**/*.js',
-      'app/views/**/*.html'
+      'app/views/**/*.html',
+      'app/views/**/*.njk'
     ]
   },
 
@@ -20,7 +21,8 @@ gulpBase({
     includePaths: [
       './',
       './node_modules/foundation-sites/scss',
-      './node_modules/@mdi/font/scss'
+      './node_modules/@mdi/font/scss',
+      './node_modules/aos/src/sass'
     ],
     output: './public/css'
   }
