@@ -37,7 +37,7 @@ module.exports = {
   // value: string
   // @type String
   //
-  cookieName: 'token',
+  cookieName: 'x-token-auth',
 
   //
   // Path to make mandatory the token
