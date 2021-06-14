@@ -1,31 +1,67 @@
 /* global app */
 
-const jwt = require('express-jwt');
+const JWT = require('express-jwt');
 const jwtSimple = require('jwt-simple');
 
 module.exports = {
 
-  init: (opts) => {
+  init(opts) {
 
-    const key = app.config.jwt.key || '';
-    const header = app.config.jwt.header || 'x-token-auth' || '';
-    const param = app.config.jwt.queryParameter || '';
+    const {
+      jwt
+    } = app.config || {};
+
+    const {
+      key,
+      header,
+      queryParameter,
+      cookieName
+    } = jwt || {};
+
     const config = {
+
       secret: key,
-      getToken: function fromHeaderOrQuerystring(req) {
-        return req.headers[header]
-          || req.headers[header.toUpperCase()]
-          || (param && req.query && req.query[param.toLowerCase()])
-          || null;
+
+      getToken: (req) => {
+
+        const headerToken = req.headers[header] || req.headers[header.toUpperCase()] || null;
+
+        const cookieToken = req.cookies && req.cookies[cookieName]
+          ? req.cookies[cookieName]
+          : null;
+
+        const queryToken = req.query && req.query[queryParameter]
+          ? req.cookies[queryParameter]
+          : null;
+
+        return headerToken || cookieToken || queryToken || null;
+
       }
+
     };
 
-    return jwt(Object.assign({}, config, opts));
+    return JWT({ ...config, ...opts });
 
   },
 
-  encode: data => jwtSimple.encode(data, app.config.jwt.key || ''),
+  encode(data) {
 
-  decode: (token, customKey) => jwtSimple.decode(token, customKey || app.config.jwt.key || '')
+    const {
+      key
+    } = app.config.jwt;
+
+    return jwtSimple.encode(data, key);
+
+  },
+
+  decode(token, customKey) {
+
+    const {
+      key
+    } = app.config.jwt;
+
+    return jwtSimple.decode(token, customKey || key);
+
+  }
 
 };
