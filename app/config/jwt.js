@@ -31,6 +31,13 @@ module.exports = {
   // @type String
   //
   queryParameter: 'token',
+  
+  //
+  // Get token via cookie
+  // value: string
+  // @type String
+  //
+  cookieName: 'token',
 
   //
   // Path to make mandatory the token
