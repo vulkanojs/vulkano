@@ -22,6 +22,9 @@ const config = require('include-all')({
   optional: true
 });
 
+// Get package.json information
+const pkg = require('../package.json');
+
 // Environment
 app.PRODUCTION = (process.env.NODE_ENV || '').toLowerCase() === 'production';
 const env = (process.env.NODE_ENV || 'development').toLowerCase();
@@ -44,6 +47,9 @@ delete allConfig.local;
 
 // General Settings
 app.config = allConfig;
+
+// Package Config
+app.pkg = pkg;
 
 // Include all components
 require('./services')();
