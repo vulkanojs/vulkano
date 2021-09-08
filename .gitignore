@@ -7,6 +7,7 @@ local.js
 node_modules
 bower_components
 npm-debug.log
+package-lock.json
 
 # OS generated files #
 ######################
@@ -28,6 +29,7 @@ Thumbs.db
 *.dev
 .DS_Store
 *.lock
+*.identifier
 
 # Editor folders #
 ########################
