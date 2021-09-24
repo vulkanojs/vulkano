@@ -1,11 +1,12 @@
 /**
+ *
  * AWS Config
  *
  */
 
 module.exports = {
 
-  enable: false,
+  enabled: false,
 
   accessKeyId: process.env.AWS_ACCESS_KEY_ID || null,
 
@@ -15,6 +16,10 @@ module.exports = {
 
   region: process.env.AWS_S3_REGION || null,
 
-  path: process.env.AWS_S3_PATH
+  path: process.env.AWS_S3_PATH || null,
+
+  acl: process.env.AWS_S3_ACL || 'public-read',
+
+  adapter: process.env.AWS_S3_ADAPTER || null,
 
 };

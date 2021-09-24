@@ -1,5 +1,3 @@
-/* global __dirname */
-
 /**
  * Custom Server Config
  *
@@ -13,13 +11,9 @@
  * This config is merged with Express Config
  */
 
-const path = require('path');
-const moment = require('moment');
-
 module.exports = {
 
-  // Hostname
-  host: 'api.production.dev',
+  host: process.env.HOST || 'api.production.dev',
 
   // Port
   port: 5000,
@@ -28,22 +22,24 @@ module.exports = {
   uploadPath: 'public/files',
 
   // Connection to Database
-  connection: null,
+  database: {
+
+    // Connection key
+    connection: null,
+
+    // Additional config to mongoose
+    config: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true
+    }
+
+  },
 
   // Custom Settings
   config: {
     'x-powered-by': false
-  },
-
-  // Config Views
-  views: {
-    path: path.join(process.cwd(), 'app/views'),
-    engine: 'nunjucks', // or ejs
-    globals: [
-      {
-        moment: () => moment()
-      }
-    ]
   }
 
 };

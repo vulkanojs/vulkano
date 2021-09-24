@@ -1,4 +1,8 @@
-/* global io, app */
+/**
+ *
+ * Sockets Config
+ *
+ */
 
 module.exports = {
 

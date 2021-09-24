@@ -1,6 +1,6 @@
 /**
- * CORS Config
  *
+ * CORS Config
  *
  */
 
@@ -10,7 +10,7 @@ module.exports = {
   // Enable CORS
   // @type Boolean
   //
-  enable: true,
+  enabled: true,
 
   //
   // Path

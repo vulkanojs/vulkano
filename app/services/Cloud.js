@@ -1,13 +1,14 @@
-/* global app, Cloud */
+/* global Cloud */
 
 const Promise = require('bluebird');
 const S3 = require('s3-uploader');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const mime = require('mime');
 
 module.exports = {
 
-  clientImage: (ext) => {
+  clientImage: () => {
 
     const {
       aws
@@ -15,39 +16,19 @@ module.exports = {
 
     const client = new S3(aws.bucket, {
       aws: {
-        path: `${aws.path}/`,
+        path: `${Filter.get(aws.path, 'trim', '/')}/`,
         region: aws.region,
-        acl: 'public-read',
+        acl: aws.acl,
         accessKeyId: aws.accessKeyId,
         secretAccessKey: aws.secretAccessKey
       },
       cleanup: {
-        versions: false,
-        original: false
+        versions: true,
+        original: true
       },
       versions: [
         {
-          format: ext === 'png' ? 'png' : 'jpg',
-          quality: 95
-        },
-        {
-          maxHeight: 1200,
-          maxWidth: 1200,
-          format: ext === 'png' ? 'png' : 'jpg',
-          suffix: '-large',
-          quality: 90
-        },
-        {
-          maxWidth: 640,
-          format: ext === 'png' ? 'png' : 'jpg',
-          suffix: '-medium'
-        },
-        {
-          maxHeight: 200,
-          maxWidth: 200,
-          format: ext === 'png' ? 'png' : 'jpg',
-          aspect: '1:1',
-          suffix: '-thumbnail'
+          quality: 100
         }
       ]
     });
@@ -56,6 +37,19 @@ module.exports = {
   },
 
   image: (file, ext) => {
+
+    const {
+      aws
+    } = app.config;
+
+    const {
+      adapter
+    } = aws || {};
+
+    if (adapter === 'DigitalOcean') {
+      const mimeType = mime.getType(file);
+      return Cloud.file(file, { mimeType });
+    }
 
     const client = Cloud.clientImage((ext || 'jpg').toLowerCase());
     return new Promise((resolve, reject) => {
@@ -86,18 +80,38 @@ module.exports = {
 
   },
 
-  file: (file) => {
+  file: (file, props) => {
 
     const {
       aws
     } = app.config;
 
+    const {
+      customFolder,
+      mimeType
+    } = props || {};
+
+    const {
+      adapter,
+      region
+    } = aws;
+
     AWS.config.region = aws.region;
     AWS.config.accessKeyId = aws.accessKeyId;
     AWS.config.secretAccessKey = aws.secretAccessKey;
 
-    const s3 = new AWS.S3();
-    const name = file.split('/').pop();
+    let s3;
+
+    if (adapter === 'DigitalOcean') {
+      s3 = new AWS.S3({
+        endpoint: new AWS.Endpoint(`${region}.digitaloceanspaces.com`)
+      });
+    } else {
+      s3 = new AWS.S3();
+    }
+
+    const tempName = file.split('/').pop();
+    const name = customFolder ? `${Filter.get(customFolder, 'trim', '/')}/${tempName}` : tempName;
 
     return new Promise((resolve, reject) => {
       fs.readFile(file, (err, data) => {
@@ -106,19 +120,28 @@ module.exports = {
         }
         const params = {
           Bucket: aws.bucket,
-          Key: `${aws.path}/${name}`,
-          ACL: 'public-read',
-          Body: data
+          Key: `${Filter.get(aws.path, 'trim', '/')}/${name}`,
+          ACL: aws.acl,
+          Body: data,
+          ContentType: mimeType || 'binary/octet-stream '
         };
         s3.putObject(params, (err2) => {
+
           if (err2) {
             reject(err2);
+            return;
+          }
+
+          if (adapter === 'DigitalOcean') {
+            resolve(`https://${aws.bucket}.${aws.region}.digitaloceanspaces.com/${aws.path}/${name}`);
           } else {
             resolve(`https://s3-${aws.region}.amazonaws.com/${aws.bucket}/${aws.path}/${name}`);
           }
+
         });
       });
     });
 
   }
+
 };

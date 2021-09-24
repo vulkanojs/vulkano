@@ -1,3 +1,9 @@
+/**
+ *
+ * WEBP Config
+ *
+ */
+
 module.exports = {
 
   enabled: false,

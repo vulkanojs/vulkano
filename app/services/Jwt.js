@@ -1,5 +1,3 @@
-/* global app */
-
 const JWT = require('express-jwt');
 const jwtSimple = require('jwt-simple');
 
@@ -20,6 +18,8 @@ module.exports = {
 
     const config = {
 
+      algorithms: ['HS256'],
+
       secret: key,
 
       getToken: (req) => {
@@ -31,7 +31,7 @@ module.exports = {
           : null;
 
         const queryToken = req.query && req.query[queryParameter]
-          ? req.cookies[queryParameter]
+          ? req.query[queryParameter]
           : null;
 
         return headerToken || cookieToken || queryToken || null;
