@@ -1,6 +1,3 @@
-
-/* global __dirname */
-
 const path = require('path');
 
 // Include all user's responses

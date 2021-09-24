@@ -1,5 +1,3 @@
-/* global __dirname, app */
-
 /**
  * Server.js
  */
@@ -116,7 +114,7 @@ module.exports = {
       /**
        * CORS
        */
-      if (cors.enable) {
+      if (cors.enabled) {
         let tmpCustomHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
         tmpCustomHeaders = tmpCustomHeaders.concat(cors.headers || []);
         res.header('Access-Control-Allow-Origin', cors.origin);
@@ -186,7 +184,7 @@ module.exports = {
     /**
      * Json Web Token
      */
-    if (jwt.enable) {
+    if (jwt.enabled) {
 
       // JWT (secret key)
       server.use(jwt.path || '*', jwtMiddleware.init().unless({
@@ -207,7 +205,7 @@ module.exports = {
     /**
      * CORS
      */
-    if (cors.enable) {
+    if (cors.enabled) {
 
       server.use(cors.path, (req, res, next) => {
 

@@ -1,5 +1,3 @@
-/* global __dirname */
-
 /**
  * Services
  */

@@ -1,4 +1,4 @@
-/* global mongoose, app */
+/* global mongoose */
 
 /**
  * Database connection
@@ -6,6 +6,7 @@
 
 const Promise = require('bluebird');
 const paginate = require('mongoose-paginate');
+const merge = require('deepmerge');
 
 global.mongoose = require('mongoose');
 
@@ -25,22 +26,33 @@ module.exports = function loadDatabaseApplication() {
   } = config;
 
   const {
-    connection
+    database
   } = settings;
 
-  const toConnect = connections[connection];
+  const {
+    connection
+  } = database || {};
 
   if (!connection) {
     return;
   }
 
+  const toConnect = connections[connection];
+
   if (!toConnect) {
     throw `Invalid conection to user MongoDB with source ${connection}`;
   }
 
-  const connectionProps = {
-    useNewUrlParser: true
+  const defaultProps = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
   };
+
+  const connectionProps = merge.all([
+    defaultProps,
+    (database ? database.config || {} : {})
+  ]);
 
   if (!mongoose.connection.readyState) {
     mongoose.connect(toConnect, connectionProps);
@@ -67,16 +79,23 @@ module.exports = function loadDatabaseApplication() {
         attributes[attr] = currentAttr;
       });
 
+      if (!attributes.createdAt) {
+        attributes.createdAt = {
+          type: Date,
+          default: Date.now
+        };
+      }
+
       const schema = mongoose.Schema(attributes);
       delete current.attributes;
-      schema.statics = Object.assign({}, current);
+      schema.statics = { ...current };
       schema.plugin(paginate);
 
       // Indexes
       if (current.indexes !== undefined) {
         if (Array.isArray(current.indexes)) {
           const tmp = current.indexes;
-          Object.keys(tmp).forEach( index => schema.index(tmp[index]));
+          Object.keys(tmp).forEach( (index) => schema.index(tmp[index]));
         } else if (typeof current.indexes === 'object') {
           schema.index(current.indexes);
         }
@@ -86,7 +105,7 @@ module.exports = function loadDatabaseApplication() {
       if (current.plugins !== undefined) {
         if (Array.isArray(current.plugins)) {
           const tmp = current.plugins;
-          Object.keys(tmp).forEach( plugin => schema.plugin(tmp[plugin]));
+          Object.keys(tmp).forEach( (plugin) => schema.plugin(tmp[plugin]));
         } else if (typeof current.plugins === 'object') {
           schema.plugin(current.plugins);
         }
