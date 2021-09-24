@@ -6,12 +6,12 @@
     "sourceType": "module"
   },
   "env": {
-      "node": true,
-      "browser": true,
-      "es6": true,
-      "jquery": true,
-      "mocha": true
-  },  
+    "node": true,
+    "browser": true,
+    "es6": true,
+    "jquery": true,
+    "mocha": true
+  },
   "globals": {
     "app": true,
     "Promise": true,
@@ -22,7 +22,7 @@
     "react": {
       "version": "latest"
     }
-  },  
+  },
   "rules": {
     "arrow-body-style": [0],
     "comma-dangle": [0],
