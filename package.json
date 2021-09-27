@@ -8,7 +8,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "dev": "node ./node_modules/concurrently/bin/concurrently './node_modules/nodemon/bin/nodemon.js --inspect' 'npm run webpack' 'npm run gulp'",
+    "dev": "node ./node_modules/concurrently/bin/concurrently -n VULKANO,WEPBACK,GULP -c green,cyan,magenta './node_modules/nodemon/bin/nodemon.js --inspect' 'npm run webpack' 'npm run gulp'",
     "start": "node app.js",
     "postinstall": "npm run build",
     "gulp": "gulp --gulpfile gulpfile.app.js",
