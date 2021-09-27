@@ -86,7 +86,7 @@ module.exports = {
     server.use((req, res, next) => {
       const proto = req.secure ? 'https' : 'http';
       const forwarded = req.headers['x-forwaded-proto'] || null;
-      const currentProtocol = (forwarded || proto).split(/\s*,\s*/)[0];
+      const currentProtocol = (forwarded || proto).split('://')[0];
       req.protocol = currentProtocol;
       next();
     });
