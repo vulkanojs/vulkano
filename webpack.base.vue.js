@@ -1,3 +1,12 @@
+/*
+ *
+ * To enable support for VUE, please install the following packages
+ *
+ * yarn add vue
+ * yarn add -D vue-loader vue-template-compiler
+ * yarn add -D @vue/cli-plugin-babel @vue/cli-plugin-eslint @vue/cli-service
+ */
+
 const path = require('path');
 
 // Babel Loader
@@ -12,6 +21,7 @@ const useBabelLoader = {
         '@babel/plugin-syntax-dynamic-import'
       ],
       presets: [
+        '@vue/cli-plugin-babel/preset',
         '@babel/preset-env',
         '@babel/preset-react'
       ]
@@ -50,6 +60,14 @@ const useUnderscoreLoader = {
   }
 };
 
+// Vue Loader
+const useVueLoader = {
+  test: /\.vue$/,
+  use: {
+    loader: 'vue-loader'
+  }
+};
+
 module.exports = {
 
   mode: String(process.env.NODE_ENV || 'development').toLowerCase(),
@@ -64,7 +82,8 @@ module.exports = {
     rules: [
       useBabelLoader,
       useESLintLoader,
-      useUnderscoreLoader
+      useUnderscoreLoader,
+      useVueLoader
     ]
 
   }

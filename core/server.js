@@ -5,11 +5,8 @@
 const express = require('express');
 const frameguard = require('frameguard');
 const socketio = require('socket.io');
-const _ = require('underscore');
 const nunjucks = require('nunjucks');
-const path = require('path');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
 const compression = require('compression');
 const multer = require('multer');
 const helmet = require('helmet');
@@ -20,7 +17,7 @@ const cookieParser = require('cookie-parser');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
-  dirname: path.normalize(path.join(__dirname, '../app/controllers')),
+  dirname: `${APP_PATH}/controllers`,
   filter: /(.+Controller)\.js$/,
   optional: true
 });
@@ -76,9 +73,9 @@ module.exports = {
       const cookiesSecretKey = cookies && cookies.secret ? cookies.secret : '';
       server.use(cookieParser(cookiesSecretKey));
     }
-    server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({ extended: true }));
-    server.use(helmet());
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+    server.use(helmet({ contentSecurityPolicy: app.PRODUCTION ? true : false }));
     server.use(responses);
 
     if ( app.config.webp.enabled) {
@@ -87,7 +84,7 @@ module.exports = {
 
     server.use(express.static(`${process.cwd()}/public`));
     server.use((req, res, next) => {
-      const proto = req.connection.encrypted ? 'https' : 'http';
+      const proto = req.secure ? 'https' : 'http';
       const forwarded = req.headers['x-forwaded-proto'] || null;
       const currentProtocol = (forwarded || proto).split(/\s*,\s*/)[0];
       req.protocol = currentProtocol;
@@ -417,7 +414,10 @@ module.exports = {
     }
 
     server.listen(server.get('port'), () => {
-      app.server = _.extend(app.server, server);
+      app.server = {
+        ...app.server,
+        ...server
+      };
       cb();
     });
 

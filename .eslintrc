@@ -1,4 +1,5 @@
 {
+  "root": true,
   "parser": "babel-eslint",
   "extends": "airbnb",
   "parserOptions": {
@@ -14,9 +15,13 @@
   },
   "globals": {
     "app": true,
+    "io": true,
     "Promise": true,
     "VSError": true,
-    "Filter": true
+    "Filter": true,
+    "APP_PATH": true,
+    "CORE_PATH": true,
+    "PUBLIC_PATH": true
   },
   "settings": {
     "react": {

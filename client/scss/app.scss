@@ -1,11 +1,11 @@
 // Foundation Core
-@import "./modules.scss";
+@import './modules.scss';
 
 // Utility
-@import "./utility.scss";
+@import './utility.scss';
 
 //
 // Import Containers Styles
 //
-@import "./partials/_index";
-@import "./pages/_index";
+@import './components/_index';
+@import './pages/_index';

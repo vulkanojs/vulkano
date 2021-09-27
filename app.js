@@ -14,7 +14,7 @@
 
 const moment = require('moment');
 
-global.STARTTIME = moment();
+global.START_TIME = moment();
 
 const bootstrap = require('./core/bootstrap');
 

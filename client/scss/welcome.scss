@@ -1,8 +1,8 @@
 // Foundation Core
-@import "./modules.scss";
+@import './modules.scss';
 
 // Utility
-@import "./utility.scss";
+@import './utility.scss';
 
 body{
   font-family: 'Niramit', sans-serif;
@@ -16,7 +16,7 @@ h1, h2, h3{
   width: 100%;
   padding: 50px 50px 100px 50px;
 
-  @include breakpoint('medium'){
+  @include breakpoint(medium) {
     max-width: 1000px;
     padding: 200px 50px 100px 50px;
   }
@@ -30,7 +30,7 @@ header{
   width: 100%;
   margin-bottom: 50px;
 
-  @include breakpoint('medium'){
+  @include breakpoint(medium) {
     float: left;
     padding-right: 100px;
   }
@@ -42,7 +42,7 @@ header{
       float: left;
     }
 
-    @include breakpoint('medium'){
+    @include breakpoint(medium) {
       width: 300px;
     }
   }
@@ -50,7 +50,7 @@ header{
   .title{
     width: 100%;
 
-    @include breakpoint('medium'){
+    @include breakpoint(medium) {
       width: calc(100% - 300px);
       float: left;
       margin-top: 70px;
@@ -61,7 +61,7 @@ header{
       display: inline-block;
       width: 100%;
       color: #af0404;
-      @include breakpoint('medium'){
+      @include breakpoint(medium) {
         width: 100%;
         // text-align: center;
       }
@@ -73,7 +73,7 @@ header{
       line-height: 1rem;
       display: inline-block;
 
-      @include breakpoint('medium'){
+      @include breakpoint(medium) {
         width: 100%;
         // text-align: center;
       }

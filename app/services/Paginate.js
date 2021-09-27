@@ -1,4 +1,4 @@
-/* global Paginate, Utils */
+/* global Utils */
 
 const _ = require('underscore');
 
@@ -23,19 +23,23 @@ module.exports = {
   prev: false,
 
   // Total pages
-  total_pages: 0,
+  totalPages: 0,
 
   // Total items
   total_items: 0,
 
-  serializeQuery: (_props, query) => {
+  serializeQuery(_props, query) {
 
-    const props = typeof _props === 'object' ? _props : { sort: null, search: [] };
+    const props = typeof _props === 'object'
+      ? _props
+      : { sort: null, search: [] };
+
     const page = query.page || 1;
-    const perPage = Number(query.per_page) || 30;
+    const perPage = Number(query.per_page) || Number(query.perPage) || 30;
     const fields = query.fields || props.fields || [];
     const sort = query.sort || props.sort || null;
     const search = query.search || null;
+
     const result = _.omit({
       page,
       perPage,
@@ -58,27 +62,74 @@ module.exports = {
       }
     }
 
-    return Object.assign(result, props.filter || {});
+    return {
+      ...result,
+      ...props.filter || {}
+    };
+
+  },
+
+  getPopulatedCollections(populate) {
+
+    const optPopulate = [];
+
+    if (populate.length > 0) {
+
+      populate.forEach( (item) => {
+
+        const {
+          virtual,
+          collection,
+          path,
+          model
+        } = item;
+
+        let populateProps = null;
+
+        if (virtual) {
+          populateProps = virtual;
+        } else {
+
+          populateProps = {
+            path: collection || path || model
+          };
+
+          if (item.fields) {
+            populateProps.select = item.fields;
+          }
+          if (item.select) {
+            populateProps.select = item.select;
+          }
+          if (item.match) {
+            populateProps.match = item.match;
+          }
+
+        }
+
+        optPopulate.push(populateProps);
+
+      });
+
+    }
+
+    return optPopulate;
 
   },
 
   // Convert records to paginate
-  get: (Model, query, hasPopulate) => {
+  get(Model, query, hasPopulate) {
 
     const populate = hasPopulate || [];
 
     let criteria = query || {};
 
-    // Current instance
-    const _this = Paginate;
-
     // Setup
-    _this.page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
-    _this.perPage = +criteria.per_page || +criteria.perPage || 50;
+    this.page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
+    this.perPage = +criteria.per_page || +criteria.perPage || 50;
 
     delete criteria.page;
     delete criteria.per_page;
-    delete criteria.perPage;
+    delete criteria.perPage; // Fallback
 
     const fields = [];
     if (Array.isArray(criteria.fields)) {
@@ -109,98 +160,68 @@ module.exports = {
       delete criteria.search;
     }
 
-    if (_this.page === 'all') {
+    const optPopulate = this.getPopulatedCollections(populate || []);
+    const queryModel = _.extend(criteria, {});
 
-      const optPopulate = [];
-      if (populate.length > 0) {
-        populate.forEach( (item) => {
-          const tmp = { path: item.collection };
-          if (item.fields) {
-            tmp.select = item.fields;
-          }
-          if (item.select) {
-            tmp.select = item.select;
-          }
-          if (item.match) {
-            tmp.match = item.match;
-          }
-          optPopulate.push(tmp);
-        });
+    if (this.page === 'all') {
 
-      }
-
-      const queryModel = _.extend(criteria, {});
       const optsModel = _.extend(sort, { populate: optPopulate });
       return Model.find(queryModel, fields.join(' '), optsModel);
 
     }
 
-    return Model.countDocuments(_.extend(criteria, {})).then( (total) => {
+    return Model
+      .countDocuments(criteria)
+      .then( (total) => {
 
-      const opts = { page: _this.page, limit: _this.perPage };
+        const opts = {
+          page: this.page,
+          limit: this.perPage
+        };
 
-      if (fields.length > 0) {
-        opts.select = fields.join(' ');
-      }
+        if (fields.length > 0) {
+          opts.select = fields.join(' ');
+        }
 
-      if (populate.length > 0) {
+        opts.populate = optPopulate;
 
-        opts.populate = [];
-        populate.forEach( (item) => {
-          const tmp = { path: item.collection };
-          if (item.fields) {
-            tmp.select = item.fields;
-          }
-          if (item.select) {
-            tmp.select = item.select;
-          }
-          if (item.match) {
-            tmp.match = item.match;
-          }
-          opts.populate.push(tmp);
-        });
+        const optsModel = _.extend(opts, sort);
 
-      }
+        return Model
+          .paginate(queryModel, optsModel)
+          .then( (data) => this._set(total, data.docs) );
 
-      const criteriaModel = _.extend(criteria, {});
-      const optsModel = _.extend(opts, sort);
-
-      return Model
-        .paginate(criteriaModel, optsModel)
-        .then( (data) => _this._set(total, data.docs) );
-
-    });
+      });
 
   },
 
-  _set: (total, items) => {
+  _set(total, items) {
 
-    const _this = Paginate;
-    _this.items = items;
-    _this.cursor = (_this.page > 1) ? ((_this.page * _this.perPage) - (_this.perPage - 1)) : 1;
-    _this.current = _this.page;
+    this.items = items;
+    this.cursor = (this.page > 1) ? ((this.page * this.perPage) - (this.perPage - 1)) : 1;
+    this.current = this.page;
 
-    const tmpNext = (((_this.perPage * (_this.page - 1)) + _this.perPage) <= total);
-    _this.next = tmpNext ? (_this.page + 1) : false;
-    _this.prev = (_this.page > 1) ? (_this.page - 1) : false;
-    _this.total_pages = Math.ceil(total / _this.perPage);
+    const tmpNext = (((this.perPage * (this.page - 1)) + this.perPage) <= total);
+    this.next = tmpNext ? (this.page + 1) : false;
+    this.prev = (this.page > 1) ? (this.page - 1) : false;
+    this.totalPages = Math.ceil(total / this.perPage);
 
-    if ((_this.total_pages < _this.current) && (total > 0)) {
-      _this.prev = false;
+    if ((this.totalPages < this.current) && (total > 0)) {
+      this.prev = false;
     }
 
-    _this.cursor = (total >= _this.cursor) ? _this.cursor : 1;
-    _this.total_items = total;
+    this.cursor = (total >= this.cursor) ? this.cursor : 1;
+    this.total_items = total;
 
     return {
-      items: _this.items,
-      cursor: _this.cursor,
-      page: _this.current,
-      per_page: _this.perPage,
-      next: _this.next,
-      prev: _this.prev,
-      total_pages: _this.total_pages,
-      total_items: _this.total_items
+      items: this.items,
+      cursor: this.cursor,
+      page: this.current,
+      perPage: this.perPage,
+      next: this.next,
+      prev: this.prev,
+      totalPages: this.totalPages,
+      totalItems: this.total_items
     };
 
   }

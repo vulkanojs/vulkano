@@ -19,7 +19,7 @@ global.PUBLIC_PATH = path.join(__dirname, '../public');
 
 // Include all api config
 const config = require('include-all')({
-  dirname: path.normalize(path.join(__dirname, '../app/config')),
+  dirname: `${APP_PATH}/config`,
   filter: /(.+)\.js$/,
   optional: true
 });
@@ -92,34 +92,40 @@ module.exports = function loadBootstrapApplication() {
     ...app.config.routes
   };
 
-  if (config.bootstrap && typeof config.bootstrap === 'function') {
-    config.bootstrap(() => {
+  const {
+    bootstrap
+  } = config;
 
-      // Start Express
-      app.server.start(() => {
-
-        console.log(`Vulkano is running on port ${app.server.get('port')} in ${env} mode`);
-
-        const {
-          database
-        } = app.config.settings || {};
-
-        const {
-          connection
-        } = database || {};
-
-        if (!connection) {
-          console.log('The value for config.settings.database.connection is empty. Skipping database connection.');
-        } else {
-          console.log(`Database Environment: ${connection}`);
-        }
-
-        console.log(`Startup Time: ${moment(moment().diff(global.STARTTIME)).format('ss.SSS')} sec`);
-
-      });
-    });
-  } else {
+  if (!bootstrap || typeof bootstrap !== 'function') {
     console.log('Missing the boostrap file to start app: config/bootstrap.js');
+    return;
   }
+
+  bootstrap( () => {
+
+    // Start Express
+    app.server.start( () => {
+
+      console.log(`Vulkano is running on port ${app.server.get('port')} in ${env} mode`);
+
+      const {
+        database
+      } = app.config.settings || {};
+
+      const {
+        connection
+      } = database || {};
+
+      if (!connection) {
+        console.log('The value for config.settings.database.connection is empty. Skipping database connection.');
+      } else {
+        console.log(`Database Environment: ${connection}`);
+      }
+
+      console.log(`Startup Time: ${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec`);
+
+    });
+
+  });
 
 };

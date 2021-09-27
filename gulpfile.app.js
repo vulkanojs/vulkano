@@ -1,6 +1,7 @@
 const gulpBase = require('./gulp.base');
 
-gulpBase({
+// export tasks
+const tasks = gulpBase({
 
   server: {
     proxy: 'localhost:5000'
@@ -28,3 +29,7 @@ gulpBase({
   }
 
 });
+
+exports.build = tasks.build;
+exports.default = tasks.watch;
+exports.watch = tasks.watch;

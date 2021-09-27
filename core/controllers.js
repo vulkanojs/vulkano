@@ -2,11 +2,9 @@
  * Controllers
  */
 
-const path = require('path');
-
 // Include all api controllers
 const AllControllers = require('include-all')({
-  dirname: path.normalize(path.join(__dirname, '../app/controllers')),
+  dirname: `${APP_PATH}/controllers`,
   filter: /(.+Controller)\.js$/,
   optional: true
 });

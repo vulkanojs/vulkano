@@ -1,5 +1,3 @@
-/* global mongoose */
-
 /**
  * Database connection
  */
@@ -8,7 +6,10 @@ const Promise = require('bluebird');
 const paginate = require('mongoose-paginate');
 const merge = require('deepmerge');
 
-global.mongoose = require('mongoose');
+const mongoose = require('mongoose');
+
+global.mongoose = mongoose;
+global.Virtual = 'Virtual';
 
 const AllModels = require('./models')();
 
@@ -59,6 +60,8 @@ module.exports = function loadDatabaseApplication() {
   }
 
   const db = mongoose.connection;
+
+  // Each Model
   Object.keys(AllModels).forEach((model) => {
 
     const current = AllModels[model];
@@ -68,15 +71,25 @@ module.exports = function loadDatabaseApplication() {
 
       // Allow trim all attributes
       const attributes = {};
+      const virtuals = {};
+
       Object.keys(current.attributes).forEach( (attr) => {
+
         const currentAttr = current.attributes[attr];
         const type = currentAttr.type || '';
+
         if ( type !== Boolean) {
           if (currentAttr.trim !== false) {
             currentAttr.trim = true;
           }
         }
-        attributes[attr] = currentAttr;
+
+        if ( String(type).toLowerCase === 'virtual' ) {
+          virtuals[attr] = currentAttr;
+        } else {
+          attributes[attr] = currentAttr;
+        }
+
       });
 
       if (!attributes.createdAt) {
@@ -87,6 +100,14 @@ module.exports = function loadDatabaseApplication() {
       }
 
       const schema = mongoose.Schema(attributes);
+
+      Object.keys(virtuals).forEach( (v) => {
+        schema.virtual(v, virtuals[v]);
+      });
+
+      schema.set('toObject', { virtuals: true });
+      schema.set('toJSON', { virtuals: true });
+
       delete current.attributes;
       schema.statics = { ...current };
       schema.plugin(paginate);
