@@ -46,8 +46,7 @@ module.exports = function loadDatabaseApplication() {
 
   const defaultProps = {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
+    useUnifiedTopology: true
   };
 
   const connectionProps = merge.all([
