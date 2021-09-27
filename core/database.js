@@ -84,8 +84,9 @@ module.exports = function loadDatabaseApplication() {
           }
         }
 
-        if ( String(type).toLowerCase === 'virtual' ) {
+        if ( String(type).toLowerCase() === 'virtual' ) {
           virtuals[attr] = currentAttr;
+          delete attributes[attr];
         } else {
           attributes[attr] = currentAttr;
         }
