@@ -55,6 +55,7 @@ const Callbacks = {
 module.exports = function loadModelsApplication() {
 
   const models = {};
+
   Object.keys(AllModels).forEach((i) => {
 
     const current = AllModels[i];
@@ -66,8 +67,6 @@ module.exports = function loadModelsApplication() {
     };
 
   });
-
-  console.log(models);
 
   return models;
 
