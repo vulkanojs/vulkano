@@ -68,15 +68,50 @@ require('./database')();
 const controllers = require('./controllers')();
 const server = require('./server');
 
+const colors = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  underscore: '\x1b[4m',
+  blink: '\x1b[5m',
+  reverse: '\x1b[7m',
+  hidden: '\x1b[8m',
+  fg: {
+    black: '\x1b[30m',
+    red: '\x1b[31m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    cyan: '\x1b[36m',
+    white: '\x1b[37m',
+    crimson: '\x1b[38m' // Scarlet
+  },
+  bg: {
+    black: '\x1b[40m',
+    red: '\x1b[41m',
+    green: '\x1b[42m',
+    yellow: '\x1b[43m',
+    blue: '\x1b[44m',
+    magenta: '\x1b[45m',
+    cyan: '\x1b[46m',
+    white: '\x1b[47m',
+    crimson: '\x1b[48m'
+  }
+};
+
 module.exports = function loadBootstrapApplication() {
 
   console.log('');
   console.log('');
-  console.log('------------------------------');
+  console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
   console.log('');
-  console.log('          VULKANO');
+  console.log(colors.fg.cyan, '               🌋', colors.reset);
+  console.log(colors.fg.cyan, `         VULKANO ${pkg.version}`, colors.reset);
   console.log('');
-  console.log('------------------------------');
+  console.log(colors.fg.blue, 'https://github.com/vulkanojs/vulkano', colors.reset);
+  console.log('');
+  console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
 
   // Routes
   app.routes = controllers;
@@ -101,12 +136,13 @@ module.exports = function loadBootstrapApplication() {
     return;
   }
 
-  bootstrap( () => {
+  bootstrap( (callbackAfterInitVulkano) => {
 
     // Start Express
     app.server.start( () => {
 
-      console.log(`Vulkano is running on port ${app.server.get('port')} in ${env} mode`);
+      console.log('PORT:', `${colors.fg.green}${app.server.get('port')}${colors.reset}`);
+      console.log('ENVIRONMENT:', `${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
 
       const {
         database
@@ -116,13 +152,20 @@ module.exports = function loadBootstrapApplication() {
         connection
       } = database || {};
 
-      if (!connection) {
-        console.log('The value for config.settings.database.connection is empty. Skipping database connection.');
-      } else {
-        console.log(`Database Environment: ${connection}`);
+      if (connection) {
+        console.log('DATABASE:', `${colors.fg.green}${connection}${colors.reset}`);
       }
 
-      console.log(`Startup Time: ${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec`);
+      console.log('STARTUP TIME:', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+
+      if (!connection) {
+        console.log(`${colors.fg.blue}The value for config.settings.database.connection is empty. Skipping database connection.`);
+      }
+
+      // Run custom callback after init vulkano
+      if (callbackAfterInitVulkano && typeof callbackAfterInitVulkano === 'function') {
+        callbackAfterInitVulkano();
+      }
 
     });
 
