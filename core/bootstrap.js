@@ -141,9 +141,6 @@ module.exports = function loadBootstrapApplication() {
     // Start Express
     app.server.start( () => {
 
-      console.log('PORT:', `${colors.fg.green}${app.server.get('port')}${colors.reset}`);
-      console.log('ENVIRONMENT:', `${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
-
       const {
         database
       } = app.config.settings || {};
@@ -152,15 +149,24 @@ module.exports = function loadBootstrapApplication() {
         connection
       } = database || {};
 
-      if (connection) {
-        console.log('DATABASE:', `${colors.fg.green}${connection}${colors.reset}`);
-      }
+      const startup = [];
 
-      console.log('STARTUP TIME:', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      startup.push(`ENV: ${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
+      startup.push(' | ');
+      startup.push(`PORT: ${colors.fg.green}${app.server.get('port')}${colors.reset}`);
+
+      console.log(startup.join(''));
+
+      if (connection) {
+        console.log('DATABASE:', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.green}EMPTY${colors.reset}`);
+      }
 
       if (!connection) {
         console.log(`${colors.fg.blue}The value for config.settings.database.connection is empty. Skipping database connection.`);
       }
+
+      console.log('STARTUP TIME:', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
 
       // Run custom callback after init vulkano
       if (callbackAfterInitVulkano && typeof callbackAfterInitVulkano === 'function') {
