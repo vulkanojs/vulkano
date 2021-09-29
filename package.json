@@ -14,8 +14,8 @@
     "gulp": "gulp --gulpfile gulpfile.app.js",
     "webpack": "webpack --config webpack.app.js -w",
     "build": "NODE_ENV=production webpack --config webpack.app.js && NODE_ENV=production gulp --gulpfile gulpfile.app.js",
-    "deploy:staging": "pm2 deploy pm2.staging.json staging",
-    "deploy:server": "pm2 deploy pm2.json production"
+    "deploy:staging": "pm2 deploy staging",
+    "deploy:server": "pm2 deploy production"
   },
   "dependencies": {
     "@mdi/font": "^6.1.95",
