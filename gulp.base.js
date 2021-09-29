@@ -77,9 +77,10 @@ module.exports = (settings) => {
   }
 
   // Watch for changes to static assets, pages, Sass, and JavaScript
-  function watch() {
+  function watch(done) {
 
     if (!dev) {
+      done();
       return;
     }
 
