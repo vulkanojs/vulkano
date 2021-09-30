@@ -4,7 +4,7 @@
 
 Thank you to all [our backers](https://opencollective.com/vulkano#backer)! 🙏
 
-[![vulkano backers](https://opencollective.com/vulkano/backers.svg?width=890)](https://opencollective.com/vulkano#backers)
+[![vulkano backers](https://opencollective.com/vulkano/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/vulkano#backers)
 
 
 ## Stack
