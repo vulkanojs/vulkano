@@ -4,6 +4,11 @@
 
 # Vulkano
 
+Vulkano is a small, simple, and fast framework for creating web applications using NodeJS. Inspired by KumbiaPHP.
+
+[![Backers on Open Collective](https://opencollective.com/vulkano/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/vulkano/sponsors/badge.svg)](#sponsors)
+
 ## Backers
 
 Thank you to all [our backers](https://opencollective.com/vulkano#backer)! 🙏
