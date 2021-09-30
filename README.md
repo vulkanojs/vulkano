@@ -6,14 +6,14 @@
 
 Vulkano is a small, simple, and fast framework for creating web applications using NodeJS. Inspired by KumbiaPHP.
 
-[![Backers on Open Collective](https://opencollective.com/vulkano/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/vulkano/sponsors/badge.svg)](#sponsors)
+[![Backers on Open Collective](https://opencollective.com/vulkanojs/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/vulkanojs/sponsors/badge.svg)](#sponsors)
 
 ## Backers
 
-Thank you to all [our backers](https://opencollective.com/vulkano#backer)! 🙏
+Thank you to all [our backers](https://opencollective.com/vulkanojs#backer)! 🙏
 
-[![vulkano backers](https://opencollective.com/vulkano/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/vulkano#backers)
+[![vulkano backers](https://opencollective.com/vulkanojs/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/vulkanojs#backers)
 
 
 ## Stack
