@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://avatars.githubusercontent.com/u/42077334?s=200&v=4" alt="Nodemon Logo">
+</p>
+
 # Vulkano
 
 ## Backers
