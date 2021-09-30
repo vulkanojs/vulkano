@@ -235,12 +235,20 @@ module.exports = {
     Object.keys(routes).forEach((route) => {
 
       const parts = route.split(' ');
-      const [methodToRun, pathToRun] = parts;
+
+      const [
+        methodToRun,
+        pathToRun
+      ] = parts;
+
       method = methodToRun;
+
       if (pathToRun) {
         pathToRoute = pathToRun;
       }
+
       handler = routes[route];
+
       if (method === 'post') {
         server[method](pathToRoute, upload.any(), middleware, handler);
       } else {
@@ -280,8 +288,16 @@ module.exports = {
         option = 'get';
       }
 
-      const runWithModule = (module) ? AllControllers[module] : AllControllers;
-      const toExecute = runWithModule[controller][action];
+      let toExecute = null;
+
+      try {
+        toExecute = module
+          ? (AllControllers[module][controller][action])
+          : AllControllers[controller][action];
+      } catch (e) {
+        toExecute = null;
+      }
+
       if (toExecute) {
         if (option === 'post') {
           server[option](pathToRun || '/', upload.any(), middleware, toExecute);
@@ -289,9 +305,7 @@ module.exports = {
           server[option](pathToRun || '/', middleware, toExecute);
         }
       } else {
-        console.log('-----');
-        console.error('Warning: Controller not found:', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`);
-        console.log('-----');
+        console.error('\x1b[31mError:', 'Controller not found in', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, '\x1b[0m');
       }
 
     });
@@ -395,9 +409,7 @@ module.exports = {
               toExecute({ socket, body: body || {} });
             });
           } else {
-            console.log('-----');
-            console.error('Warning: Controller not found', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, 'to socket event', i);
-            console.log('-----');
+            console.error('\x1b[31mError:', 'Controller not found in', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, '\x1b[0m', 'to socket event', i);
           }
 
         });
