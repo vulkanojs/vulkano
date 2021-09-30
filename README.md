@@ -1,6 +1,11 @@
 # Vulkano
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/argordmel)
+## Backers
+
+Thank you to all [our backers](https://opencollective.com/vulkano#backer)! 🙏
+
+[![vulkano backers](https://opencollective.com/vulkano/backers.svg?width=890)](https://opencollective.com/vulkano#backers)
+
 
 ## Stack
 
@@ -21,7 +26,7 @@
 ### System
 
 - Unix
-- Node.js v10+
+- Node.js v12+
 
 ### Packages
 
@@ -35,12 +40,11 @@ $ yarn install
 | :------------------------------	| :---------------------------------------- |
 | `npm run dev`                   | Run development server and watch changes	|
 | `npm run start`                 | Start development server                  |
-| `npm run production`						| Start production server                   |
-| `npm run pm2 --env=production`  | Start production server with PM2          |
-| `npm run deploy:heroku`         | Update Heroku app                         |
-| `npm run deploy:server`         | Deploy app into server                    |
 | `npm run gulp`                  | Start browsersync & sass                  |
 | `npm run webpack`               | Start webpack                             |
+| `npm run build`                 | Task to buils assets in production mode   |
+| `npm run deploy:heroku`         | Update Heroku app                         |
+| `npm run deploy:server`         | Deploy app into server                    |
 
 
 ## Structure
