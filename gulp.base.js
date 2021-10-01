@@ -47,7 +47,7 @@ module.exports = (settings) => {
 
   // BrowserSync Reload
   function browserSyncReload(done) {
-    if (!dev) {
+    if (dev) {
       browser.reload();
     }
     done();
