@@ -12,12 +12,6 @@
  *   => `pm2 start pm2.json`
  */
 
-const moment = require('moment');
+global.START_TIME = new Date();
 
-global.START_TIME = moment();
-
-const bootstrap = require('./core/bootstrap');
-
-(function startApplication() {
-  bootstrap();
-}());
+require('./core/bootstrap')();
