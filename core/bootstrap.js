@@ -13,6 +13,7 @@ global.app = {};
 global._ = _;
 global.Promise = Promise;
 
+global.ABS_PATH = path.resolve(__dirname, '../');
 global.CORE_PATH = path.join(__dirname, '../core');
 global.APP_PATH = path.join(__dirname, '../app');
 global.PUBLIC_PATH = path.join(__dirname, '../public');

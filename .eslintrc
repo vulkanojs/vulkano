@@ -19,6 +19,7 @@
     "Promise": true,
     "VSError": true,
     "Filter": true,
+    "ABS_PATH": true,
     "APP_PATH": true,
     "CORE_PATH": true,
     "PUBLIC_PATH": true
