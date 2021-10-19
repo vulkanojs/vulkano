@@ -15,12 +15,6 @@ module.exports = {
 
   host: process.env.HOST || 'api.production.dev',
 
-  // Port
-  port: 5000,
-
-  // Upload path
-  uploadPath: 'public/files',
-
   // Connection to Database
   database: {
 
@@ -37,9 +31,15 @@ module.exports = {
 
   },
 
-  // Custom Settings
-  config: {
-    'x-powered-by': false
+  // Express Settings
+  express: {
+
+    port: 5000,
+
+    uploadPath: 'public/files',
+
+    poweredBy: false
+
   }
 
 };

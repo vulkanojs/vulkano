@@ -26,8 +26,6 @@ const JWT = require('../app/services/Jwt');
 
 module.exports = {
 
-  port: 5000,
-
   routes: {},
 
   start: function loadServerApplication(cb) {
@@ -42,75 +40,149 @@ module.exports = {
       cookies
     } = app.config;
 
+    const {
+      express: expressUserConfig
+    } = settings || {};
+
+    const expressConfig = expressUserConfig || {};
     const views = app.server.views || {};
-    const port = process.env.PORT || app.server.port || 5000;
+    const port = process.env.PORT || settings.port || expressConfig.port || 5000;
 
     // Middleware
     const middleware = app.config.middleware || ((req, res, next) => {
       next();
     });
 
-    // Uploader
-    const upload = multer({ dest: app.server.uploadPath });
-    const cacheDir = `${process.cwd()}/public/cache-webp`;
-
     const server = express();
-
-    const webpConfig = {
-      quality: app.config.webp.quality || 80,
-      preset: app.config.webp.preset || 'photo',
-      cacheDir: app.config.webp.cacheDir || cacheDir
-    };
 
     // Settings
     server.enable('trust proxy');
-    server.use(morgan('dev', {
+
+    // ---------------
+    // PORT
+    // ---------------
+    server.set('port', port);
+
+    // ---------------
+    // MULTER
+    // ---------------
+    const multerDefault = { dest: expressConfig.uploadPath || 'public/files' };
+    const multerCustom = expressConfig.multer ? expressConfig.multer : {};
+    const upload = multer({ ...multerDefault, ...multerCustom });
+
+    // ---------------
+    // MORGAN
+    // ---------------
+    const morganDefault = {
+      format: 'dev',
       skip: ((req, res) => res.statusCode < 400)
-    }));
+    };
+
+    const morganCustom = expressConfig.morgan ? expressConfig.morgan : {};
+    const morganConfig = { ...morganDefault, ...morganCustom };
+    server.use(morgan(morganConfig.format, morganConfig));
+
+    // ---------------
+    // USER AGENT
+    // ---------------
     server.use(useragent.express());
-    server.use(compression());
+
+    // ---------------
+    // COMPRESSION
+    // ---------------
+    server.use(compression( expressConfig.compression || {} ));
+
+    // ---------------
+    // COOKIES
+    // ---------------
     if (cookies && cookies.enabled) {
       const cookiesSecretKey = cookies && cookies.secret ? cookies.secret : '';
       server.use(cookieParser(cookiesSecretKey));
     }
-    server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
-    server.use(helmet({ contentSecurityPolicy: app.PRODUCTION ? true : false }));
+
+    // ---------------
+    // EXPRESS JSON
+    // ---------------
+    const expressJSONDefault = {};
+    const expressJSONCustom = expressConfig.json ? expressConfig.json : {};
+    server.use(express.json( { ...expressJSONDefault, ...expressJSONCustom } ));
+
+    // ---------------
+    // EXPRESS FORM DATA
+    // ---------------
+    const urlencodedDefault = { extended: true };
+    const urlencodedCustom = expressConfig.urlencoded ? expressConfig.urlencoded : {};
+    server.use(express.urlencoded({ ...urlencodedDefault, ...urlencodedCustom }));
+
+    // ---------------
+    // HELMET
+    // ---------------
+    const helmetDefault = { contentSecurityPolicy: false };
+    const helmetCustom = expressConfig.helmet ? expressConfig.helmet : {};
+    server.use(helmet( { ...helmetDefault, ...helmetCustom } ));
+
+    // ---------------
+    // RESPONSES
+    // ---------------
     server.use(responses);
 
+    // ---------------
+    // WEBP MIDDLEWARE (PUBLIC PATH)
+    // ---------------
     if ( app.config.webp.enabled) {
+      const cacheDir = `${process.cwd()}/public/cache-webp`;
+      const webpConfig = {
+        quality: app.config.webp.quality || 80,
+        preset: app.config.webp.preset || 'photo',
+        cacheDir: app.config.webp.cacheDir || cacheDir
+      };
       server.use(webp(`${process.cwd()}/public`, webpConfig));
     }
 
+    // ---------------
+    // PUBLIC PATH
+    // ---------------
     server.use(express.static(`${process.cwd()}/public`));
-    server.use((req, res, next) => {
+
+    // ---------------
+    // FRAMEGUARD
+    // ---------------
+    if (expressConfig.frameguard) {
+      if (Array.isArray(expressConfig.frameguard)) {
+        expressConfig.frameguard.forEach( (frame) => {
+          server.use(frameguard(frame));
+        });
+      } else {
+        server.use(frameguard(expressConfig.frameguard));
+      }
+    }
+
+    // ---------------
+    // PROTOCOL & POWERED BY
+    // ---------------
+    server.use( (req, res, next) => {
+
       const proto = req.secure ? 'https' : 'http';
       const forwarded = req.headers['x-forwaded-proto'] || null;
       const currentProtocol = (forwarded || proto).split('://')[0];
       req.protocol = currentProtocol;
+
+      if (expressConfig.poweredBy) {
+        res.setHeader('X-Powered-By', expressConfig.poweredBy);
+      }
+
       next();
+
     });
 
-    if (settings.config) {
-      if (!settings.config.poweredBy) {
-        server.disable('x-powered-by');
-      }
-      if (settings.config.frameguard) {
-        if (Array.isArray(settings.config.frameguard)) {
-          settings.config.frameguard.forEach( (frame) => {
-            server.use(frameguard(frame));
-          });
-        } else {
-          server.use(frameguard(settings.config.frameguard));
-        }
-      }
-    }
-
+    // ---------------
+    // REQUEST OPTIONS
+    // ---------------
     server.options('*', (req, res) => {
 
-      /**
-       * CORS
-       */
+      // ---------------
+      // CORS
+      // ---------------
       if (cors.enabled) {
         let tmpCustomHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
         tmpCustomHeaders = tmpCustomHeaders.concat(cors.headers || []);
@@ -127,60 +199,58 @@ module.exports = {
 
     });
 
-    // Set Port
-    server.set('port', port);
-
-    // Set Views
+    // ---------------
+    // VIEWS
+    // ---------------
     server.set('views', views.path);
-    if (views.engine === 'nunjucks') {
-      const envNunjucks = nunjucks.configure(views.path, {
-        express: server,
-        autoescape: true,
-        watch: !app.PRODUCTION
+
+    const envNunjucks = nunjucks.configure(views.path, {
+      express: server,
+      autoescape: true,
+      watch: !app.PRODUCTION
+    });
+
+    app.server.views._engine = envNunjucks;
+
+    envNunjucks.addGlobal('app', app);
+
+    if (views.globals && Array.isArray(views.globals)) {
+      views.globals.forEach((global) => {
+        Object.keys(global || []).forEach((i) => {
+          envNunjucks.addGlobal(i, global[i]);
+        });
       });
-
-      app.server.views._engine = envNunjucks;
-
-      envNunjucks.addGlobal('app', app);
-
-      if (views.globals && Array.isArray(views.globals)) {
-        views.globals.forEach((global) => {
-          Object.keys(global || []).forEach((i) => {
-            envNunjucks.addGlobal(i, global[i]);
-          });
-        });
-      }
-
-      if (views.filters && Array.isArray(views.filters)) {
-        views.filters.forEach((filter) => {
-          Object.keys(filter || []).forEach((i) => {
-            envNunjucks.addFilter(i, filter[i]);
-          });
-        });
-      }
-
-      if (views.extensions && Array.isArray(views.extensions)) {
-        views.extensions.forEach((extension) => {
-          Object.keys(extension || []).forEach((i) => {
-            envNunjucks.addExtension(i, extension[i]);
-          });
-        });
-      }
-    } else {
-      server.set('view engine', views.engine || 'ejs');
     }
 
-    function haltOnTimedout(req, res, next) {
+    if (views.filters && Array.isArray(views.filters)) {
+      views.filters.forEach((filter) => {
+        Object.keys(filter || []).forEach((i) => {
+          envNunjucks.addFilter(i, filter[i]);
+        });
+      });
+    }
+
+    if (views.extensions && Array.isArray(views.extensions)) {
+      views.extensions.forEach((extension) => {
+        Object.keys(extension || []).forEach((i) => {
+          envNunjucks.addExtension(i, extension[i]);
+        });
+      });
+    }
+
+    // ---------------
+    // TIMEOUT
+    // ---------------
+    server.use(timeout( expressConfig.timeout || 120000 ));
+    server.use( (req, res, next) => {
       if (!req.timedout) {
         next();
       }
-    }
-    server.use(timeout(app.server.timeout !== undefined ? app.server.timeout : 120000));
-    server.use(haltOnTimedout);
+    });
 
-    /**
-     * Json Web Token
-     */
+    // ---------------
+    // JWT
+    // ---------------
     if (jwt.enabled) {
 
       // JWT (secret key)
@@ -199,9 +269,9 @@ module.exports = {
 
     }
 
-    /**
-     * CORS
-     */
+    // ---------------
+    // CORS
+    // ---------------
     if (cors.enabled) {
 
       server.use(cors.path, (req, res, next) => {
@@ -223,6 +293,10 @@ module.exports = {
 
       });
     }
+
+    // ---------------
+    // ROUTES
+    // ---------------
 
     const {
       routes
@@ -310,7 +384,9 @@ module.exports = {
 
     });
 
-    // HTTP 404
+    // ---------------
+    // ERROR 404
+    // ---------------
     server.use((req, res) => {
       if (+res.statusCode >= 500 && +res.statusCode < 600) {
         throw new Error();
@@ -318,7 +394,9 @@ module.exports = {
       res.status(404).render(`${views.path}/_shared/errors/404.html`);
     });
 
-    // HTTP 5XX
+    // ---------------
+    // ERROR 5XX
+    // ---------------
     server.use((err, req, res) => {
       const status = err.status || res.statusCode || 500;
       res.status(status);
@@ -337,7 +415,9 @@ module.exports = {
       }
     });
 
-    // Server Start
+    // ---------------
+    // SOCKETS
+    // ---------------
     if (sockets.enabled) {
 
       const io = socketio.listen(server.listen(port));
@@ -425,6 +505,9 @@ module.exports = {
       return;
     }
 
+    // ---------------
+    // START SERVER
+    // ---------------
     server.listen(server.get('port'), () => {
       app.server = {
         ...app.server,
