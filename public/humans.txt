@@ -1,14 +1,8 @@
 /* humanstxt.org */
 
 /* TEAM */
-Sergio Martinez
-@misterymotion
-
 Jose Paternina
 @josedaniel
 
 Ivan Melendez
 @argordmel
-
-Romel Perez
-romelperez.com
