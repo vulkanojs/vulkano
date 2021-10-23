@@ -55,8 +55,10 @@ module.exports = {
   mode: String(process.env.NODE_ENV || 'development').toLowerCase(),
 
   stats: {
+    modules: false,
     colors: true,
-    env: true
+    env: true,
+    errorDetails: true
   },
 
   module: {
