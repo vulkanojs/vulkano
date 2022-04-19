@@ -19,22 +19,6 @@ const useBabelLoader = {
   }
 };
 
-// ESLint Loader
-const useESLintLoader = {
-  test: /\.js$/,
-  enforce: 'pre',
-  exclude: /(node_modules)/,
-  use: {
-    loader: 'eslint-loader',
-    options: {
-      configFile: path.resolve(__dirname, './.eslintrc'),
-      ignore: path.resolve(__dirname, './.eslintignore'),
-      failOnWarning: false,
-      failOnError: false
-    }
-  }
-};
-
 // Underscore Loader
 const useUnderscoreLoader = {
   test: /\.html$/,
@@ -55,7 +39,6 @@ module.exports = {
   mode: String(process.env.NODE_ENV || 'development').toLowerCase(),
 
   stats: {
-    modules: false,
     colors: true,
     env: true,
     errorDetails: true
@@ -65,7 +48,6 @@ module.exports = {
 
     rules: [
       useBabelLoader,
-      useESLintLoader,
       useUnderscoreLoader
     ]
 

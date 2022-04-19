@@ -1,9 +1,10 @@
 {
   "root": true,
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "extends": "airbnb",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "requireConfigFile": false,
+    "ecmaVersion": 8,
     "sourceType": "module"
   },
   "env": {
@@ -26,7 +27,7 @@
   },
   "settings": {
     "react": {
-      "version": "latest"
+      "version": "999.999.999"
     }
   },
   "rules": {

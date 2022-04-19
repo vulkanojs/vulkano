@@ -1,10 +1,12 @@
 const gulpBase = require('./gulp.base');
 
+const port = process.env.PORT || 8000;
+
 // export tasks
 const tasks = gulpBase({
 
   server: {
-    proxy: 'localhost:5000'
+    proxy: `localhost:${port}`
   },
 
   scripts: {

@@ -1,5 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
+
 const baseConfig = require('./webpack.base');
 
 const env = String(process.env.NODE_ENV || 'development').toLowerCase();
@@ -9,7 +11,16 @@ const pluginDefinePlugin = new webpack.DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify(env)
 });
 
-const plugins = [pluginDefinePlugin];
+// ESLint Options
+const ESLitOptions = {
+  failOnWarning: false,
+  failOnError: false
+};
+
+const plugins = [
+  pluginDefinePlugin,
+  new ESLintPlugin(ESLitOptions)
+];
 
 const config = Object.assign(baseConfig, {
   entry: {
