@@ -4,7 +4,7 @@
 
 const express = require('express');
 const frameguard = require('frameguard');
-const socketio = require('socket.io');
+const { Server } = require('socket.io');
 const nunjucks = require('nunjucks');
 const morgan = require('morgan');
 const compression = require('compression');
@@ -420,14 +420,16 @@ module.exports = {
     // ---------------
     if (sockets.enabled) {
 
-      const io = socketio.listen(server.listen(port));
-
-      io.set('heartbeat timeout', +sockets.timeout || 4000);
-      io.set('heartbeat interval', +sockets.interval || 2000);
+      const socketProps = {
+        pingTimeout: +sockets.timeout || 4000,
+        pingInterval: +sockets.interval || 2000
+      };
 
       if (sockets.cors) {
-        io.origins( sockets.cors);
+        socketProps.cors = sockets.cors || {};
       }
+
+      const io = new Server(server.listen(port), socketProps);
 
       // next line is the money
       global.io = io;
