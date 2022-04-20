@@ -19,7 +19,7 @@ const tasks = gulpBase({
 
   sass: {
     files: [
-      'client/scss/**/*.scss'
+      'client/**/*.scss'
     ],
     includePaths: [
       './',
