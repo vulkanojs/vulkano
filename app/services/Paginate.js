@@ -38,7 +38,7 @@ module.exports = {
     const perPage = Number(query.per_page) || Number(query.perPage) || 30;
     const fields = query.fields || props.fields || [];
     const sort = query.sort || props.sort || null;
-    const search = query.search || null;
+    const searchType = (query.searchType || '').toLowerCase().replace('-', '');
 
     const result = _.omit({
       page,
@@ -50,16 +50,30 @@ module.exports = {
 
     // Filter by search
     if (search) {
+
       const searchBy = props.searchBy || [];
       const items = [];
+
       searchBy.forEach( (item) => {
+
         const row = {};
-        row[item] = new RegExp(['.*', Utils.accentToRegex(search), '*.'].join(''), 'i');
+
+        if (searchType === 'startwith' || searchType === 'start') {
+          row[item] = new RegExp(['^', Utils.accentToRegex(search), '*.'].join(''), 'i');
+        } else if (searchType === 'endwith' || searchType === 'end') {
+          row[item] = new RegExp(['.*', Utils.accentToRegex(search)].join(''), 'i');
+        } else {
+          row[item] = new RegExp(['.*', Utils.accentToRegex(search), '*.'].join(''), 'i');
+        }
+
         items.push(row);
+
       });
+
       if (items.length > 0) {
         result.search = { $or: items };
       }
+
     }
 
     return {
