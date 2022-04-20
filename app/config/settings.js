@@ -34,7 +34,7 @@ module.exports = {
   // Express Settings
   express: {
 
-    port: 5000,
+    port: 8000,
 
     uploadPath: 'public/files',
 
