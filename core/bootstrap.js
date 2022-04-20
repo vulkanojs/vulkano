@@ -3,6 +3,11 @@
  *
  */
 
+/**
+ * Bootstrap.js
+ *
+ */
+
 const path = require('path');
 const moment = require('moment');
 const merge = require('deepmerge');
@@ -150,13 +155,13 @@ module.exports = function loadBootstrapApplication() {
         connection
       } = database || {};
 
-      const startup = [];
+      const serverConfig = [];
 
-      startup.push(`ENV: ${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
-      startup.push(' | ');
-      startup.push(`PORT: ${colors.fg.green}${app.server.get('port')}${colors.reset}`);
+      serverConfig.push(`ENV: ${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
+      serverConfig.push(' | ');
+      serverConfig.push(`PORT: ${colors.fg.green}${app.server.get('port')}${colors.reset}`);
 
-      console.log(startup.join(''));
+      console.log(serverConfig.join(''));
 
       if (connection) {
         console.log('DATABASE:', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.green}EMPTY${colors.reset}`);
@@ -166,7 +171,13 @@ module.exports = function loadBootstrapApplication() {
         console.log(`${colors.fg.blue}The value for config.settings.database.connection is empty. Skipping database connection.`);
       }
 
-      console.log('STARTUP TIME:', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      const nodeConfig = [];
+      const nodeVersion = process.version.padEnd(env.length - 1, ' ');
+      nodeConfig.push(`NODE: ${colors.fg.green}${nodeVersion}${colors.reset}`);
+      nodeConfig.push(' | ');
+      nodeConfig.push('STARTUP: ', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      console.log(nodeConfig.join(''));
+
       console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
 
       // Run custom callback after init vulkano
