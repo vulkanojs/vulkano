@@ -25,6 +25,7 @@ module.exports = {
     config: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      // family: 4 // 4 (IPv4), 6 (IPv6), or null (default: OS family)
       // useFindAndModify: false,
       // useCreateIndex: true
     }
