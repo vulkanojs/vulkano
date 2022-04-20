@@ -1,5 +1,3 @@
-const path = require('path');
-
 // Babel Loader
 const useBabelLoader = {
   test: /\.js$/,
@@ -34,6 +32,14 @@ const useUnderscoreLoader = {
   }
 };
 
+// Vue Loader
+const useVueLoader = {
+  test: /\.vue$/,
+  use: {
+    loader: 'vue-loader'
+  }
+};
+
 module.exports = {
 
   mode: String(process.env.NODE_ENV || 'development').toLowerCase(),
@@ -48,6 +54,7 @@ module.exports = {
 
     rules: [
       useBabelLoader,
+      useVueLoader,
       useUnderscoreLoader
     ]
 
