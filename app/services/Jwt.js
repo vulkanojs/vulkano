@@ -1,4 +1,4 @@
-const JWT = require('express-jwt');
+const { expressjwt: JWT } = require('express-jwt');
 const jwtSimple = require('jwt-simple');
 
 module.exports = {
