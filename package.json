@@ -110,7 +110,6 @@
     "enzyme": "^3.11.0",
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
