@@ -1,4 +1,4 @@
-/* global __dirname, Serializer */
+/* global Serializer */
 
 /**
  * Serializers
@@ -47,11 +47,18 @@ module.exports = {
   _convert(model, data) {
 
     const props = AllSerializers[model] || {};
+
     if (!props.attributes) {
       return data;
     }
     const result = new JSONAPISerializer(model, data, props || {});
-    return Object.assign({}, result, { serialized: true });
+
+    const merged = {
+      ...result,
+      serialized: true
+    };
+
+    return merged;
 
   }
 
