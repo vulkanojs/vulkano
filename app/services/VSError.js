@@ -1,5 +1,3 @@
-/* global app */
-
 const Promise = require('bluebird');
 
 function VSError(msg, code) {
