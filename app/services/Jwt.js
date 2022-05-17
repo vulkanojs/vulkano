@@ -6,15 +6,21 @@ module.exports = {
   init(opts) {
 
     const {
-      jwt
+      jwt,
+      // Express config folder in app/confg/express
+      express
     } = app.config || {};
+
+    const {
+      jwt: expressJwt,
+    } = express || {};
 
     const {
       key,
       header,
       queryParameter,
       cookieName
-    } = jwt || {};
+    } = jwt || expressJwt || {};
 
     const config = {
 
