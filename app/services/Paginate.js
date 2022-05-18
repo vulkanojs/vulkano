@@ -1,5 +1,3 @@
-/* global Utils */
-
 const _ = require('underscore');
 
 module.exports = {
@@ -38,6 +36,7 @@ module.exports = {
     const perPage = Number(query.per_page) || Number(query.perPage) || 30;
     const fields = query.fields || props.fields || [];
     const sort = query.sort || props.sort || null;
+    const search = query.search || props.search || null;
     const searchType = (query.searchType || '').toLowerCase().replace('-', '');
 
     const result = _.omit({
