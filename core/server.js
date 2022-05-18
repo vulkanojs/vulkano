@@ -14,6 +14,7 @@ const timeout = require('connect-timeout');
 const useragent = require('express-useragent');
 const webp = require('webp-middleware');
 const cookieParser = require('cookie-parser');
+const merge = require('deepmerge');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -32,21 +33,70 @@ module.exports = {
 
     const jwtMiddleware = JWT;
 
+    // Common config by filename
     const {
       cors,
       jwt,
       settings,
       sockets,
-      cookies
+      cookies,
+      // Folder express config files
+      express: expressServerConfig
     } = app.config;
 
+    // express config by file in settings.js
     const {
-      express: expressUserConfig
+      port: expressUserPort,
+      express: expressConfigInSettings
     } = settings || {};
 
-    const expressConfig = expressUserConfig || {};
+    // express config by file in app/config/express/settings.js
+    const {
+      settings: expressGeneralSettings
+    } = expressServerConfig || {};
+
+    // express port via file in app/config/express/settings.js
+    const {
+      port: expressSettingsPort
+    } = expressGeneralSettings || {};
+
+    // Express default configuration
+    const expressDefaultConfig = {
+      timeout: 120000,
+      poweredBy: false,
+      port: process.env.PORT || expressUserPort || expressSettingsPort || 8000,
+      cors: {},
+      cookies: {},
+      jwt: {},
+      multer: {
+        dest: 'public/files'
+      },
+      morgan: {
+        format: 'dev',
+        skip: ((req, res) => res.statusCode < 400)
+      },
+      compression: {},
+      json: {},
+      urlencoded: {
+        extended: true
+      },
+      helmet: {
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false
+      },
+      frameguard: null
+    };
+
+    // Merge all express configuration: config/file.js, config/express/file.js, config/settings.js
+    const expressConfig = merge.all([
+      { cookies, jwt, cors },
+      expressDefaultConfig,
+      expressServerConfig || {},
+      expressConfigInSettings || {},
+    ]);
+
     const views = app.server.views || {};
-    const port = process.env.PORT || settings.port || expressConfig.port || 5000;
+    const port = process.env.PORT || expressUserPort;
 
     // Middleware
     const middleware = app.config.middleware || ((req, res, next) => {
@@ -59,28 +109,19 @@ module.exports = {
     server.enable('trust proxy');
 
     // ---------------
-    // PORT
+    // PORT - File: app/config/express/settings.js
     // ---------------
     server.set('port', port);
 
     // ---------------
-    // MULTER
+    // MULTER - File: app/config/express/multer.js
     // ---------------
-    const multerDefault = { dest: expressConfig.uploadPath || 'public/files' };
-    const multerCustom = expressConfig.multer ? expressConfig.multer : {};
-    const upload = multer({ ...multerDefault, ...multerCustom });
+    const upload = multer(expressConfig.multer);
 
     // ---------------
-    // MORGAN
+    // MORGAN - File: app/config/express/morgan.js
     // ---------------
-    const morganDefault = {
-      format: 'dev',
-      skip: ((req, res) => res.statusCode < 400)
-    };
-
-    const morganCustom = expressConfig.morgan ? expressConfig.morgan : {};
-    const morganConfig = { ...morganDefault, ...morganCustom };
-    server.use(morgan(morganConfig.format, morganConfig));
+    server.use(morgan(expressConfig.morgan.format, expressConfig.morgan));
 
     // ---------------
     // USER AGENT
@@ -88,38 +129,35 @@ module.exports = {
     server.use(useragent.express());
 
     // ---------------
-    // COMPRESSION
+    // COMPRESSION - File: app/config/express/compression.js
     // ---------------
     server.use(compression( expressConfig.compression || {} ));
 
     // ---------------
-    // COOKIES
+    // COOKIES - File: app/config/express/cookies.js
     // ---------------
-    if (cookies && cookies.enabled) {
-      const cookiesSecretKey = cookies && cookies.secret ? cookies.secret : '';
+    if (expressConfig.cookies && expressConfig.cookies.enabled) {
+      const cookiesSecretKey = expressConfig.cookies && expressConfig.cookies.secret ? expressConfig.cookies.secret : '';
+      if (!cookiesSecretKey) {
+        console.log('Warning: Please set cookie secret key in the file config/express/cookie.js');
+      }
       server.use(cookieParser(cookiesSecretKey));
     }
 
     // ---------------
-    // EXPRESS JSON
+    // EXPRESS JSON - File: app/config/express/json.js
     // ---------------
-    const expressJSONDefault = {};
-    const expressJSONCustom = expressConfig.json ? expressConfig.json : {};
-    server.use(express.json( { ...expressJSONDefault, ...expressJSONCustom } ));
+    server.use(express.json(expressConfig.json));
 
     // ---------------
-    // EXPRESS FORM DATA
+    // EXPRESS FORM DATA - File: app/config/express/urlencoded.js
     // ---------------
-    const urlencodedDefault = { extended: true };
-    const urlencodedCustom = expressConfig.urlencoded ? expressConfig.urlencoded : {};
-    server.use(express.urlencoded({ ...urlencodedDefault, ...urlencodedCustom }));
+    server.use(express.urlencoded(expressConfig.urlencoded));
 
     // ---------------
-    // HELMET
+    // HELMET - File: app/config/express/helmet.js
     // ---------------
-    const helmetDefault = { contentSecurityPolicy: false };
-    const helmetCustom = expressConfig.helmet ? expressConfig.helmet : {};
-    server.use(helmet( { ...helmetDefault, ...helmetCustom } ));
+    server.use(helmet(expressConfig.helmet));
 
     // ---------------
     // RESPONSES
@@ -127,25 +165,25 @@ module.exports = {
     server.use(responses);
 
     // ---------------
-    // WEBP MIDDLEWARE (PUBLIC PATH)
+    // WEBP MIDDLEWARE - File: app/config/express/webp.js
     // ---------------
-    if ( app.config.webp.enabled) {
+    if (expressConfig.webp && expressConfig.webp.enabled) {
       const cacheDir = `${process.cwd()}/public/cache-webp`;
       const webpConfig = {
-        quality: app.config.webp.quality || 80,
-        preset: app.config.webp.preset || 'photo',
-        cacheDir: app.config.webp.cacheDir || cacheDir
+        quality: expressConfig.webp.quality || 80,
+        preset: expressConfig.webp.preset || 'photo',
+        cacheDir: expressConfig.webp.cacheDir || cacheDir
       };
       server.use(webp(`${process.cwd()}/public`, webpConfig));
     }
 
     // ---------------
-    // PUBLIC PATH
+    // PUBLIC PATH - File: app/config/settings.js
     // ---------------
     server.use(express.static(`${process.cwd()}/public`));
 
     // ---------------
-    // FRAMEGUARD
+    // FRAMEGUARD - File: app/config/express/frameguard.js
     // ---------------
     if (expressConfig.frameguard) {
       if (Array.isArray(expressConfig.frameguard)) {
@@ -158,7 +196,7 @@ module.exports = {
     }
 
     // ---------------
-    // PROTOCOL & POWERED BY
+    // PROTOCOL & POWERED BY - File: app/config/settings.js
     // ---------------
     server.use( (req, res, next) => {
 
@@ -176,17 +214,17 @@ module.exports = {
     });
 
     // ---------------
-    // REQUEST OPTIONS
+    // REQUEST OPTIONS - File: app/config/express/cors.js
     // ---------------
     server.options('*', (req, res) => {
 
       // ---------------
       // CORS
       // ---------------
-      if (cors.enabled) {
+      if (expressConfig.cors && expressConfig.cors.enabled) {
         let tmpCustomHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
-        tmpCustomHeaders = tmpCustomHeaders.concat(cors.headers || []);
-        res.header('Access-Control-Allow-Origin', cors.origin);
+        tmpCustomHeaders = tmpCustomHeaders.concat(expressConfig.cors.headers || []);
+        res.header('Access-Control-Allow-Origin', expressConfig.cors.origin);
         res.header('Access-Control-Allow-Headers', tmpCustomHeaders.join(', '));
       } else {
         res.header('Access-Control-Allow-Origin', '*');
@@ -198,6 +236,62 @@ module.exports = {
       res.status(200).end();
 
     });
+
+    // ---------------
+    // TIMEOUT - File: app/config/settings.js
+    // ---------------
+    server.use(timeout( expressConfig.timeout || 120000 ));
+    server.use( (req, res, next) => {
+      if (!req.timedout) {
+        next();
+      }
+    });
+
+    // ---------------
+    // JWT - File: app/config/express/jwt.js
+    // ---------------
+    if (expressConfig.jwt && expressConfig.jwt.enabled) {
+
+      // JWT (secret key)
+      server.use(expressConfig.jwt.path || '*', jwtMiddleware.init().unless({
+        path: expressConfig.jwt.ignore || []
+      }));
+
+      // JWT  Handler error
+      server.use((err, req, res, next) => {
+        if (err && err.name === 'UnauthorizedError') {
+          res.status(401).jsonp({ success: false, error: 'Invalid token' });
+        } else {
+          next();
+        }
+      });
+
+    }
+
+    // ---------------
+    // CORS - File: app/config/express/cors.js
+    // ---------------
+    if (expressConfig.cors && expressConfig.cors.enabled) {
+
+      server.use(expressConfig.cors.path, (req, res, next) => {
+
+        // Enable CORS.
+        let tmpCorsHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
+        tmpCorsHeaders = tmpCorsHeaders.concat(expressConfig.cors.headers || []);
+
+        res.header('Access-Control-Allow-Origin', expressConfig.cors.origin);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', tmpCorsHeaders.join(', '));
+
+        // Disable CACHE in API resources.
+        res.header('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
+        res.header('Pragma', 'no-cache'); // HTTP 1.0.
+        res.header('Expires', '0'); // Proxies.
+
+        next();
+
+      });
+    }
 
     // ---------------
     // VIEWS
@@ -235,62 +329,6 @@ module.exports = {
         Object.keys(extension || []).forEach((i) => {
           envNunjucks.addExtension(i, extension[i]);
         });
-      });
-    }
-
-    // ---------------
-    // TIMEOUT
-    // ---------------
-    server.use(timeout( expressConfig.timeout || 120000 ));
-    server.use( (req, res, next) => {
-      if (!req.timedout) {
-        next();
-      }
-    });
-
-    // ---------------
-    // JWT
-    // ---------------
-    if (jwt.enabled) {
-
-      // JWT (secret key)
-      server.use(jwt.path || '*', jwtMiddleware.init().unless({
-        path: jwt.ignore || []
-      }));
-
-      // JWT  Handler error
-      server.use((err, req, res, next) => {
-        if (err && err.name === 'UnauthorizedError') {
-          res.status(401).jsonp({ success: false, error: 'Invalid token' });
-        } else {
-          next();
-        }
-      });
-
-    }
-
-    // ---------------
-    // CORS
-    // ---------------
-    if (cors.enabled) {
-
-      server.use(cors.path, (req, res, next) => {
-
-        // Enable CORS.
-        let tmpCorsHeaders = ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept'];
-        tmpCorsHeaders = tmpCorsHeaders.concat(cors.headers || []);
-
-        res.header('Access-Control-Allow-Origin', cors.origin);
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', tmpCorsHeaders.join(', '));
-
-        // Disable CACHE in API resources.
-        res.header('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
-        res.header('Pragma', 'no-cache'); // HTTP 1.0.
-        res.header('Expires', '0'); // Proxies.
-
-        next();
-
       });
     }
 

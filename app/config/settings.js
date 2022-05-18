@@ -13,7 +13,11 @@
 
 module.exports = {
 
+  // Custom Server Config
   host: process.env.HOST || 'api.production.dev',
+
+  // Port
+  port: process.env.PORT || 8000,
 
   // Connection to Database
   database: {
@@ -29,17 +33,6 @@ module.exports = {
       // useFindAndModify: false,
       // useCreateIndex: true
     }
-
-  },
-
-  // Express Settings
-  express: {
-
-    port: 8000,
-
-    uploadPath: 'public/files',
-
-    poweredBy: false
 
   }
 
