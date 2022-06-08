@@ -1,3 +1,5 @@
+/* global Jwt */
+
 /**
  *
  * Sockets Config
@@ -28,15 +30,72 @@ module.exports = {
 
   },
 
+  verifyToken(socket) {
+
+    const {
+      token
+    } = socket.handshake.auth || {};
+
+    if (token === null || typeof token === 'undefined' || !token) {
+      return false;
+    }
+
+    // Development
+    let payload = Jwt.decode(token);
+
+    // Production
+    if (!payload) {
+      payload = Jwt.decode(token);
+    }
+
+    const {
+      data
+    } = payload || {};
+
+    const {
+      user
+    } = data || {};
+
+    const {
+      id
+    } = user || {};
+
+    if (!id) {
+      return false;
+    }
+
+    return user;
+
+  },
+
+  middleware(socket, next) {
+
+    // Security
+    // const user = app.config.sockets.verifyToken(socket);
+
+    // const {
+    //   id
+    // } = user || {};
+
+    // if (!id) {
+    //   next(new Error(`Invalid user ${id || ''}`));
+    // }
+
+    // // eslint-disable-next-line no-param-reassign
+    // socket.request.user = user || {};
+
+    next();
+
+  },
+
   onConnect: (socket) => {
 
     app.config.sockets.connections.users += 1;
-    // io.sockets.emit('admin:users:counter', { counter: app.config.sockets.connections.users });
+
     console.log('connections', app.config.sockets.connections.users);
 
     socket.on('disconnect', () => {
       app.config.sockets.connections.users -= 1;
-      // io.sockets.emit('admin:users:counter', { counter: app.config.sockets.connections.users });
       console.log('connections', app.config.sockets.connections.users);
     });
 
