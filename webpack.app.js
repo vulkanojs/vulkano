@@ -34,7 +34,7 @@ const config = Object.assign(baseConfig, {
     app: './client/index.js'
   },
   output: {
-    path: path.resolve(process.cwd(), './default/public/'),
+    path: path.resolve(process.cwd(), './public/'),
     filename: 'js/[name].js'
   },
   resolve: {
