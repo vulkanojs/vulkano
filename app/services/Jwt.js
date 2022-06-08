@@ -68,6 +68,44 @@ module.exports = {
 
     return jwtSimple.decode(token, customKey || key);
 
+  },
+
+  socket(socket) {
+
+    const {
+      token
+    } = socket.handshake.auth || {};
+
+    if (token === null || typeof token === 'undefined' || !token) {
+      return false;
+    }
+
+    // Development
+    let payload = this.decode(token);
+
+    // Production
+    if (!payload) {
+      payload = this.decode(token);
+    }
+
+    const {
+      data
+    } = payload || {};
+
+    const {
+      user
+    } = data || {};
+
+    const {
+      id
+    } = user || {};
+
+    if (!id) {
+      return false;
+    }
+
+    return user;
+
   }
 
 };

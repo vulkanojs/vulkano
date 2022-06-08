@@ -30,59 +30,21 @@ module.exports = {
 
   },
 
-  verifyToken(socket) {
+  middleware(socket, next) {
 
-    const {
-      token
-    } = socket.handshake.auth || {};
-
-    if (token === null || typeof token === 'undefined' || !token) {
-      return false;
-    }
-
-    // Development
-    let payload = Jwt.decode(token);
-
-    // Production
-    if (!payload) {
-      payload = Jwt.decode(token);
-    }
-
-    const {
-      data
-    } = payload || {};
-
-    const {
-      user
-    } = data || {};
+    // Security
+    const user = Jwt.socket(socket);
 
     const {
       id
     } = user || {};
 
     if (!id) {
-      return false;
+      next(new Error(`Invalid user ${id || 'or token'}`));
     }
 
-    return user;
-
-  },
-
-  middleware(socket, next) {
-
-    // Security
-    // const user = app.config.sockets.verifyToken(socket);
-
-    // const {
-    //   id
-    // } = user || {};
-
-    // if (!id) {
-    //   next(new Error(`Invalid user ${id || ''}`));
-    // }
-
-    // // eslint-disable-next-line no-param-reassign
-    // socket.request.user = user || {};
+    // eslint-disable-next-line no-param-reassign
+    socket.request.user = user || {};
 
     next();
 
