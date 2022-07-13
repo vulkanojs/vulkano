@@ -24,7 +24,7 @@ module.exports = {
   totalPages: 0,
 
   // Total items
-  total_items: 0,
+  totalItems: 0,
 
   serializeQuery(_props, query) {
 
@@ -151,7 +151,7 @@ module.exports = {
       });
     } else if (typeof criteria.fields === 'string') {
       const tmpFields = (criteria.fields) ? criteria.fields.split(',') : [];
-      tmpFields.fields.forEach( (f) => {
+      tmpFields.forEach( (f) => {
         fields.push(f);
       });
     }
@@ -224,7 +224,7 @@ module.exports = {
     }
 
     this.cursor = (total >= this.cursor) ? this.cursor : 1;
-    this.total_items = total;
+    this.totalItems = total;
 
     return {
       items: this.items,
@@ -234,7 +234,7 @@ module.exports = {
       next: this.next,
       prev: this.prev,
       totalPages: this.totalPages,
-      totalItems: this.total_items
+      totalItems: this.totalItems
     };
 
   }
