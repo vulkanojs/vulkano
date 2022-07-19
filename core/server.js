@@ -471,7 +471,7 @@ module.exports = {
         socketProps.cors = sockets.cors || {};
       }
 
-      const io = new Server(server.listen(port), socketProps);
+      const io = new Server(server.listen(expressConfig.port), socketProps);
 
       // next line is the money
       global.io = io;
