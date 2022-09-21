@@ -8,6 +8,7 @@ const moment = require('moment');
 const merge = require('deepmerge');
 const _ = require('underscore');
 const Promise = require('bluebird');
+const v8 = require('v8');
 
 global.app = {};
 global._ = _;
@@ -153,8 +154,7 @@ module.exports = function loadBootstrapApplication() {
 
       const serverConfig = [];
 
-      const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
-
+      const nodeVersion = process.version.match(/^v(\d+\.\d+\.\d+)/)[1];
       const portText = app.server.get('port').padEnd(nodeVersion.length, ' ');
       serverConfig.push(` PORT: ${colors.fg.green}${portText}${colors.reset}`);
       serverConfig.push(' | ');
@@ -162,12 +162,16 @@ module.exports = function loadBootstrapApplication() {
 
       console.log(serverConfig.join(''));
 
+      const totalHeapSize = v8.getHeapStatistics().total_available_size;
+      const totalHeapSizeGb = (totalHeapSize / 1024 / 1024 / 1024).toFixed(2);
+
       const nodeConfig = [];
       nodeConfig.push(` NODE: ${colors.fg.green}${nodeVersion}${colors.reset}`);
       nodeConfig.push(' | ');
-      nodeConfig.push(' STARTUP: ', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      nodeConfig.push(' MAX MEM: ', `${colors.fg.green}${totalHeapSizeGb} GB${colors.reset}`);
       console.log(nodeConfig.join(''));
 
+      console.log(' STARTUP: ', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
       console.log(' DATABASE:', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
 
       console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
