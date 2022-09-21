@@ -5,6 +5,7 @@ module.exports = {
       name: 'vulkano',
       script: 'app.js',
       max_memory_restart: '800M',
+      // node_args: '--max_old_space_size=8192',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       env: {
         PORT: 5000,
