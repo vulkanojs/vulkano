@@ -38,6 +38,10 @@ const config = Object.assign(baseConfig, {
     filename: 'js/[name].js'
   },
   resolve: {
+    alias: {
+      '@client': path.resolve(__dirname, './client'),
+      '@cms': path.resolve(__dirname, './cms')
+    },
     modules: [
       './',
       './node_modules/'
