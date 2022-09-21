@@ -138,7 +138,9 @@ module.exports = {
     tmpSort.forEach( (_part) => {
       const part = (_part || '').split('|');
       if (part.length > 1) {
-        sort.sort[part[0].trim()] = part[1].trim().toLowerCase();
+        const desc = part[1].trim().toLowerCase() === 'descending' ? 'desc' : '';
+        const asc = part[1].trim().toLowerCase() === 'ascending' ? 'asc' : '';
+        sort.sort[part[0].trim()] = asc || desc || part[1].trim().toLowerCase();
       }
     });
 
