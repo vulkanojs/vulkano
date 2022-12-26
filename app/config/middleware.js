@@ -1,3 +1,5 @@
+/* global Jwt */
+
 /**
  * Middleware.js
  *
@@ -5,6 +7,15 @@
  *
  */
 module.exports = (req, res, next) => {
+
+  const {
+    auth: authEncripted
+  } = req;
+
+  if (authEncripted) {
+    const decoded = Jwt.decrypt(authEncripted);
+    req.auth = (decoded) ? decoded : {};
+  }
 
   // Remove this line if you need make validations
   next();
