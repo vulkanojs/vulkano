@@ -12,6 +12,8 @@ const AllModels = require('include-all')({
 
 const ActiveRecord = require('../app/services/ActiveRecord');
 
+const Scaffold = require('./scaffold');
+
 const Callbacks = {
 
   beforeSave: (next) => {
@@ -58,12 +60,13 @@ module.exports = function loadModelsApplication() {
 
   Object.keys(AllModels).forEach((i) => {
 
-    const current = AllModels[i];
+    const Current = AllModels[i];
 
     models[i] = {
       ...Callbacks,
+      ...Scaffold(i),
       ...ActiveRecord,
-      ...current
+      ...Current
     };
 
   });

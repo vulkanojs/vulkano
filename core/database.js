@@ -59,6 +59,8 @@ module.exports = function loadDatabaseApplication() {
     mongoose.connect(toConnect, connectionProps);
   }
 
+  // mongoose.set('debug', true);
+
   const db = mongoose.connection;
 
   // Each Model
@@ -93,10 +95,23 @@ module.exports = function loadDatabaseApplication() {
 
       });
 
+      if (!attributes.active) {
+        attributes.active = {
+          type: Boolean,
+          default: true
+        };
+      }
+
       if (!attributes.createdAt) {
         attributes.createdAt = {
           type: Date,
           default: Date.now
+        };
+      }
+
+      if (!attributes.updatedAt) {
+        attributes.updatedAt = {
+          type: Date
         };
       }
 
