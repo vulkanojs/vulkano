@@ -2,30 +2,6 @@ const _ = require('underscore');
 
 module.exports = {
 
-  // Array of elements
-  items: [],
-
-  // Current cursor or records
-  cursor: 1,
-
-  // Page number
-  page: 1,
-
-  // Items per page
-  perPage: 20,
-
-  // Next page
-  next: false,
-
-  // Prev page
-  prev: false,
-
-  // Total pages
-  totalPages: 0,
-
-  // Total items
-  total_items: 0,
-
   serializeQuery(_props, query) {
 
     const props = typeof _props === 'object'
@@ -137,8 +113,8 @@ module.exports = {
     let criteria = query || {};
 
     // Setup
-    this.page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
-    this.perPage = +criteria.per_page || +criteria.perPage || 50;
+    const page = criteria.page === 'all' ? 'all' : ( parseInt(criteria.page, 10) || 1);
+    const perPage = +criteria.per_page || +criteria.perPage || 50;
 
     delete criteria.page;
     delete criteria.per_page;
@@ -151,7 +127,7 @@ module.exports = {
       });
     } else if (typeof criteria.fields === 'string') {
       const tmpFields = (criteria.fields) ? criteria.fields.split(',') : [];
-      tmpFields.fields.forEach( (f) => {
+      tmpFields.forEach( (f) => {
         fields.push(f);
       });
     }
@@ -162,7 +138,9 @@ module.exports = {
     tmpSort.forEach( (_part) => {
       const part = (_part || '').split('|');
       if (part.length > 1) {
-        sort.sort[part[0].trim()] = part[1].trim().toLowerCase();
+        const desc = part[1].trim().toLowerCase() === 'descending' ? 'desc' : '';
+        const asc = part[1].trim().toLowerCase() === 'ascending' ? 'asc' : '';
+        sort.sort[part[0].trim()] = asc || desc || part[1].trim().toLowerCase();
       }
     });
 
@@ -176,7 +154,7 @@ module.exports = {
     const optPopulate = this.getPopulatedCollections(populate || []);
     const queryModel = _.extend(criteria, {});
 
-    if (this.page === 'all') {
+    if (page === 'all') {
 
       const optsModel = _.extend(sort, { populate: optPopulate });
       return Model.find(queryModel, fields.join(' '), optsModel);
@@ -188,8 +166,8 @@ module.exports = {
       .then( (total) => {
 
         const opts = {
-          page: this.page,
-          limit: this.perPage
+          page,
+          limit: perPage
         };
 
         if (fields.length > 0) {
@@ -202,39 +180,39 @@ module.exports = {
 
         return Model
           .paginate(queryModel, optsModel)
-          .then( (data) => this._set(total, data.docs) );
+          .then( (data) => this._set(total, data.docs, page, perPage) );
 
       });
 
   },
 
-  _set(total, items) {
+  _set(total, items, _page, _perPage) {
 
-    this.items = items;
-    this.cursor = (this.page > 1) ? ((this.page * this.perPage) - (this.perPage - 1)) : 1;
-    this.current = this.page;
+    const page = _page || 1;
+    const perPage = _perPage || 30;
 
-    const tmpNext = (((this.perPage * (this.page - 1)) + this.perPage) <= total);
-    this.next = tmpNext ? (this.page + 1) : false;
-    this.prev = (this.page > 1) ? (this.page - 1) : false;
-    this.totalPages = Math.ceil(total / this.perPage);
+    let cursor = (page > 1) ? ((page * perPage) - (perPage - 1)) : 1;
 
-    if ((this.totalPages < this.current) && (total > 0)) {
-      this.prev = false;
+    const tmpNext = (((perPage * (page - 1)) + perPage) <= total);
+    const next = tmpNext ? (page + 1) : false;
+    let prev = (page > 1) ? (page - 1) : false;
+    const totalPages = Math.ceil(total / perPage);
+
+    if ( (totalPages < page) && (total > 0) ) {
+      prev = false;
     }
 
-    this.cursor = (total >= this.cursor) ? this.cursor : 1;
-    this.total_items = total;
+    cursor = (total >= cursor) ? cursor : 1;
 
     return {
-      items: this.items,
-      cursor: this.cursor,
-      page: this.current,
-      perPage: this.perPage,
-      next: this.next,
-      prev: this.prev,
-      totalPages: this.totalPages,
-      totalItems: this.total_items
+      items,
+      cursor,
+      page,
+      perPage,
+      next,
+      prev,
+      totalPages,
+      totalItems: total
     };
 
   }

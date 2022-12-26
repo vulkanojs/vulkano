@@ -53,8 +53,18 @@ module.exports = {
   encode(data) {
 
     const {
+      jwt,
+      // Express config folder in app/confg/express
+      express
+    } = app.config || {};
+
+    const {
+      jwt: expressJwt,
+    } = express || {};
+
+    const {
       key
-    } = app.config.jwt;
+    } = jwt || expressJwt || {};
 
     return jwtSimple.encode(data, key);
 
@@ -63,8 +73,18 @@ module.exports = {
   decode(token, customKey) {
 
     const {
+      jwt,
+      // Express config folder in app/confg/express
+      express
+    } = app.config || {};
+
+    const {
+      jwt: expressJwt,
+    } = express || {};
+
+    const {
       key
-    } = app.config.jwt;
+    } = jwt || expressJwt || {};
 
     return jwtSimple.decode(token, customKey || key);
 

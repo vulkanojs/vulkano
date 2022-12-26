@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
   //
 
   /*
-  if (req.user && +req.user.role !== 1) {
+  if (req.auth && +req.auth.role !== 1) {
     const data = {
       success: false,
       error: 'You don\'t have permissions to access this option.'

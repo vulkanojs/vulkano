@@ -92,11 +92,15 @@ module.exports = {
       { cookies, jwt, cors },
       expressDefaultConfig,
       expressServerConfig || {},
+      expressGeneralSettings || {},
       expressConfigInSettings || {},
     ]);
 
+    if (expressConfig && expressConfig.settings) {
+      delete expressConfig.settings;
+    }
+
     const views = app.server.views || {};
-    const port = process.env.PORT || expressUserPort;
 
     // Middleware
     const middleware = app.config.middleware || ((req, res, next) => {
@@ -111,7 +115,7 @@ module.exports = {
     // ---------------
     // PORT - File: app/config/express/settings.js
     // ---------------
-    server.set('port', port);
+    server.set('port', expressConfig.port);
 
     // ---------------
     // MULTER - File: app/config/express/multer.js
@@ -467,7 +471,7 @@ module.exports = {
         socketProps.cors = sockets.cors || {};
       }
 
-      const io = new Server(server.listen(port), socketProps);
+      const io = new Server(server.listen(expressConfig.port), socketProps);
 
       // next line is the money
       global.io = io;

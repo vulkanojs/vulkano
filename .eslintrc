@@ -1,7 +1,10 @@
 {
   "root": true,
   "parser": "@babel/eslint-parser",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:react/jsx-runtime"
+  ],
   "parserOptions": {
     "requireConfigFile": false,
     "ecmaVersion": 8,
@@ -32,6 +35,15 @@
     "PUBLIC_PATH": true
   },
   "settings": {
+    "import/resolver": {
+      "alias": {
+        "extensions": [".js", ".vue", ".jsx"],
+        "map": [
+          ["@client", "./client"],
+          ["@cms", "./cms"]
+        ]
+      }
+    },
     "react": {
       "version": "999.999.999"
     }
