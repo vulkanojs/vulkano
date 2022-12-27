@@ -1,4 +1,19 @@
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+
 module.exports = {
+
+  getSlug(str, separator) {
+
+    return String(str).replace(/-/g, ' ').normalize('NFD') // split an accented letter in the base letter and the acent
+      .replace(/[\u0300-\u036f]/g, '') // remove all previously split accents
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9 ]/g, '') // remove all chars not letters, numbers and spaces (to be replaced)
+      .replace(/\s+/g, separator || '-');
+
+  },
 
   accentToRegex: (_text) => {
 
@@ -30,6 +45,38 @@ module.exports = {
     });
 
     return text;
+
+  },
+
+  download(url, dest, cb) {
+
+    const file = fs.createWriteStream(dest);
+
+    if (url.indexOf('http:') >= 0) {
+
+      http.get(url, (response) => {
+        response.pipe(file);
+        file.on('finish', () => {
+          file.close(cb);
+        });
+        file.on('error', (error) => {
+          cb(error);
+        });
+      });
+
+      return;
+
+    }
+
+    https.get(url, (response) => {
+      response.pipe(file);
+      file.on('finish', () => {
+        file.close(cb);
+      });
+      file.on('error', (error) => {
+        cb(error);
+      });
+    });
 
   }
 
