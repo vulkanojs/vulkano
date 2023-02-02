@@ -50,6 +50,9 @@ module.exports = {
   // Path to ignore token request
   // Example: ['/api/auth', '/api/auth/forgot', /^\/api\/events/i]
   // you can see https://github.com/jfromaniello/express-unless to more examples
+  //
+  // To allow the enpoint to verify token replace the api path for /^\/api\/auth(?!\/(current))/i
+  //
   // @type Array
   //
   ignore: [
