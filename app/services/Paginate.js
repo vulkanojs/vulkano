@@ -85,12 +85,16 @@ module.exports = {
 
           if (item.fields) {
             populateProps.select = item.fields;
-          }
-          if (item.select) {
+          } else if (item.select) {
             populateProps.select = item.select;
           }
+
           if (item.match) {
             populateProps.match = item.match;
+          }
+
+          if (item.populate) {
+            populateProps.populate = item.populate;
           }
 
         }
