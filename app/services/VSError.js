@@ -1,12 +1,18 @@
 const Promise = require('bluebird');
 
-function VSError(msg, code) {
+function VSError(msg, code, props) {
 
   Error.captureStackTrace(this, this.constructor);
 
+  const {
+    stack
+  } = props || {};
+
   this.message = msg;
   this.statusCode = code || 500;
-  if (app.PRODUCTION) {
+  this.customProps = props || {};
+
+  if (app.PRODUCTION || stack === false ) {
     delete this.stack;
   }
 
@@ -19,7 +25,7 @@ VSError.notFound = (n) => {
 };
 
 // Reject request
-VSError.reject = (text, status) => Promise.reject(new VSError(text, status));
+VSError.reject = (text, status, props) => Promise.reject(new VSError(text, status, props));
 
 // Extending of native error object
 require('util').inherits(VSError, Error);
