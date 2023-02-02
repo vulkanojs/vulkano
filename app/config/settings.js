@@ -19,6 +19,9 @@ module.exports = {
   // Port
   port: process.env.PORT || 8000,
 
+  // Salt for password
+  salt: 'qS~2QWTo]q-91ho4dtz/-,[-WS6+]%8}|@1.@G@V#A9T}LPO,?Qd.|zw!P?5=8S',
+
   // Connection to Database
   database: {
 

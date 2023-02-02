@@ -12,7 +12,37 @@ module.exports = {
   enabled: false,
 
   // Cors
-  cors: '*:*',
+  cors: (req, callback) => {
+
+    const {
+      origin,
+      host,
+    } = req.headers || {};
+
+    const realOrigin = origin || host;
+
+    const allowedOrigin = [
+      'yourdomain.com'
+    ];
+
+    let found = false;
+
+    allowedOrigin.forEach( (o) => {
+
+      if ( (realOrigin || '' ).indexOf(o) !== -1 ) {
+        found = true;
+      }
+
+    });
+
+    if (found) {
+      callback(null, true);
+    } else {
+      console.log('Invalid origin', realOrigin || 'No Origin');
+      callback(new Error(`Invalid origin ${realOrigin} - Socket CORS`));
+    }
+
+  },
 
   // Socket timeout
   timeout: 4000,
@@ -36,11 +66,11 @@ module.exports = {
     const user = Jwt.socket(socket);
 
     const {
-      id
+      _id
     } = user || {};
 
-    if (!id) {
-      next(new Error(`Invalid user ${id || 'or token'}`));
+    if (!_id) {
+      next(new Error(`Invalid user ${_id || 'or token'}`));
     }
 
     // eslint-disable-next-line no-param-reassign
@@ -52,14 +82,37 @@ module.exports = {
 
   onConnect: (socket) => {
 
+    const {
+      request
+    } = socket;
+
     app.config.sockets.connections.users += 1;
 
-    console.log('connections', app.config.sockets.connections.users);
+    const {
+      user
+    } = request;
 
-    socket.on('disconnect', () => {
-      app.config.sockets.connections.users -= 1;
-      console.log('connections', app.config.sockets.connections.users);
-    });
+    if (user && user._id) {
+
+      app.config.sockets.connections.clients[user._id] = user._id;
+
+      io.sockets.emit('users:counter', {
+        counter: app.config.sockets.connections.users,
+      });
+
+      socket.on('disconnect', () => {
+
+        app.config.sockets.connections.users -= 1;
+
+        delete app.config.sockets.connections.clients[user._id];
+
+        io.sockets.emit('users:counter', {
+          counter: app.config.sockets.connections.users,
+        });
+
+      });
+
+    }
 
   },
 
