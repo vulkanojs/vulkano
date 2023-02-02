@@ -468,7 +468,15 @@ module.exports = {
       };
 
       if (sockets.cors) {
-        socketProps.cors = sockets.cors || {};
+        // io.origins( sockets.cors);
+      }
+
+      if (sockets.cors) {
+        if (typeof sockets.cors === 'function') {
+          socketProps.allowRequest = sockets.cors;
+        } else if (typeof sockets.cors === 'string') {
+          socketProps.cors = sockets.cors || '';
+        }
       }
 
       const io = new Server(server.listen(expressConfig.port), socketProps);
@@ -476,6 +484,12 @@ module.exports = {
       // next line is the money
       global.io = io;
       server.set('socketio', io);
+
+      // middleware
+      if (sockets.middleware) {
+        io.use(sockets.middleware);
+      }
+
       io.on('connection', (socket) => {
 
         if ( typeof sockets.onConnect === 'function') {
