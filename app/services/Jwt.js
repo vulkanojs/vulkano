@@ -152,31 +152,17 @@ module.exports = {
       return false;
     }
 
-    // Development
-    let payload = this.decode(token);
-
-    // Production
-    if (!payload) {
-      payload = this.decode(token);
-    }
+    const data = this.decode(token);
 
     const {
-      data
-    } = payload || {};
-
-    const {
-      user
+      _id
     } = data || {};
 
-    const {
-      id
-    } = user || {};
-
-    if (!id) {
+    if (!_id) {
       return false;
     }
 
-    return user;
+    return data;
 
   }
 
