@@ -35,6 +35,9 @@
     "PUBLIC_PATH": true
   },
   "settings": {
+    "react": {
+      "version": "999.999.999"
+    },
     "import/resolver": {
       "alias": {
         "extensions": [".js", ".vue", ".jsx"],
@@ -43,9 +46,6 @@
           ["@cms", "./cms"]
         ]
       }
-    },
-    "react": {
-      "version": "999.999.999"
     }
   },
   "rules": {
