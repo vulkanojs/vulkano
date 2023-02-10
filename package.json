@@ -36,6 +36,7 @@
     "date-fns": "^1.29.0",
     "datebook": "^7.1.0",
     "deepmerge": "^4.2.2",
+    "dotenv": "^16.0.3",
     "element-ui": "^2.15.12",
     "eslint-webpack-plugin": "^3.2.0",
     "exceljs": "^4.3.0",
