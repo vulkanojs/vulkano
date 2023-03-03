@@ -1,6 +1,6 @@
 module.exports = (modelName) => {
 
-  console.log(modelName);
+  // console.log(modelName);
   const getModelName = `get${modelName}`;
   const getAllModelName = `getAll${modelName}`;
 
