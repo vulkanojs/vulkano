@@ -2,11 +2,13 @@ const _ = require('underscore');
 
 module.exports = {
 
-  serializeQuery(_props, query) {
+  serializeQuery(_props, _query) {
 
     const props = typeof _props === 'object'
       ? _props
       : { sort: null, search: [] };
+
+    const query = _query || {};
 
     const page = query.page || 1;
     const perPage = Number(query.per_page) || Number(query.perPage) || 30;
