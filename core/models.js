@@ -12,7 +12,7 @@ const AllModels = require('include-all')({
 
 const ActiveRecord = require('../app/services/ActiveRecord');
 
-const Scaffold = require('./scaffold');
+const Scaffold = require('./scaffold/model');
 
 const Callbacks = {
 

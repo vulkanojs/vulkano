@@ -1,15 +1,10 @@
-module.exports = (ModelName) => {
+module.exports = (modelName) => {
 
-  // console.log(ModelName);
-  const getModelName = `get${ModelName}`;
+  console.log(modelName);
+  const getModelName = `get${modelName}`;
+  const getAllModelName = `getAll${modelName}`;
 
   return {
-
-    [getModelName](id) {
-
-      return this.getByField(id);
-
-    },
 
     /**
      * Method to get all records by page
@@ -117,7 +112,40 @@ module.exports = (ModelName) => {
       // Soft delete
       return this.update(id, { active: false });
 
-    }
+    },
+
+    /**
+     * ALIAS: getModelName
+     * @param {ObjectID} id
+     * @returns {Promise}
+     */
+    [getModelName](id) {
+
+      return this.getByField(id);
+
+    },
+
+    /**
+     * ALIAS: getById
+     * @param {ObjectID} id
+     * @returns {Promise}
+     */
+    getById(id) {
+
+      return this.getByField(id);
+
+    },
+
+    /**
+     * ALIAS: getAllModelName
+     * @param {Object} props
+     * @returns {Promise}
+     */
+    [getAllModelName](props) {
+
+      return this.getAll(props);
+
+    },
 
   };
 
