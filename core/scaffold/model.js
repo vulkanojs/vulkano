@@ -38,7 +38,7 @@ module.exports = {
       return VSError.reject('Invalid ID. Record not found.', 404);
     }
 
-    const toSearch = {};
+    const toSearch = { active: true };
     toSearch[field || '_id'] = value;
 
     return this.findOne(toSearch)
