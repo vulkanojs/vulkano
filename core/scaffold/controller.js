@@ -55,7 +55,7 @@ module.exports = (modelName) => {
         id
       } = req.params || {};
 
-      res.vsr(global[modelName].getById(id) );
+      res.vsr(global[modelName].getByField(id) );
 
     },
 

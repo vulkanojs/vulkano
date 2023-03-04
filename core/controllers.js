@@ -9,6 +9,8 @@ const AllControllers = require('include-all')({
   optional: true
 });
 
+const scaffoldController = require('./scaffold/controller');
+
 module.exports = function loadControllersApplication() {
 
   const routes = {};
@@ -16,7 +18,16 @@ module.exports = function loadControllersApplication() {
   Object.keys(AllControllers).forEach( (controller) => {
 
     const methods = ['get', 'post', 'put', 'delete'];
-    const current = AllControllers[controller];
+    let current = AllControllers[controller];
+
+    const {
+      scaffold,
+      model
+    } = current;
+
+    if (scaffold && model) {
+      current = { ...scaffoldController(model), ...current };
+    }
 
     let controllerName = controller.replace('Controller', '').toLowerCase();
 
@@ -27,7 +38,7 @@ module.exports = function loadControllersApplication() {
 
     Object.keys(current || []).forEach( (route) => {
 
-      // Is a controller
+      // Is a submodule (like api/TestController)
       if (route.split('Controller').length > 1) {
 
         moduleName = controllerName;
@@ -36,11 +47,23 @@ module.exports = function loadControllersApplication() {
         Object.keys(submodules || []).forEach( (subcontroller) => {
 
           controllerName = subcontroller.replace('Controller', '').toLowerCase();
-          const subcurrent = submodules[subcontroller];
+          let subcurrent = submodules[subcontroller];
+
+          const {
+            scaffold: subcurrentScaffold,
+            model: subcurrentModel
+          } = subcurrent || {};
+
+          if (subcurrentScaffold && subcurrentModel) {
+            subcurrent = { ...scaffoldController(subcurrentModel), ...subcurrent };
+          }
 
           Object.keys(subcurrent || []).forEach( (subroute) => {
+
             parts = subroute.split(' ');
+
             const [tmpMethod, tmpPath] = parts;
+
             if (tmpPath) {
               method = tmpMethod.toLowerCase();
               pathToRun = tmpPath;
@@ -61,7 +84,9 @@ module.exports = function loadControllersApplication() {
 
             }
 
-            routes[`${method} ${pathToRun}`] = subcurrent[subroute];
+            if (typeof subcurrent[subroute] === 'function') {
+              routes[`${method} ${pathToRun}`] = subcurrent[subroute];
+            }
 
           });
         });
@@ -89,7 +114,9 @@ module.exports = function loadControllersApplication() {
           }
         }
 
-        routes[`${method} ${pathToRun}`] = current[route];
+        if (typeof current[route] === 'function') {
+          routes[`${method} ${pathToRun}`] = current[route];
+        }
 
       }
 
