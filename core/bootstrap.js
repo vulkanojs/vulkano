@@ -3,6 +3,7 @@
  *
  */
 
+const dotenv = require('dotenv');
 const path = require('path');
 const moment = require('moment');
 const merge = require('deepmerge');
@@ -18,6 +19,9 @@ global.ABS_PATH = path.resolve(__dirname, '../');
 global.CORE_PATH = path.join(__dirname, '../core');
 global.APP_PATH = path.join(__dirname, '../app');
 global.PUBLIC_PATH = path.join(__dirname, '../public');
+
+// Read Dontenv config
+dotenv.config();
 
 // Include all api config
 const config = require('include-all')({
