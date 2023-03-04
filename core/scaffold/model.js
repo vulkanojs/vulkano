@@ -1,152 +1,113 @@
-module.exports = (modelName) => {
+module.exports = {
 
-  // console.log(modelName);
-  const getModelName = `get${modelName}`;
-  const getAllModelName = `getAll${modelName}`;
+  /**
+   * Method to get all records by page
+   *
+   * @param {Object} props (page, perPage, search, sort)
+   * @returns {Promise}
+   */
+  getAll(props) {
 
-  return {
+    // Props to Query
+    const defaultProps = {
+      sort: 'createdAt|DESC',
+      searchBy: [],
+      filter: {
+        active: true
+      },
+    };
 
-    /**
-     * Method to get all records by page
-     *
-     * @param {Object} props (page, perPage, search, sort)
-     * @returns {Promise}
-     */
-    getAll(props) {
+    // Query to Run
+    const query = Paginate.serializeQuery(defaultProps, props);
 
-      // Props to Query
-      const defaultProps = {
-        sort: 'createdAt|DESC',
-        searchBy: [],
-        filter: {
-          active: true
-        },
-      };
+    // Pagination
+    return Paginate.get(this, query);
 
-      // Query to Run
-      const query = Paginate.serializeQuery(defaultProps, props);
+  },
 
-      // Pagination
-      return Paginate.get(this, query);
+  /**
+   * Method to get a record by id
+   *
+   * @param {ObjectID} id
+   * @returns {Promise}
+   */
+  getByField(value, field) {
 
-    },
+    // This is to prevent error while run the findOne
+    if (!(/^[a-fA-F0-9]{24}$/).test(value) && !field) {
+      return VSError.reject('Invalid ID. Record not found.', 404);
+    }
 
-    /**
-     * Method to get a record by id
-     *
-     * @param {ObjectID} id
-     * @returns {Promise}
-     */
-    getByField(value, field) {
+    const toSearch = {};
+    toSearch[field || '_id'] = value;
 
-      // This is to prevent error while run the findOne
-      if (!(/^[a-fA-F0-9]{24}$/).test(value) && !field) {
-        return VSError.reject('Invalid ID. Record not found.', 404);
-      }
+    return this.findOne(toSearch)
+      .then( (r) => {
 
-      const toSearch = {};
-      toSearch[field || '_id'] = value;
+        if (!r) {
+          return VSError.notFound();
+        }
 
-      return this.findOne(toSearch)
-        .then( (r) => {
+        return r.toObject({ transform: true });
 
-          if (!r) {
-            return VSError.notFound();
-          }
+      });
 
-          return r.toObject({ transform: true });
+  },
 
-        });
+  /**
+   * Method to create a new record
+   * @param {Promise} data
+   */
+  create(data) {
 
-    },
+    const obj = new this(data);
+    return obj.save();
 
-    /**
-     * Method to create a new record
-     * @param {Promise} data
-     */
-    create(data) {
+  },
 
-      const obj = new this(data);
-      return obj.save();
+  /**
+   * Method to update a record
+   * @param {ObjectID} id
+   * @param {Object} data
+   * @returns {Promise}
+   */
+  update(_id, data) {
 
-    },
+    return this.getByField(_id)
+      .then( (record) => {
 
-    /**
-     * Method to update a record
-     * @param {ObjectID} id
-     * @param {Object} data
-     * @returns {Promise}
-     */
-    update(_id, data) {
+        // Merge current info with incoming values
+        const merged = {
+          ...record,
+          ...data,
+          updatedAt: Date.now()
+        };
 
-      return this.getById(_id)
-        .then( (record) => {
+        return this.findOneAndUpdate({ _id }, merged, { new: true })
+          .then( (r) => {
 
-          // Merge current info with incoming values
-          const merged = {
-            ...record,
-            ...data,
-            updatedAt: Date.now()
-          };
+            const tmp = r.toObject({ transform: true });
+            return tmp;
 
-          return this
-            .findOneAndUpdate({ _id }, merged, { new: true })
-            .then( (r) => {
+          });
 
-              const tmp = r.toObject({ transform: true });
-              return tmp;
+      });
 
-            });
+  },
 
-        });
+  /**
+   * Method to delete a record
+   * @param {ObjectID} id
+   * @returns {Promise}
+   */
+  delete(id) {
 
-    },
+    // Scaffold Model
+    // const Model = global[modelName];
 
-    /**
-     * Method to delete a record
-     * @param {ObjectID} id
-     * @returns {Promise}
-     */
-    delete(id) {
+    // Soft delete
+    return this.update(id, { active: false });
 
-      // Soft delete
-      return this.update(id, { active: false });
-
-    },
-
-    /**
-     * ALIAS: getModelName
-     * @param {ObjectID} id
-     * @returns {Promise}
-     */
-    [getModelName](id) {
-
-      return this.getByField(id);
-
-    },
-
-    /**
-     * ALIAS: getById
-     * @param {ObjectID} id
-     * @returns {Promise}
-     */
-    getById(id) {
-
-      return this.getByField(id);
-
-    },
-
-    /**
-     * ALIAS: getAllModelName
-     * @param {Object} props
-     * @returns {Promise}
-     */
-    [getAllModelName](props) {
-
-      return this.getAll(props);
-
-    },
-
-  };
+  }
 
 };

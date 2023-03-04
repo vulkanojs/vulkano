@@ -12,7 +12,7 @@ const AllModels = require('include-all')({
 
 const ActiveRecord = require('../app/services/ActiveRecord');
 
-const Scaffold = require('./scaffold/model');
+const scaffold = require('./scaffold/model');
 
 const Callbacks = {
 
@@ -62,9 +62,25 @@ module.exports = function loadModelsApplication() {
 
     const Current = AllModels[i];
 
+    const getAll = `getAll${i}`;
+    const getModelName = `get${i}`;
+
+    const custom = {
+
+      [getAll](props) {
+        return global[i].getAll(props);
+      },
+
+      [getModelName](id) {
+        return global[i].getByField(id);
+      }
+
+    };
+
     models[i] = {
       ...Callbacks,
-      ...Scaffold(i),
+      ...scaffold,
+      ...custom,
       ...ActiveRecord,
       ...Current
     };
