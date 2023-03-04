@@ -10,20 +10,12 @@ module.exports = (modelName) => {
     update
   } = global[modelName] || {};
 
-  const getAll = global[modelName][`getAll${modelName}`];
-  const getById = global[modelName][`get${modelName}`];
+  const getAllModelName = `getAll${modelName}`;
+  const getModelName = `get${modelName}`;
 
-  if (!getAll || !getById || !create || !update) {
+  if (!create || !update) {
 
     const invalid = [];
-
-    if (!getAll) {
-      invalid.push(`getAll${modelName}`);
-    }
-
-    if (!getById) {
-      invalid.push(`get${modelName}`);
-    }
 
     if (!create) {
       invalid.push('create');
@@ -43,9 +35,7 @@ module.exports = (modelName) => {
 
     get(req, res) {
 
-      console.log(getAll);
-
-      res.vsr(global[modelName].getAll(req.query || {}));
+      res.vsr(global[modelName][getAllModelName](req.query || {}));
 
     },
 
@@ -55,7 +45,7 @@ module.exports = (modelName) => {
         id
       } = req.params || {};
 
-      res.vsr(global[modelName].getByField(id) );
+      res.vsr(global[modelName][getModelName](id) );
 
     },
 
