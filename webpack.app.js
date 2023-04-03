@@ -31,7 +31,7 @@ const plugins = [
 
 const config = Object.assign(baseConfig, {
   entry: {
-    app: './client/index.js'
+    app: './src/client/index.js'
   },
   output: {
     path: path.resolve(process.cwd(), './public/'),
@@ -39,8 +39,9 @@ const config = Object.assign(baseConfig, {
   },
   resolve: {
     alias: {
-      '@client': path.resolve(__dirname, './client'),
-      '@cms': path.resolve(__dirname, './cms')
+      '@client': path.resolve(__dirname, './src/client'),
+      '@cms': path.resolve(__dirname, './src/cms'),
+      '@common': path.resolve(__dirname, './src/common')
     },
     modules: [
       './',

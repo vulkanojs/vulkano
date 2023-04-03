@@ -30,6 +30,7 @@ Thumbs.db
 .DS_Store
 *.lock
 *.identifier
+*.LICENSE.txt
 
 # Editor folders #
 ########################
@@ -59,5 +60,9 @@ public/css/app.css
 public/css/app.css.map
 public/js/app.js
 public/js/app.js.map
+public/css/cms.css
+public/css/cms.css.map
+public/js/cms.js
+public/js/cms.js.map
 public/js/vendors.js
 public/js/vendors.js.map

@@ -3,10 +3,8 @@
   "ignore": [
     ".git/",
     "public/",
-    "cms/",
     "nbproject/",
-    "client/",
-    "sdk/"
+    "src/"
   ],
   "env": {
     "NODE_ENV": "development",
