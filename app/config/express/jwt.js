@@ -57,7 +57,7 @@ module.exports = {
   //
   ignore: [
     '/api/',
-    /^\/api\/auth/i
+    /^\/api\/auth(?!\/(current))/i
   ]
 
 };
