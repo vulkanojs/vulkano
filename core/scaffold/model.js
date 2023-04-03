@@ -61,6 +61,11 @@ module.exports = {
   create(data) {
 
     const obj = new this(data);
+
+    if (obj._id) {
+      delete obj._id;
+    }
+
     return obj.save();
 
   },
