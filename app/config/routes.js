@@ -6,6 +6,10 @@
 
 module.exports = {
 
-  '/': 'WelcomeController.get'
+  '/': 'WelcomeController.get',
+
+  // For VUE, REACT, ETC..
+  // '/admin*': 'AdminController.get',
+  // '/*': 'HomeController.get'
 
 };
