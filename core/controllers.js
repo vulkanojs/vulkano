@@ -18,7 +18,7 @@ module.exports = function loadControllersApplication() {
   Object.keys(AllControllers).forEach( (controller) => {
 
     const methods = ['get', 'post', 'put', 'delete'];
-    let current = AllControllers[controller];
+    const current = AllControllers[controller];
 
     const {
       scaffold,
@@ -26,7 +26,17 @@ module.exports = function loadControllersApplication() {
     } = current;
 
     if (scaffold && model) {
-      current = { ...scaffoldController(model), ...current };
+
+      const scaffoldingCurrent = scaffoldController(model);
+
+      Object.keys(scaffoldingCurrent).forEach( (m) => {
+
+        if (!current[m]) {
+          current[m] = scaffoldingCurrent[m];
+        }
+
+      });
+
     }
 
     let controllerName = controller.replace('Controller', '').toLowerCase();
@@ -47,7 +57,7 @@ module.exports = function loadControllersApplication() {
         Object.keys(submodules || []).forEach( (subcontroller) => {
 
           controllerName = subcontroller.replace('Controller', '').toLowerCase();
-          let subcurrent = submodules[subcontroller];
+          const subcurrent = submodules[subcontroller];
 
           const {
             scaffold: subcurrentScaffold,
@@ -55,7 +65,18 @@ module.exports = function loadControllersApplication() {
           } = subcurrent || {};
 
           if (subcurrentScaffold && subcurrentModel) {
-            subcurrent = { ...scaffoldController(subcurrentModel), ...subcurrent };
+
+            const scaffoldingSubcurrent = scaffoldController(subcurrentModel);
+
+            Object.keys(scaffoldingSubcurrent).forEach( (m) => {
+
+              if (!subcurrent[m]) {
+                subcurrent[m] = scaffoldingSubcurrent[m];
+                console.log('adding', m);
+              }
+
+            });
+
           }
 
           Object.keys(subcurrent || []).forEach( (subroute) => {
