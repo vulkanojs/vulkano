@@ -1,11 +1,12 @@
-// Foundation Core
-@import './scss/modules.scss';
-
-// Utility
-@import './scss/utility.scss';
+// Common
+@import '../common/scss/index';
 
 //
 // Import Containers Styles
 //
-@import './scss/components/_index';
-@import './scss/pages/_index';
+
+// SASS - Layouts
+@import './layouts/index';
+
+// SASS - Views
+@import './views/index';

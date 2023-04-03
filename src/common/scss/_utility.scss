@@ -1,20 +1,15 @@
-//
-// ONLY UTILITY FILE
-//
-
 body {
 
-  // Small First
+  // Mobile first
 
-
-  // Medium
+  // Tablet
   @include breakpoint(medium up) {
 
   }
 
-  // Large
+  // Desktop
   @include breakpoint(large up) {
 
   }
-}
 
+}

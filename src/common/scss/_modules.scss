@@ -3,9 +3,9 @@
 @import 'foundation';
 
 @include foundation-global-styles;
-// @include foundation-grid;
+@include foundation-grid;
 // @include foundation-flex-grid;
-@include foundation-flex-classes;
+// @include foundation-flex-classes;
 @include foundation-typography;
 @include foundation-forms;
 @include foundation-button;
@@ -14,7 +14,7 @@
 //@include foundation-badge;
 //@include foundation-breadcrumbs;
 //@include foundation-button-group;
-//@include foundation-callout;
+@include foundation-callout;
 //@include foundation-card;
 //@include foundation-close-button;
 //@include foundation-menu;

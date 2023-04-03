@@ -1,0 +1,8 @@
+$mdi-font-path: "/fonts" !default;
+
+@import 'materialdesignicons';
+
+@mixin icon($icon: '') {
+  font-family: Material Design Icons;
+  content: mdi($icon);
+}
