@@ -1,4 +1,4 @@
-/* global app, Emails */
+/* global Emails */
 
 const helper = require('sendgrid').mail;
 const sg = require('sendgrid')(app.config.sendgrid ? app.config.sendgrid.apiKey || '' : '');
@@ -63,14 +63,14 @@ module.exports = {
     const personalization = new helper.Personalization();
     if (msg.cc) {
       if (Array.isArray(msg.cc)) {
-        msg.cc.forEach( email => personalization.addCc(email) );
+        msg.cc.forEach( (email) => personalization.addCc(email) );
       } else {
         personalization.addCc(msg.cc);
       }
     }
     const mail = new helper.Mail(fromEmail, subject, toEmail, content);
     if (msg.attachments && Array.isArray(msg.attachments)) {
-      msg.attachments.forEach( file => mail.addAttachment(file || {}));
+      msg.attachments.forEach( (file) => mail.addAttachment(file || {}));
     }
     const message = mail.toJSON();
     return message;
