@@ -4,6 +4,9 @@
 
 module.exports = {
 
+  /**
+   * Fields
+   */
   attributes: {
     name: {
       type: String,
@@ -11,7 +14,14 @@ module.exports = {
     },
     age: {
       type: Number,
-      required: false
+      required: false,
+      validate: {
+        validator: (value) => {
+          const isValid = (value >= 21) ? true : false;
+          return isValid;
+        },
+        message: 'Invalid Age: Must be +21.',
+      }
     },
     // the fields:
     // active, createdAt, updatedAt
