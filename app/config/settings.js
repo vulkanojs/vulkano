@@ -25,8 +25,8 @@ module.exports = {
   // Connection to Database
   database: {
 
-    // Connection key
-    connection: null,
+    // MONGO_URI connection or connetion key (development, production)
+    connection: process.env.MONGO_URI || null,
 
     // Additional config to mongoose
     config: {

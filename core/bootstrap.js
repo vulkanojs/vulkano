@@ -156,6 +156,8 @@ module.exports = function loadBootstrapApplication() {
         connection
       } = database || {};
 
+      const connectionToShow = connection && process.env.MONGO_URI ? 'MONGO_URI' : connection;
+
       const serverConfig = [];
 
       const nodeVersion = process.version.match(/^v(\d+\.\d+\.\d+)/)[1];
@@ -176,7 +178,7 @@ module.exports = function loadBootstrapApplication() {
       console.log(nodeConfig.join(''));
 
       console.log(' STARTUP: ', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
-      console.log(' DATABASE:', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
+      console.log(' DATABASE:', connectionToShow ? `${colors.fg.green}${connectionToShow}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
 
       console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
 

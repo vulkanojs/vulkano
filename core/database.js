@@ -38,7 +38,9 @@ module.exports = function loadDatabaseApplication() {
     return;
   }
 
-  const toConnect = connections[connection];
+  const toConnect = connection in connections
+    ? connections[connection]
+    : (connection || null);
 
   if (!toConnect) {
     throw `Invalid conection to user MongoDB with source ${connection}`;
