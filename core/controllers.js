@@ -72,7 +72,6 @@ module.exports = function loadControllersApplication() {
 
               if (!subcurrent[m]) {
                 subcurrent[m] = scaffoldingSubcurrent[m];
-                console.log('adding', m);
               }
 
             });
