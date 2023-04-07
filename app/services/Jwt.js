@@ -6,6 +6,11 @@ const moment = require('moment');
 
 module.exports = {
 
+  /**
+   * Get JWT config
+   *
+   * @returns {Object}
+   */
   getConfig() {
 
     const {
@@ -22,13 +27,16 @@ module.exports = {
 
   },
 
+  /**
+   * Init JWT for Express
+   *
+   * @param {Object} opts
+   * @returns
+   */
   init(opts) {
 
     const {
-      key,
-      header,
-      queryParameter,
-      cookieName
+      key
     } = this.getConfig();
 
     const config = {
@@ -37,31 +45,7 @@ module.exports = {
 
       secret: key,
 
-      getToken: (req) => {
-
-        // Get Token via HTTP header
-        const headerToken = req.headers[header] || req.headers[header.toUpperCase()] || null;
-
-        // Get Token via Cookie
-        const cookieToken = req.cookies && req.cookies[cookieName]
-          ? req.cookies[cookieName]
-          : null;
-
-        // Get Token via Query Parameter
-        const queryToken = req.query && req.query[queryParameter]
-          ? req.query[queryParameter]
-          : null;
-
-        // Current Token
-        const token = headerToken || cookieToken || queryToken || null;
-
-        // Decode Token
-        const hasData = this.decode(token);
-
-        // Return only if token is valid
-        return hasData ? token : null;
-
-      }
+      getToken: (req) => this.getToken(req)
 
     };
 
@@ -69,6 +53,50 @@ module.exports = {
 
   },
 
+  /**
+   * Get token from request
+   *
+   * @param {Express} req
+   * @returns {String}
+   */
+  getToken(req) {
+
+    const {
+      header,
+      queryParameter,
+      cookieName
+    } = this.getConfig();
+
+    // Get Token via HTTP header
+    const headerToken = req.headers[header] || req.headers[header.toUpperCase()] || null;
+
+    // Get Token via Cookie
+    const cookieToken = req.cookies && req.cookies[cookieName]
+      ? req.cookies[cookieName]
+      : null;
+
+    // Get Token via Query Parameter
+    const queryToken = req.query && req.query[queryParameter]
+      ? req.query[queryParameter]
+      : null;
+
+    // Current Token
+    const token = headerToken || cookieToken || queryToken || null;
+
+    // Decode Token
+    const hasData = this.decode(token);
+
+    // Return only if token is valid
+    return hasData ? token : null;
+
+  },
+
+  /**
+   * Encode token
+   *
+   * @param {String} data
+   * @returns {Object}
+   */
   encode(data) {
 
     const {
@@ -82,6 +110,13 @@ module.exports = {
 
   },
 
+  /**
+   * Decode token
+   *
+   * @param {String} token
+   * @param {String} customKey Optional Key
+   * @returns {Object}
+   */
   decode(token, customKey) {
 
     const {
@@ -119,6 +154,12 @@ module.exports = {
 
   },
 
+  /**
+   * Decryp Token
+   *
+   * @param {String} str
+   * @returns {String}
+   */
   decrypt(str) {
 
     const {
@@ -142,6 +183,12 @@ module.exports = {
 
   },
 
+  /**
+   * Decode token from SocketIO
+   *
+   * @param {Socket} socket
+   * @returns {Object}
+   */
   socket(socket) {
 
     const {
