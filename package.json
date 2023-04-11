@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@sendgrid/mail": "^7.7.0",
     "aos": "^3.0.0-beta.6",
     "archiver-promise": "^1.0.0",
     "aws-sdk": "^2.1307.0",
@@ -81,7 +82,6 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "s3-uploader": "^2.0.3",
-    "sendgrid": "^5.2.3",
     "sha1": "^1.1.1",
     "signals": "^1.0.0",
     "smoothscroll-polyfill": "^0.4.4",

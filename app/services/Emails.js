@@ -1,79 +1,72 @@
-/* global Emails */
-
-const helper = require('sendgrid').mail;
-const sg = require('sendgrid')(app.config.sendgrid ? app.config.sendgrid.apiKey || '' : '');
+const sgMail = require('@sendgrid/mail');
 const nunjucks = require('nunjucks');
 const Promise = require('bluebird');
 
+sgMail.setApiKey(app.config.sendgrid ? app.config.sendgrid.apiKey || '' : '');
+
 module.exports = {
 
-  example: (payload) => {
-    const msg = {};
-    msg.to = payload.to || 'argordmel@gmail.com';
-    msg.subject = payload.subject || 'This is a email test';
+  /**
+   * Send Example email
+   *
+   * @param {Object} payload
+   * @returns Promise
+   */
+  example(payload) {
+
+    const defaultProps = {
+      to: payload.to || 'argordmel@gmail.com',
+      subject: payload.subject || 'This is a email test',
+      data: {}
+    };
+
+    const msg = { ...defaultProps, ...payload };
+
+    return this._template('example', msg.data || {})
+      .then( (html) => this._send({ ...msg, html }) );
+
+  },
+
+  /**
+   * Render html template and return it as string
+   *
+   * @param {String} template
+   * @param {Object} data
+   * @returns String
+   */
+  _template(template, data) {
+
     return new Promise( (resolve, reject) => {
-      nunjucks.render('emails/example.html', payload.data || {}, (err, data) => {
+      nunjucks.render(`${APP_PATH}/views/_shared/emails/${template}.html`, data || {}, (err, html) => {
         if (err) {
           return reject(err);
         }
-        return resolve(data);
+        return resolve(html);
       });
-    }).then((data) => {
-      msg.content = data;
-      return Emails._send(msg);
-    }).catch((err) => {
-      console.log(err);
-    });
-  },
-
-  // sends a mail/send request to sendgrid
-  _send: (msg) => {
-
-    const request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: Emails._build(msg)
-    });
-    return new Promise((resolve, reject) => {
-      sg.API(request, (err, response) => ((err) ? reject(err) : resolve(response)));
     });
 
   },
 
-  // builds a new message
-  _build: (_msg) => {
-    const msg = _msg || {};
+  /**
+   * Send email
+   *
+   * @param {Object} props { from, to, subject, html, cc, cco, attachments }
+   * @returns Promise
+   */
+  _send: (props) => {
 
-    if (!msg.mailtype) {
-      msg.mailtype = 'text/html';
-    }
+    const {
+      sendgrid
+    } = app.config || {};
 
-    if (!msg.from) {
-      msg.from = app.config.sendgrid.fromEmail;
-    }
+    const defaultProps = {
+      from: sendgrid.fromEmail,
+      fromname: sendgrid.fromName
+    };
 
-    if (!msg.fromname) {
-      msg.fromname = app.config.sendgrid.fromName;
-    }
+    const merged = { ...defaultProps, ...props };
 
-    const fromEmail = new helper.Email(msg.from, msg.fromname);
-    const toEmail = new helper.Email(msg.to);
-    const { subject } = msg;
-    const content = new helper.Content(msg.mailtype, msg.content);
-    const personalization = new helper.Personalization();
-    if (msg.cc) {
-      if (Array.isArray(msg.cc)) {
-        msg.cc.forEach( (email) => personalization.addCc(email) );
-      } else {
-        personalization.addCc(msg.cc);
-      }
-    }
-    const mail = new helper.Mail(fromEmail, subject, toEmail, content);
-    if (msg.attachments && Array.isArray(msg.attachments)) {
-      msg.attachments.forEach( (file) => mail.addAttachment(file || {}));
-    }
-    const message = mail.toJSON();
-    return message;
+    return sgMail.send(merged);
 
   }
 
