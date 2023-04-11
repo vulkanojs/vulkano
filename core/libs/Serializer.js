@@ -1,5 +1,3 @@
-/* global Serializer */
-
 /**
  * Serializers
  *
