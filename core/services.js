@@ -4,20 +4,28 @@
 
 const path = require('path');
 
-// Include all services
-const AllServices = require('include-all')({
-  dirname: path.join(__dirname, '../app/services'),
+// Include all libs & services
+const coreLibs = require('include-all')({
+  dirname: path.join(CORE_PATH, '/libs'),
   filter: /(.+)\.js$/,
   optional: true
 });
 
+const appServices = require('include-all')({
+  dirname: path.join(APP_PATH, '/services'),
+  filter: /(.+)\.js$/,
+  optional: true
+});
+
+const allServices = { ...coreLibs, ...appServices };
+
 module.exports = function loadServicesApplication() {
 
-  delete AllServices.ActiveRecord;
-  delete AllServices.AppController;
+  delete allServices.ActiveRecord;
+  delete allServices.AppController;
 
-  Object.keys(AllServices).forEach((service) => {
-    global[service] = AllServices[service];
+  Object.keys(allServices).forEach((service) => {
+    global[service] = allServices[service];
   });
 
 };

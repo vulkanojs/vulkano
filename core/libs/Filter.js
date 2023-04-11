@@ -8,15 +8,23 @@
 const path = require('path');
 
 // Include all api controllers
-const AllFilters = require('include-all')({
-  dirname: path.normalize(path.join(__dirname, '/filters')),
+const coreFilters = require('include-all')({
+  dirname: path.join(CORE_PATH, '/libs/filters'),
   filter: /(.+)\.js$/,
   optional: true
 });
 
+const appFilters = require('include-all')({
+  dirname: path.join(APP_PATH, '/services/filters'),
+  filter: /(.+)\.js$/,
+  optional: true
+});
+
+const allFilters = { ...coreFilters, ...appFilters };
+
 module.exports = {
 
-  get: (str, filters, opts) => {
+  get(str, filters, opts) {
 
     let result = null;
 
@@ -33,13 +41,14 @@ module.exports = {
 
   },
 
-  load: (filter) => {
+  load(filter) {
 
-    if (!AllFilters[filter]) {
+    if (!allFilters[filter]) {
       console.error('FILTER', filter, 'NOT FOUND INTO /app/services/filters');
       return false;
     }
-    return AllFilters[filter];
+
+    return allFilters[filter];
 
   }
 

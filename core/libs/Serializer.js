@@ -10,12 +10,20 @@
 const path = require('path');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
 
-// Include all serializers
-const AllSerializers = require('include-all')({
-  dirname: path.normalize(path.join(__dirname, '/serializers')),
+// Include all api controllers
+const coreSerializers = require('include-all')({
+  dirname: path.join(CORE_PATH, '/libs/serializers'),
   filter: /(.+)\.js$/,
   optional: true
 });
+
+const appSerializers = require('include-all')({
+  dirname: path.join(APP_PATH, '/services/serializers'),
+  filter: /(.+)\.js$/,
+  optional: true
+});
+
+const allSerializers = { ...coreSerializers, ...appSerializers };
 
 module.exports = {
 
@@ -46,7 +54,7 @@ module.exports = {
 
   _convert(model, data) {
 
-    const props = AllSerializers[model] || {};
+    const props = allSerializers[model] || {};
 
     if (!props.attributes) {
       return data;

@@ -7,32 +7,29 @@ moment.locale('en');
 
 module.exports = (() => {
 
-  const {
-    en,
-    es
-  } = app.config.locales;
+  const locales = Object.keys(app.config.locales);
+  const resources = new Map();
+
+  locales.forEach( (locale) => {
+    resources.set(locale, { translation: app.config.locales[locale] });
+  });
 
   // Change translations
   i18next.init({
     lng: 'en',
     fallbackLng: 'en',
-    resources: {
-      en: {
-        translation: en
-      },
-      es: {
-        translation: es
-      }
-    }
+    resources: Object.fromEntries(resources)
   });
 
   // catch the event and make changes accordingly
   i18next.on('languageChanged', (lng) => {
-    if (lng === 'es' || lng === 'spanish') {
-      moment.locale('es');
-    } else {
-      moment.locale('en');
+
+    try {
+      moment.locale(lng);
+    } catch (err) {
+      console.log(err);
     }
+
   });
 
   return i18next;

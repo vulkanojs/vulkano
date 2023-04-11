@@ -2,13 +2,13 @@ const Cron = require('cron').CronJob;
 
 module.exports = {
 
-  schedule: (start, task, end) => {
+  schedule(start, task, end, timeZone) {
 
     const config = {
       cronTime: start,
       onTick: task || ( () => {} ),
       onComplete: end || ( () => {} ),
-      timeZone: 'America/Bogota',
+      timeZone: timeZone || 'America/New_York',
       start: true
     };
 
