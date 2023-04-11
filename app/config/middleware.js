@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
 
   if (authEncripted) {
     const decoded = Jwt.decrypt(authEncripted);
-    req.auth = (decoded) ? decoded : {};
+    req.auth = (decoded) ? { ...decoded, token: Jwt.getToken(req) } : {};
   }
 
   // Remove this line if you need make validations
