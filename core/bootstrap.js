@@ -149,19 +149,25 @@ module.exports = function loadBootstrapApplication() {
     app.server.start( () => {
 
       const {
+        sockets,
+        settings: configSettings,
+        redis
+      } = app.config || {};
+
+      const {
         database
-      } = app.config.settings || {};
+      } = configSettings || {};
 
       const {
         connection
       } = database || {};
 
-      const connectionToShow = connection && process.env.MONGO_URI ? 'MONGO_URI' : connection;
-
       const serverConfig = [];
 
       const nodeVersion = process.version.match(/^v(\d+\.\d+\.\d+)/)[1];
       const portText = app.server.get('port').padEnd(nodeVersion.length, ' ');
+      const socketText = (sockets.enabled ? 'YES' : 'NO').padEnd(nodeVersion.length - 3, ' ');
+
       serverConfig.push(` PORT: ${colors.fg.green}${portText}${colors.reset}`);
       serverConfig.push(' | ');
       serverConfig.push(` ENV: ${app.PRODUCTION ? colors.fg.red : colors.fg.green}${env}${colors.reset}`);
@@ -177,8 +183,26 @@ module.exports = function loadBootstrapApplication() {
       nodeConfig.push(' MAX MEM: ', `${colors.fg.green}${totalHeapSizeGb} GB${colors.reset}`);
       console.log(nodeConfig.join(''));
 
-      console.log(' STARTUP: ', `${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
-      console.log(' DATABASE:', connectionToShow ? `${colors.fg.green}${connectionToShow}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
+      const startUpConfig = [];
+      if (sockets.redis && redis && redis.enabled) {
+        startUpConfig.push(' SOCKETS: ', `${colors.fg.green}${socketText}${colors.reset}`);
+      } else {
+        startUpConfig.push(' SOCKETS: ', `${colors.fg.green}${socketText}${colors.reset}`);
+      }
+      startUpConfig.push(' | ');
+      startUpConfig.push(` STARTUP: ${colors.fg.green}${moment(moment().diff(global.START_TIME)).format('ss.SSS')} sec${colors.reset}`);
+      console.log(startUpConfig.join(''));
+
+      const dbConfig = [];
+      if (redis && redis.enabled) {
+        dbConfig.push(' REDIS: ', `${colors.fg.green}YES   ${colors.reset}`);
+      } else {
+        dbConfig.push(' REDIS: ', `${colors.fg.green}NO    ${colors.reset}`);
+      }
+
+      dbConfig.push(' | ');
+      dbConfig.push(' DB: ', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
+      console.log(dbConfig.join(''));
 
       console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
 

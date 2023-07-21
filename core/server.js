@@ -15,6 +15,8 @@ const useragent = require('express-useragent');
 const webp = require('webp-middleware');
 const cookieParser = require('cookie-parser');
 const merge = require('deepmerge');
+const { createClient } = require('redis');
+const { createAdapter } = require('@socket.io/redis-adapter');
 
 // Include all api controllers
 const AllControllers = require('include-all')({
@@ -22,7 +24,6 @@ const AllControllers = require('include-all')({
   filter: /(.+Controller)\.js$/,
   optional: true
 });
-
 const responses = require('./responses');
 const JWT = require('./libs/Jwt');
 
@@ -41,6 +42,7 @@ module.exports = {
       settings,
       sockets,
       cookies,
+      redis,
       // Folder express config files
       express: expressServerConfig
     } = app.config;
@@ -465,12 +467,9 @@ module.exports = {
 
       const socketProps = {
         pingTimeout: +sockets.timeout || 4000,
-        pingInterval: +sockets.interval || 2000
+        pingInterval: +sockets.interval || 2000,
+        transports: sockets.transports || ['websocket', 'polling']
       };
-
-      if (sockets.cors) {
-        // io.origins( sockets.cors);
-      }
 
       if (sockets.cors) {
         if (typeof sockets.cors === 'function') {
@@ -480,88 +479,124 @@ module.exports = {
         }
       }
 
-      const io = new Server(server.listen(expressConfig.port), socketProps);
-
-      // next line is the money
-      global.io = io;
-      server.set('socketio', io);
-
-      // middleware
-      if (sockets.middleware) {
-        io.use(sockets.middleware);
+      if (sockets.redis && !redis.enabled) {
+        throw new Error('Enable the Redis config "app/config/redis.js" to connect the sockets');
       }
 
-      io.on('connection', (socket) => {
+      const io = new Server(server.listen(expressConfig.port), socketProps);
 
-        if ( typeof sockets.onConnect === 'function') {
-          sockets.onConnect(socket);
+      let pubClient = null;
+      let subClient = null;
+
+      if (sockets.redis) {
+
+        const propsToRedis = {
+          host: redis.host,
+          port: redis.port
+        };
+
+        if (redis.password) {
+          propsToRedis.password = redis.password;
         }
 
-        const socketEvents = sockets.events || {};
+        pubClient = createClient(propsToRedis);
+        subClient = pubClient.duplicate();
 
-        Object.keys(socketEvents).forEach( (i) => {
+        io.adapter(createAdapter(pubClient, subClient));
 
-          const checkPath = socketEvents[i] || '';
+      }
 
-          let toExecute = null;
-          let module = null;
-          let controller = null;
-          let action = null;
+      Promise
+        .all([
+          (sockets.redis ? pubClient.connect() : null),
+          (sockets.redis ? subClient.connect() : null)
+        ])
+        .then(() => {
 
-          if (typeof checkPath === 'function') {
+          io.on('connection', (socket) => {
 
-            toExecute = checkPath;
-
-          } else {
-
-            const fullPath = checkPath.split('.');
-
-            if (fullPath.length > 2) { // Has folder
-
-              [
-                module,
-                controller,
-                action
-              ] = fullPath;
-
-            } else {
-
-              [
-                controller,
-                action
-              ] = fullPath;
-
+            if ( typeof sockets.onConnect === 'function') {
+              sockets.onConnect(socket);
             }
 
-            try {
-              toExecute = module
-                ? (AllControllers[module][controller][action])
-                : AllControllers[controller][action];
-            } catch (e) {
-              toExecute = null;
-            }
+            const socketEvents = sockets.events || {};
 
-          }
+            Object.keys(socketEvents).forEach( (i) => {
 
-          if (toExecute) {
-            socket.on(i, (body) => {
-              toExecute({ socket, body: body || {} });
+              const checkPath = socketEvents[i] || '';
+
+              let toExecute = null;
+              let module = null;
+              let controller = null;
+              let action = null;
+
+              if (typeof checkPath === 'function') {
+
+                toExecute = checkPath;
+
+              } else {
+
+                const fullPath = checkPath.split('.');
+
+                if (fullPath.length > 2) { // Has folder
+
+                  [
+                    module,
+                    controller,
+                    action
+                  ] = fullPath;
+
+                } else {
+
+                  [
+                    controller,
+                    action
+                  ] = fullPath;
+
+                }
+
+                try {
+                  toExecute = module
+                    ? (AllControllers[module][controller][action])
+                    : AllControllers[controller][action];
+                } catch (e) {
+                  toExecute = null;
+                }
+
+              }
+
+              if (toExecute) {
+                socket.on(i, (body) => {
+                  toExecute({ socket, body: body || {} });
+                });
+              } else {
+                console.error('\x1b[31mError:', 'Controller not found in', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, '\x1b[0m', 'to socket event', i);
+              }
+
             });
-          } else {
-            console.error('\x1b[31mError:', 'Controller not found in', (module) ? `${module}.${controller}.${action}` : `${controller}.${action}`, '\x1b[0m', 'to socket event', i);
+
+            server.set('socket', socket);
+            app.socket = socket;
+
+          });
+
+          // next line is the money
+          global.io = io;
+          server.set('socketio', io);
+
+          // middleware
+          if (sockets.middleware) {
+            io.use(sockets.middleware);
           }
+
+          app.server = server;
+
+          cb();
 
         });
 
-        server.set('socket', socket);
-        app.socket = socket;
-
-      });
-
-      app.server = server;
-
-      cb();
       return;
+
     }
 
     // ---------------

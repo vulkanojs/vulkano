@@ -20,6 +20,7 @@
   "dependencies": {
     "@mdi/font": "^7.2.96",
     "@sendgrid/mail": "^7.7.0",
+    "@socket.io/redis-adapter": "^8.2.1",
     "aos": "^3.0.0-beta.6",
     "archiver-promise": "^1.0.0",
     "aws-sdk": "^2.1307.0",
@@ -79,6 +80,7 @@
     "path-to-regexp": "^6.2.1",
     "pm2": "^5.3.0",
     "promise.prototype.finally": "^3.1.4",
+    "redis": "^4.6.7",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "s3-uploader": "^2.0.3",

@@ -11,6 +11,12 @@ module.exports = {
   // Enable sockets
   enabled: false,
 
+  // Transports
+  transports: ['websocket', 'polling'],
+
+  // Redis
+  redis: false,
+
   // Cors
   cors: (req, callback) => {
 
