@@ -31,7 +31,8 @@ module.exports = function loadDatabaseApplication() {
   } = settings;
 
   const {
-    connection
+    connection,
+    settings: dbSettings
   } = database || {};
 
   if (!connection) {
@@ -55,11 +56,15 @@ module.exports = function loadDatabaseApplication() {
     (database ? database.config || {} : {})
   ]);
 
+  if (dbSettings) {
+    Object.keys(dbSettings).forEach( (s) => {
+      mongoose.set(s, dbSettings[s]);
+    });
+  }
+
   if (!mongoose.connection.readyState) {
     mongoose.connect(toConnect, connectionProps);
   }
-
-  // mongoose.set('debug', true);
 
   const db = mongoose.connection;
 
