@@ -162,10 +162,12 @@ module.exports = function loadBootstrapApplication() {
         connection
       } = database || {};
 
+      const connectionToShow = connection && process.env.MONGO_URI ? 'MONGO_URI' : connection;
+
       const serverConfig = [];
 
       const nodeVersion = process.version.match(/^v(\d+\.\d+\.\d+)/)[1];
-      const portText = app.server.get('port').padEnd(nodeVersion.length, ' ');
+      const portText = String(app.server.get('port') || 8000).padEnd(nodeVersion.length, ' ');
       const socketText = (sockets.enabled ? 'YES' : 'NO').padEnd(nodeVersion.length - 3, ' ');
 
       serverConfig.push(` PORT: ${colors.fg.green}${portText}${colors.reset}`);
@@ -201,7 +203,7 @@ module.exports = function loadBootstrapApplication() {
       }
 
       dbConfig.push(' | ');
-      dbConfig.push(' DB: ', connection ? `${colors.fg.green}${connection}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
+      dbConfig.push(' DB: ', connection ? `${colors.fg.green}${connectionToShow}${colors.reset}` : `${colors.fg.blue}The connection is empty${colors.reset}`);
       console.log(dbConfig.join(''));
 
       console.log(`${colors.fg.magenta}--------------------------------------`, colors.reset);
