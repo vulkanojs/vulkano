@@ -38,9 +38,7 @@ module.exports = function loadDatabaseApplication() {
     return;
   }
 
-  const toConnect = connection in connections
-    ? connections[connection]
-    : (connection || null);
+  const toConnect = connections[connection];
 
   if (!toConnect) {
     throw `Invalid conection to user MongoDB with source ${connection}`;
@@ -120,11 +118,23 @@ module.exports = function loadDatabaseApplication() {
       const schema = mongoose.Schema(attributes);
 
       Object.keys(virtuals).forEach( (v) => {
-        schema.virtual(v, virtuals[v]);
+
+        const currentVirtual = virtuals[v];
+
+        const {
+          get: getVirtual
+        } = currentVirtual || {};
+
+        if (getVirtual) {
+          schema.virtual(v, currentVirtual).get(getVirtual);
+        } else {
+          schema.virtual(v, currentVirtual);
+        }
+
       });
 
-      schema.set('toObject', { virtuals: true });
-      schema.set('toJSON', { virtuals: true });
+      schema.set('toObject', { virtuals: true, getters: true, setters: true });
+      schema.set('toJSON', { virtuals: true, getters: true, setters: true });
 
       delete current.attributes;
       schema.statics = { ...current };
@@ -205,6 +215,7 @@ module.exports = function loadDatabaseApplication() {
       }
 
       global[model] = db.model(model, schema, model.toLowerCase());
+      global[model].attributes = attributes;
 
     }
 
