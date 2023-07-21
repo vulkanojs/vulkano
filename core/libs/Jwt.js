@@ -35,7 +35,6 @@ module.exports = {
 
     const {
       key,
-      secret,
       algorithms
     } = this.getConfig();
 
@@ -43,7 +42,7 @@ module.exports = {
 
       algorithms: algorithms || ['HS256'],
 
-      secret: secret || key,
+      secret: key,
 
       getToken: (req) => this.getToken(req)
 
