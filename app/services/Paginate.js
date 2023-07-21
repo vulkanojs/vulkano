@@ -26,36 +26,86 @@ module.exports = {
     }, (value) => !value );
 
     // Filter by search
-    if (search) {
+    const searchBy = props.searchBy || [];
 
-      const searchBy = props.searchBy || [];
-      const items = [];
+    const itemsToSearch = [];
+
+    if (search && Array.isArray(searchBy) && searchBy.length > 0 ) {
 
       searchBy.forEach( (item) => {
 
-        const row = {};
+        let type = String;
 
-        if (searchType === 'startwith' || searchType === 'start') {
-          row[item] = new RegExp(['^', Utils.accentToRegex(search), '*.'].join(''), 'i');
-        } else if (searchType === 'endwith' || searchType === 'end') {
-          row[item] = new RegExp(['.*', Utils.accentToRegex(search)].join(''), 'i');
-        } else {
-          row[item] = new RegExp(['.*', Utils.accentToRegex(search), '*.'].join(''), 'i');
+        if (typeof item === 'object') {
+          type = item?.type || String;
         }
 
-        items.push(row);
+        const row = {};
+
+        if (type === String) {
+
+          if (searchType === 'startwith' || searchType === 'start') {
+            row[item] = new RegExp(['^', Utils.accentToRegex(search), '*.'].join(''), 'i');
+          } else if (searchType === 'endwith' || searchType === 'end') {
+            row[item] = new RegExp(['.*', Utils.accentToRegex(search)].join(''), 'i');
+          } else {
+            row[item] = new RegExp(['.*', Utils.accentToRegex(search), '*.'].join(''), 'i');
+          }
+
+        } else if (type === Number) {
+
+          row[item] = search;
+
+        }
+
+        itemsToSearch.push(row);
 
       });
 
-      if (items.length > 0) {
-        result.search = { $or: items };
+    }
+
+    if (props.filterByOr) {
+      if (Array.isArray(props.filterByOr)) {
+        props.filterByOr.forEach( (i) => {
+          itemsToSearch.push(i);
+        });
+      } else {
+        itemsToSearch.push(props.filterByOr);
       }
+    }
+
+    let newSearch = {};
+
+    const currentFilters = {
+      ...(props.filter || {})
+    };
+
+    const hasFilters = Object.keys( props.filter || {} ).length > 0 ? true : false;
+    const hasItems = itemsToSearch.length > 0 ? true : false;
+
+    if (hasItems && hasFilters) {
+
+      newSearch.$and = [];
+
+      // AND
+      newSearch.$and.push(currentFilters);
+
+      // OR
+      newSearch.$and.push({ $or: itemsToSearch });
+
+    } else if (hasItems && !hasFilters) {
+
+      newSearch.$or = itemsToSearch;
+
+    } else if (!hasItems && hasFilters) {
+
+      newSearch = { ...currentFilters };
 
     }
 
     return {
       ...result,
-      ...props.filter || {}
+      search: newSearch
     };
 
   },
