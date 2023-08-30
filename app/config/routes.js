@@ -6,6 +6,9 @@
 
 module.exports = {
 
+  // Content Security Policy
+  // 'POST /__cspreport__': 'ExampleController.cspreport',
+
   '/': 'WelcomeController.get',
 
   // For VUE, REACT, ETC..
