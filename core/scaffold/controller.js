@@ -1,5 +1,25 @@
 module.exports = (modelName) => {
 
+  const {
+    config
+  } = app;
+
+  const {
+    settings
+  } = config;
+
+  const {
+    database
+  } = settings;
+
+  const {
+    connection
+  } = database || {};
+
+  if (!connection && !process.env.MONGO_URI) {
+    return {};
+  }
+
   if (!modelName) {
     console.log(`Invalid Model name ${modelName} to the Scaffold Controller`);
     return {};
