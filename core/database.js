@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 
 global.mongoose = mongoose;
 global.Virtual = 'Virtual';
+global.Mixed = mongoose.Schema.Types.Mixed;
 
 const AllModels = require('./models')();
 

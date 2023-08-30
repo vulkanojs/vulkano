@@ -26,6 +26,7 @@
     "Utils": true,
     "i18n": true,
     "Cloud": true,
+    "Mixed": true,
     "Jwt": true,
     "Serializer": true,
     "Encrypter": true,
