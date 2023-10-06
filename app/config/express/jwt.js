@@ -17,7 +17,7 @@ module.exports = {
   // You can use this https://api.wordpress.org/secret-key/1.1/salt/ to change key
   // @type String
   //
-  key: '[hSG1YnA[A](6[|7s/=`.l8(Ikos>QW?8Q{_/7m<fvDSej(nGf{AqL$Z:!/ehrd?',
+  key: process.env.JWT_SECRET_KEY || '',
 
   //
   // header name via Request

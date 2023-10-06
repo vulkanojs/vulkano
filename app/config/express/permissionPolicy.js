@@ -3,10 +3,16 @@
  */
 module.exports = {
 
-  // Enabled
+  //
+  // Enable Permission Policy
+  // @type Boolean
+  //
   enabled: true,
 
+  //
   // Permissions
+  // @type Array
+  //
   permissions: [
     'accelerometer=()',
     'camera=()',

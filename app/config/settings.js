@@ -14,13 +14,13 @@
 module.exports = {
 
   // Custom Server Config
-  host: process.env.HOST || 'api.production.dev',
+  host: process.env.HOST || '',
 
   // Port
   port: process.env.PORT || 8000,
 
   // Salt for password
-  salt: 'qS~2QWTo]q-91ho4dtz/-,[-WS6+]%8}|@1.@G@V#A9T}LPO,?Qd.|zw!P?5=8S',
+  salt: process.env.SALT_KEY || '',
 
   // Connection to Database
   database: {

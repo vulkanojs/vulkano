@@ -6,8 +6,15 @@
 
 module.exports = {
 
+  //
+  // Enable Cookies
+  // @type Boolean
+  //
   enabled: true,
 
-  secret: 'BC@#^O:|w:V4(.a]-H.p*R1q-=:K$TYl0:ñ#E^L#YJM N88G7,6fdw5+Jsn=Jq<n'
+  // SECRET KEY to sign the cookie
+  // You can use this https://api.wordpress.org/secret-key/1.1/salt/ to change key
+  // @type String
+  secret: process.env.COOKIES_SECRET_KEY || ''
 
 };

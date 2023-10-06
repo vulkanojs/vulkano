@@ -1,5 +1,3 @@
-/* global Jwt */
-
 /**
  *
  * Sockets Config
@@ -8,18 +6,29 @@
 
 module.exports = {
 
-  // Enable sockets
+  //
+  // Enable Sockets
+  // @type Boolean
+  //
   enabled: false,
 
-  // Redis
-  redis: false,
-
+  //
   // Transports
-  // for redis only websocket
-  // !important: in the client site must be only websocket
+  // @type Array
+  //
   transports: ['websocket', 'polling'],
 
-  // Cors
+  //
+  // Adapter for REDIS.
+  // If is enabled, the transports for the client and server should be websocket only.
+  // @type Boolean
+  //
+  redis: false,
+
+  //
+  // Sockets Cors
+  // @type Function
+  //
   cors: (req, callback) => {
 
     const {
@@ -52,13 +61,22 @@ module.exports = {
 
   },
 
-  // Socket timeout
+  //
+  // Sockets Timeout
+  // @type Number
+  //
   timeout: 4000,
 
-  // Interval
+  //
+  // Sockets Interval
+  // @type Number
+  //
   interval: 2000,
 
-  // Connections
+  //
+  // Sockets Connections
+  // @type Object
+  //
   connections: {
 
     users: 0,
@@ -68,6 +86,10 @@ module.exports = {
 
   },
 
+  //
+  // Sockets Middleware
+  // @type Function
+  //
   middleware(socket, next) {
 
     // Security
@@ -88,6 +110,10 @@ module.exports = {
 
   },
 
+  //
+  // When a new client is connected
+  // @type Function
+  //
   onConnect: (socket) => {
 
     const {
@@ -124,7 +150,10 @@ module.exports = {
 
   },
 
-  // Custom evetns
+  //
+  // Events: methods to run when the server listen an event from the client
+  // @type Object
+  //
   events: {
 
     // Examples Chat
