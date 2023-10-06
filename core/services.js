@@ -11,21 +11,24 @@ const coreLibs = require('include-all')({
   optional: true
 });
 
-const appServices = require('include-all')({
-  dirname: path.join(APP_PATH, '/services'),
-  filter: /(.+)\.js$/,
-  optional: true
-});
-
-const allServices = { ...coreLibs, ...appServices };
-
 module.exports = function loadServicesApplication() {
 
-  delete allServices.ActiveRecord;
-  delete allServices.AppController;
+  Object.keys(coreLibs).forEach((service) => {
+    global[service] = coreLibs[service];
+  });
 
-  Object.keys(allServices).forEach((service) => {
-    global[service] = allServices[service];
+  // eslint-disable-next-line global-require
+  const appServices = require('include-all')({
+    dirname: path.join(APP_PATH, '/services'),
+    filter: /(.+)\.js$/,
+    optional: true
+  });
+
+  delete appServices.ActiveRecord;
+  delete appServices.AppController;
+
+  Object.keys(appServices).forEach((service) => {
+    global[service] = appServices[service];
   });
 
 };
