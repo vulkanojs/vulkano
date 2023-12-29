@@ -1,12 +1,10 @@
-/* global Youtube, Cloud, Upload */
-
-const _ = require('underscore');
 const path = require('path');
-const Promise = require('bluebird');
-const rename = Promise.promisify(require('fs').rename);
+const fs = require('fs');
+
 const uuid = require('uuid');
 const mime = require('mime');
-const fs = require('fs');
+const Promise = require('bluebird');
+const rename = Promise.promisify(require('fs').rename);
 const moment = require('moment');
 
 module.exports = {
@@ -14,8 +12,6 @@ module.exports = {
   file(f, opts) {
 
     const {
-      title,
-      description,
       localPath,
       uploadToCloud,
       allowed,
@@ -30,6 +26,7 @@ module.exports = {
     let type = 'file';
     let name = (fileName || file.originalname || '').replace(`.${ext}`, '').replace(/\s/g, '_');
     let enableCloud = (app.config.aws && app.config.aws.enabled) ? true : false;
+
     if (uploadToCloud === false) {
       enableCloud = false;
     }
@@ -54,7 +51,7 @@ module.exports = {
         }
 
         if (allowed && Array.isArray(allowed)) {
-          if (!_.contains(allowed, ext)) {
+          if (!allowed.includes(ext)) {
             throw new VSError(`The extension file is not allowed: ${ext}`, 400);
           }
         }
@@ -64,10 +61,10 @@ module.exports = {
       })
       .then( () => {
 
-        if (_.contains(['gif', 'jpg', 'jpeg', 'png', 'jpe'], ext)) {
+        if ( ['gif', 'jpg', 'jpeg', 'png', 'jpe'].indexOf(ext) >= 0 ) {
           type = 'image';
           name = uuid.v4();
-        } else if (_.contains(['quicktime', 'ogg', 'webm', 'mp4', '3gp', 'mov', 'm4v', 'avi', 'mpg'], ext)) {
+        } else if ( ['quicktime', 'ogg', 'webm', 'mp4', '3gp', 'mov', 'm4v', 'avi', 'mpg'].indexOf(ext) >= 0 ) {
           type = 'video';
           name = uuid.v4();
         }
@@ -87,44 +84,40 @@ module.exports = {
         return rename(filePath, filePublic)
           .then( () => {
 
-            if (enableCloud) {
+            if (!enableCloud) {
 
-              return Promise
-                .resolve()
-                .then( () => {
-
-                  if (type === 'image') {
-                    return Upload.uploadImageS3(file, ext);
-                  }
-
-                  if (type === 'video') {
-                    return Upload.uploadYoutube(file, title, description);
-                  }
-
-                  return Upload.uploadFileS3(file, ext);
-
-                })
-                .then( (r) => {
-                  if (removeLocalFile === true) {
-
-                    try {
-                      fs.unlinkSync(filePublic);
-                    } catch (err) {
-                      console.error(err);
-                    }
-
-                  }
-                  console.log(r);
-                  return r;
-                });
+              return type === 'image'
+                ? Upload.processImage(file, ext)
+                : Upload.processFile(file, ext);
 
             }
 
-            if (type === 'image') {
-              return Upload.processImage(file, ext);
-            }
+            return Promise
+              .resolve()
+              .then( () => {
 
-            return Upload.processFile(file, ext);
+                if (type === 'image') {
+                  return Upload.uploadImageS3(file, ext);
+                }
+
+                return Upload.uploadFileS3(file, ext);
+
+              })
+              .then( (r) => {
+
+                if (removeLocalFile === true) {
+
+                  try {
+                    fs.unlinkSync(filePublic);
+                  } catch (err) {
+                    console.error(err);
+                  }
+
+                }
+
+                return r;
+
+              });
 
           });
 
@@ -146,11 +139,14 @@ module.exports = {
             return result;
           }
 
-          result = Object.assign(result, {
-            thumbnail: r.thumbnail,
-            medium: r.medium,
-            large: r.large
-          });
+          result = {
+            ...result,
+            ...{
+              thumbnail: r.thumbnail,
+              medium: r.medium,
+              large: r.large
+            }
+          };
 
         }
 
@@ -170,9 +166,11 @@ module.exports = {
   isUploaded(file, fieldname) {
 
     const tmp = (file && file[0]) || null;
+
     if (!tmp) {
       return false;
     }
+
     return (tmp.fieldname === 'file' || tmp.fieldname === `''${fieldname}` || tmp.originalname === `''${fieldname}`) ? tmp : false;
 
   },
@@ -234,7 +232,7 @@ module.exports = {
 
     const validType = [...images, ...videos, ...files, ...zip];
 
-    return _.find( validType, (item) => item === mimetype);
+    return validType.find( (item) => item === mimetype );
 
   },
 
@@ -282,8 +280,7 @@ module.exports = {
 
     const filePublic = path.normalize(`${process.cwd()}/public/files/${file.originalname}`);
 
-    return Cloud
-      .image(filePublic, ext)
+    return Cloud.image(filePublic, ext)
       .then( (url) => ({
         name: file.originalname,
         url
@@ -302,40 +299,11 @@ module.exports = {
 
     const filePublic = path.normalize(`${process.cwd()}/public/files/${file.originalname}`);
 
-    return Cloud
-      .file(filePublic)
+    return Cloud.file(filePublic)
       .then( (r) => ({
         name: file.originalname,
         url: r
       }));
-
-  },
-
-  /**
-   * Upload to Youtube
-   *
-   * @param {type} file
-   * @param {string} title
-   * @param {string} description
-   * @returns {Object}
-   */
-  uploadYoutube(file, title, description) {
-
-    const result = {
-      name: file.originalname,
-      url: '',
-      youtubeId: ''
-    };
-
-    const filePublic = path.normalize(`${process.cwd()}/public/files/${file.originalname}`);
-
-    return Youtube
-      .upload({ video: filePublic, title, description })
-      .then( (upload) => {
-        result.url = `https://www.youtube.com/watch?v=${upload.id}`;
-        result.youtubeId = upload.id;
-        return result;
-      });
 
   }
 

@@ -15,7 +15,7 @@ module.exports = {
   example(payload) {
 
     const defaultProps = {
-      to: payload.to || 'argordmel@gmail.com',
+      to: payload.to || 'your@email.com',
       subject: payload.subject || 'This is a email test',
       data: {}
     };
