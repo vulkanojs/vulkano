@@ -4,7 +4,8 @@
 
 # Vulkano
 
-Vulkano is a small, simple, and fast framework for creating web applications using NodeJS. Inspired by KumbiaPHP.
+Vulkano is a small, simple, and fast framework for creating web applications using NodeJS.
+Inspired by KumbiaPHP.
 
 [![Backers on Open Collective](https://opencollective.com/vulkanojs/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/vulkanojs/sponsors/badge.svg)](#sponsors)
@@ -18,7 +19,7 @@ Thank you to all [our backers](https://opencollective.com/vulkanojs#backer)! ðŸ™
 
 ## Stack
 
-### API
+### @vulkano/core
 
 - Node.js
 - [Express](http://expressjs.com)
@@ -26,96 +27,50 @@ Thank you to all [our backers](https://opencollective.com/vulkanojs#backer)! ðŸ™
 - [Nunjucks](http://mozilla.github.io/nunjucks/) (Template Engine)
 - [Nodemon](http://nodemon.io/) (Reload automatically for dev mode)
 - [PM2](http://pm2.keymetrics.io/) (Deployment)
-- [Gulp](https://gulpjs.com/) (Automate and enhance your workflow)
-- [BrowserSync](https://www.browsersync.io/) (Time-saving synchronised browser testing)
-- [WebPack](https://webpack.js.org/) (Bundle your scripts)
 
 ## Install
 
 ### System
 
-- Unix
-- Node.js v12+
+- Unix or WSL v2
+- Node.js v20+
 
 ### Packages
 
 ```bash
-$ yarn install
+$ bun install
 ```
 
 ## Workflow
 
 | Command                         | Description                               |
 | :------------------------------	| :---------------------------------------- |
-| `npm run dev`                   | Run development server and watch changes	|
-| `npm run start`                 | Start development server                  |
-| `npm run gulp`                  | Start browsersync & sass                  |
-| `npm run webpack`               | Start webpack                             |
-| `npm run build`                 | Task to buils assets in production mode   |
-| `npm run deploy:heroku`         | Update Heroku app                         |
-| `npm run deploy:server`         | Deploy app into server                    |
-
+| `bun run dev`                   | Run development server and watch changes	|
 
 ## Structure
 
 - `app/`
-- `client/`
-- `cms/`
-- `core/`
+  - `config/`
+    - `env/`
+    - `express/`
+    - `locales/`
+    - `views/`
+  - `controllers/`
+  - `models/`
+  - `services/`
+  - `views/`
 - `public/` - HTTP Public folder
+  - `css/` - HTTP Public folder
+  - `files/` - HTTP Public folder
+  - `fonts/` - HTTP Public folder
+  - `img/` - HTTP Public folder
+  - `js/` - HTTP Public folder
 - `Procfile` - Heroku entry point
 - `README.md`
-- `app.js` - Server entry point
+- `vulkano.js` - Server entry point
 - `nodemon.json` - Nodemon entry point
 
 
 ## Your App Folder
 
-### Config
-You can create any config enviroments as needed. By default, vulcano runs with NODE_ENV=development, in development mode. In productions servers, you should change NODE_ENV to _production_.
-
-#### connections.js
-
-#### policies.js
-
-#### routes.js
-
-#### server.js
-
-### Controllers
-
-### Helpers
-
-#### Filters
-
-### Models
-
-### Responses
-
-#### vsr.js
-
-### Services
-
-#### ActiveRecord.js
-
-#### AppController.js
-
-#### Filter.js
-
-#### Jwt.js (Json Web Token)
-
-#### Paginate.js
-
-#### Upload.js
-
-#### VSError.js
-
-### Views.js
-
-#### _shared
-
-##### Errors
-
-##### Partials
-
-##### Templates
+Coming soon...
