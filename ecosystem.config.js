@@ -34,10 +34,7 @@ module.exports = {
       repo: 'GIT_REPOSITORY',
       path: 'DESTINATION_PATH',
       'pre-setup': 'echo "commands or local script path to be run on the host before the setup process starts"',
-      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano && pm2 save',
-      env: {
-        NODE_ENV: 'production'
-      }
+      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano && pm2 save'
     },
 
     staging: {
@@ -48,10 +45,7 @@ module.exports = {
       repo: 'GIT_REPOSITORY',
       path: 'DESTINATION_PATH',
       'pre-setup': 'echo "commands or local script path to be run on the host before the setup process starts"',
-      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano-staging && pm2 save',
-      env: {
-        NODE_ENV: 'development'
-      }
+      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano-staging && pm2 save'
     }
 
   }
