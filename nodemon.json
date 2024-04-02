@@ -3,8 +3,7 @@
   "ignore": [
     ".git/",
     "public/",
-    "nbproject/",
-    "src/"
+    "nbproject/"
   ],
   "env": {
     "NODE_ENV": "development",

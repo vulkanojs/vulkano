@@ -14,7 +14,8 @@
     "deploy:server": "pm2 deploy production"
   },
   "dependencies": {
-    "@vulkano/core": "^1.0.0"
+    "@vulkano/core": "^1.0.0",
+    "concurrently": "^8.2.2"
   },
   "repository": {
     "type": "git",
@@ -24,8 +25,5 @@
     "node",
     "heroku",
     "express"
-  ],
-  "devDependencies": {
-
-  }
+  ]
 }
