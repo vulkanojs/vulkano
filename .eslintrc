@@ -28,7 +28,7 @@
     "Cloud": true,
     "Mixed": true,
     "Jwt": true,
-    "Serializer": true,
+    "ApiClient": true,
     "Encrypter": true,
     "Crontab": true,
     "VSError": true,
@@ -41,16 +41,6 @@
   "settings": {
     "react": {
       "version": "999.999.999"
-    },
-    "import/resolver": {
-      "alias": {
-        "extensions": [".js", ".vue", ".jsx"],
-        "map": [
-          ["@client", "./src/client"],
-          ["@cms", "./src/cms"],
-          ["@common", "./src/common"]
-        ]
-      }
     }
   },
   "rules": {
