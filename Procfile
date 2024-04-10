@@ -1,1 +1,1 @@
-web: node vulkano.js
+web: node app.js
