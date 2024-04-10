@@ -9,7 +9,7 @@ module.exports = {
   // Content Security Policy
   // 'POST /__cspreport__': 'ExampleController.cspreport',
 
-  '/': 'WelcomeController.get',
+  '/': 'HomeController.get',
 
   // For VUE, REACT, ETC..
   // '/admin*': 'AdminController.get',
