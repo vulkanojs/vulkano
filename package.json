@@ -17,7 +17,7 @@
     "express"
   ],
   "scripts": {
-    "dev": "node './node_modules/nodemon/bin/nodemon.js --inspect'",
+    "dev": "./node_modules/nodemon/bin/nodemon.js --inspect",
     "start": "node app.js"
   },
   "dependencies": {
