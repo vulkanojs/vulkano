@@ -67,7 +67,7 @@ $ bun install
   - `js/` - HTTP Public folder
 - `Procfile` - Heroku entry point
 - `README.md`
-- `vulkano.js` - Server entry point
+- `app.js` - Server entry point
 - `nodemon.json` - Nodemon entry point
 
 
