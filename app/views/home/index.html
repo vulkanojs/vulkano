@@ -2,10 +2,39 @@
 
 {% block content %}
 
-<div class="wrapper">
+<style>
+  body {
+    background: #f2f2f2;
+    color: #0c0c0c;
+  }
+  code {
+    background: #f2f2f2;
+    padding: 0.25rem;
+    color: #B1252B;
+    font-weight: bold;
+  }
+
+  h1, h2, h3 {
+    color: #9D553C;
+  }
+
+  a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+  }
+
+  a:hover {
+    color: #535bf2;
+    text-decoration: underline;
+  }
+
+</style>
+
+<div class="wrapper" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; font-family: Arial, Sans-Serif">
   <header>
-    <div class="logo">
-      <img src="/img/vulkano-logo-optimized.png" alt="">
+    <div class="logo" style="text-align: center">
+      <img src="/img/vulkano-logo-optimized.png" alt="" style="max-width: 300px">
     </div>
     <div class="title">
       <span class="title">Vulkano</span>
@@ -105,16 +134,7 @@
     </li>
     <li>
       <p>
-        If you modify sass files in <code>client/scss</code> while runing <code>npm run gulp</code>, your
-        styles will be parsed and compiled via Gulp. Browsersync is included in the box.
-        Checkout <code>/gulpfile.app.js</code> and <code>/gulp.base.js</code> to make this fit your needs.
-      </p>
-    </li>
-    <li>
-      <p>
-        If you modify js files in <code>client/js</code> while runing <code>npm run webpack</code>, your js files
-        will be proccessed and packed by Webpack. Please checkout <code>/webpack.app.js</code> and <code>/webpack.base.js</code>
-        to see more.
+        Incoming: Support to Vue 3 and Vite or esbuild
       </p>
     </li>
   </ul>
