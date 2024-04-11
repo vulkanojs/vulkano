@@ -4,8 +4,13 @@
 
 module.exports = {
 
+  // Extend methods of Scaffold Controller
   scaffold: true,
 
+  // Allowed methods
+  allowedMethods: ['get', 'post', 'put', 'delete'],
+
+  // Model to CRUD (create, read, update and delete) records
   model: 'ExampleWithScaffold'
 
 };
