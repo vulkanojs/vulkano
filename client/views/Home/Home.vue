@@ -1,6 +1,9 @@
 <template>
 
   <div class="home">
+    <a href="https://github.com/vulkanojs/vulkano" target="_blank">
+      <img src="/img/vulkano-logo-optimized.png" alt="Vulkano logo" />
+    </a>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite/vite.svg" alt="Vite logo" />
     </a>
@@ -9,9 +12,13 @@
     </a>
   </div>
 
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld msg="Vulkano + Vite + Vue" />
 
-  <p>Current Test: /views/Home/Home.vue</p>
+  <p>
+    Edit
+    Current View:
+    <code>/views/Home/Home.vue</code> to test HMR
+  </p>
 
 </template>
 

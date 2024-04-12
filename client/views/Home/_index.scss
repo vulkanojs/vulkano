@@ -14,6 +14,14 @@
     &:first-child {
       &:hover {
         img {
+          filter: drop-shadow(0 0 2em #5B3328aa);
+        }
+      }
+    }
+
+    &:nth-child(2) {
+      &:hover {
+        img {
           filter: drop-shadow(0 0 2em #646cffaa);
         }
       }
