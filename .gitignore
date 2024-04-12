@@ -57,13 +57,7 @@ dwsync.xml
 #docker-compose.yml
 
 # Project
-public/css/app.css
-public/css/app.css.map
-public/js/app.js
-public/js/app.js.map
-public/css/cms.css
-public/css/cms.css.map
-public/js/cms.js
-public/js/cms.js.map
+public/css/index.css
+public/index.html
+public/js/index.js
 public/js/vendors.js
-public/js/vendors.js.map

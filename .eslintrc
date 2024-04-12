@@ -41,6 +41,14 @@
   "settings": {
     "react": {
       "version": "999.999.999"
+    },
+    "import/resolver": {
+      "alias": {
+        "extensions": [".js", ".vue", ".jsx"],
+        "map": [
+          ["@client", "./client"]
+        ]
+      }
     }
   },
   "rules": {

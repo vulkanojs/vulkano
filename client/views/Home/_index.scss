@@ -1,0 +1,32 @@
+.home {
+
+  img {
+
+    height: 6rem;
+    padding: 1.5rem;
+    will-change: filter;
+    transition: filter 300ms;
+
+  }
+
+  a {
+
+    &:first-child {
+      &:hover {
+        img {
+          filter: drop-shadow(0 0 2em #646cffaa);
+        }
+      }
+    }
+
+    &:last-of-type {
+      &:hover {
+        img {
+          filter: drop-shadow(0 0 2em #42b883aa);
+        }
+      }
+    }
+
+  }
+
+}

@@ -2,14 +2,22 @@
  * Local Bootstrap
  */
 
-module.exports = (start) => {
+module.exports = (startVulkano) => {
 
-  Promise
-    .resolve()
-    .then( () => {
+  // Start app
+  startVulkano( () => {
 
-      // Start app
-      start();
-    });
+    if (process.env.NODE_ENV !== 'production') {
+
+      // proxy hmr ws back to vite
+      app.server.on('upgrade', (req, socket, head) => {
+        if (req.url === '/') {
+          app.viteProxy.ws(req, socket, head);
+        }
+      });
+
+    }
+
+  });
 
 };

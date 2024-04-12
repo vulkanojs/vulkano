@@ -4,5 +4,8 @@
     ".git/",
     "public/",
     "nbproject/"
+  ],
+  "ignoreRoot": [
+    ".git"
   ]
 }
