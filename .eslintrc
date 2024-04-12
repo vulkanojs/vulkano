@@ -46,7 +46,8 @@
       "alias": {
         "extensions": [".js", ".vue", ".jsx"],
         "map": [
-          ["@client", "./client"]
+          ["@client", "./client"],
+          ["@cms", "./cms"]
         ]
       }
     }

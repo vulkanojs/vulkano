@@ -19,10 +19,15 @@ export default defineConfig({
     }
   },
   build: {
+    root: './',
     emptyOutDir: false,
-    outDir: `${path.resolve(__dirname, 'public')}`,
+    outDir: path.resolve(__dirname, 'public'),
     rollupOptions: {
-      external: /\/img\/.*/,
+      // external: /\/img\/.*/,
+      input: {
+        index: path.resolve(__dirname, 'index.html'),
+        cms: path.resolve(__dirname, 'cms/index.html'),
+      },
       output: {
         chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
         entryFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
@@ -51,7 +56,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@client': `${path.resolve(__dirname, 'client')}/`
+      '@client': `${path.resolve(__dirname, 'client')}/`,
+      '@cms': `${path.resolve(__dirname, 'cms')}/`
     }
   }
 });
