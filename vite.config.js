@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue';
 /**
  * Allow the hash for files
  */
-const allowHashForCache = false;
+const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'true' ? true : false;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +25,7 @@ export default defineConfig({
     rollupOptions: {
       // external: /\/img\/.*/,
       input: {
-        index: path.resolve(__dirname, 'index.html'),
+        app: path.resolve(__dirname, 'client/index.html'),
         cms: path.resolve(__dirname, 'cms/index.html'),
       },
       output: {
