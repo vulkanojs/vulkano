@@ -1,5 +1,3 @@
-/* global Jwt */
-
 /**
  * Middleware.js
  *
