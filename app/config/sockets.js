@@ -10,17 +10,18 @@ module.exports = {
   // Enable Sockets
   // @type Boolean
   //
-  enabled: false,
+  enabled: true,
 
   //
   // Transports
+  // For redis use only websocket, also in client too
   // @type Array
   //
   transports: ['websocket', 'polling'],
 
   //
   // Adapter for REDIS.
-  // If is enabled, the transports for the client and server should be websocket only.
+  // If redis enabled, the transports for the client and server should be websocket only.
   // @type Boolean
   //
   redis: false,
@@ -39,6 +40,7 @@ module.exports = {
     const realOrigin = origin || host;
 
     const allowedOrigin = [
+      'localhost:3000',
       'yourdomain.com'
     ];
 
@@ -157,7 +159,8 @@ module.exports = {
   events: {
 
     // Examples Chat
-    // event: folder.YourController.method
+    // event:action: folder.YourController.method
+    //
     // 'chat:signin': 'sockets.ChatController.signin',
     // 'chat:message': 'sockets.ChatController.save',
     // 'chat:history': 'sockets.ChatController.get'
