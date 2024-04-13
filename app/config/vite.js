@@ -18,8 +18,6 @@ module.exports = async function setupVite(startVulkano) {
     }
   });
 
-  console.log('inicializa');
-
   app.viteProxy = proxy;
 
   if (typeof startVulkano === 'function') {
