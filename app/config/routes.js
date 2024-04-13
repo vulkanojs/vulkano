@@ -9,10 +9,9 @@ module.exports = {
   // Content Security Policy
   // 'POST /__cspreport__': 'ExampleController.cspreport',
 
+  // Vite Home page & Vite Proxy
   '/': 'HomeController.get',
-
-  // Vite Proxy
-  '/*': process.env.NODE_ENV !== 'production' ? 'HomeController.proxy' : 'HomeController.get'
+  '/*': 'HomeController.proxy'
 
   // For VUE, REACT, ETC..
   // '/admin*': 'AdminController.get',
