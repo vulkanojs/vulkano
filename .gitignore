@@ -59,9 +59,9 @@ dwsync.xml
 # Project
 
 # CSS
-public/css/index.css
-public/css/app.css
-public/css/cms.css
+public/css/index*.css
+public/css/app*.css
+public/css/cms*.css
 
 # HTML
 public/index.html
@@ -69,8 +69,8 @@ public/cms/index.html
 public/client/index.html
 
 # JS
-public/js/index.js
-public/js/app.js
-public/js/cms.js
-public/js/vendors.js
-public/js/modulepreload-polyfill.js
+public/js/index*.js
+public/js/app*.js
+public/js/cms*.js
+public/js/vendors*.js
+public/js/modulepreload-polyfill*.js
