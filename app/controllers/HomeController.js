@@ -18,7 +18,7 @@ module.exports = {
             .catch( () => fs.readFileSync(`${APP_PATH}/views/home/index.html`).toString());
         }
 
-        return fs.readFileSync(`${ABS_PATH}/public/index.html`).toString();
+        return fs.readFileSync(`${ABS_PATH}/public/client/index.html`).toString();
 
       })
       .then( async (template) => {
