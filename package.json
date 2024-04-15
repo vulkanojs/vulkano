@@ -22,7 +22,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.2.0",
+    "@vulkano/core": "^1.4.0",
     "axios": "^1.6.8",
     "http-proxy": "^1.18.1",
     "moment": "^2.30.1",
