@@ -6,6 +6,7 @@
     "nbproject/"
   ],
   "env": {
+    "VITE_PROXY_PORT": 39876,
     "VITE_CJS_IGNORE_WARNING": true
   }
 }
