@@ -10,7 +10,7 @@ module.exports = {
   // Enable CORS
   // @type Boolean
   //
-  enabled: true,
+  enabled: false,
 
   //
   // Path

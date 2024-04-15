@@ -10,7 +10,7 @@ module.exports = {
   // Enable Cookies
   // @type Boolean
   //
-  enabled: true,
+  enabled: false,
 
   // SECRET KEY to sign the cookie
   // You can use this https://api.wordpress.org/secret-key/1.1/salt/ to change key

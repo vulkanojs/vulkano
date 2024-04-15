@@ -10,7 +10,7 @@ module.exports = {
   // Enable JWT
   // @type Boolean
   //
-  enabled: true,
+  enabled: false,
 
   //
   // Custom KEY
