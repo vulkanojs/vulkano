@@ -5,7 +5,7 @@
     "public/",
     "nbproject/"
   ],
-  "ignoreRoot": [
-    ".git"
-  ]
+  "env": {
+    "VITE_CJS_IGNORE_WARNING": true
+  }
 }
