@@ -1,10 +1,6 @@
 module.exports = {
 
   // Change the views path
-  // path: `${APP_PATH}/views`,
-
-  settings: {
-    test: 'hola'
-  }
+  path: `${APP_PATH}/views`,
 
 };

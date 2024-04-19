@@ -9,11 +9,11 @@ module.exports = {
   // Content Security Policy
   // 'POST /__cspreport__': 'ExampleController.cspreport',
 
-  // Vite Home page & Vite Proxy
-  '/': 'HomeController.get',
-  '/*': 'HomeController.proxy'
+  // Vite & Vite Proxy
+  '/': 'ViteController.get',
+  '/*': 'ViteController.proxy'
 
-  // For VUE, REACT, ETC..
+  // For admin VUE, REACT, ETC..
   // '/admin*': 'AdminController.get',
   // '/*': 'HomeController.get'
 
