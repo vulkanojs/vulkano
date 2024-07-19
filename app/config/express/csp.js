@@ -16,6 +16,7 @@ module.exports = {
     max_age: '10886400',
     endpoints: [
       {
+        // @TODO replace it for your domain name
         url: 'https://yourdomain.com/__cspreport__'
       }
     ]
@@ -23,15 +24,82 @@ module.exports = {
   },
 
   // Values
-  rules: [
-    "default-src 'self'",
-    "font-src 'self' data:",
-    "img-src 'self'",
-    "script-src 'self' 'sha256-AF490//jIflwN/2nTDszvAx/KI2V9GJG8gdwvGhO/zw='",
-    "style-src 'self'",
-    "frame-src 'self'",
-    "frame-ancestors 'self' https://yourdomain.com https://yourlocal.local",
-    'report-to csp-endpoint; report-uri /__cspreport__'
-  ]
+  rules: {
+
+    // Default
+    'default-src': [
+      "'self'"
+    ],
+
+    // Form
+    'form-action': [
+      "'self'"
+    ],
+
+    // Fonts
+    'font-src': [
+      "'self'",
+      'data:',
+      // 'fonts.googleapis.com',
+      // 'fonts.gstatic.com',
+      // 'yourS3orCDN.com'
+    ],
+
+    // Imgages
+    'img-src': [
+      "'self'",
+      'data:',
+      // '*.google-analytics.com',
+      // '*.googletagmanager.com',
+      // 'yourS3orCDN.com'
+    ],
+
+    // Scripts
+    'script-src': [
+      "'self'",
+      // "'unsafe-inline'",
+      // "'unsafe-eval'",
+      // 'cdnjs.cloudflare.com',
+      // '*.googletagmanager.com',
+      // 'yourS3orCDN.com'
+    ],
+
+    // Styles
+    'style-src': [
+      "'self'",
+      "'unsafe-inline'",
+      'cdnjs.cloudflare.com'
+    ],
+
+    'style-src-elem': [
+      "'self'",
+      // 'cdnjs.cloudflare.com',
+      // 'fonts.googleapis.com',
+      // 'fonts.gstatic.com',
+      // 'yourS3orCDN.com'
+    ],
+
+    // Frame
+    'frame-src': [
+      "'self'"
+    ],
+    'frame-ancestors': [
+      "'self'"
+    ],
+
+    // Connection
+    'connect-src': [
+      "'self'",
+      // '*.googletagmanager.com',
+      // '*.google-analytics.com',
+      // '*.analytics.google.com',
+    ],
+
+    // CSP Report
+    'report-to': [
+      'csp-endpoint'
+    ]
+
+  }
 
 };
