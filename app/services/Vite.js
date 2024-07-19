@@ -6,7 +6,7 @@ module.exports = {
 
   init(buildPath) {
 
-    this.buildPath = buildPath || 'public';
+    this.buildPath = buildPath || 'public/.vite';
 
     // we must have a manifest file...
     let manifestPath = null;

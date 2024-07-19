@@ -60,13 +60,13 @@ export default defineConfig({
       name: 'override-config',
       config: () => ({
         build: {
-          manifest: 'manifest.json',
+          manifest: '.vite/manifest.json',
         },
       }),
     },
     eslint,
     devManifest({
-      manifestName: `manifest.${process.env.NODE_ENV || 'development'}`
+      manifestName: `.vite/manifest.${process.env.NODE_ENV || 'development'}`
     }),
     vue({
       template: {

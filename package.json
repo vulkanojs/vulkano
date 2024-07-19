@@ -18,11 +18,11 @@
     "express"
   ],
   "scripts": {
-    "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,VULKANO -c green,cyan 'vite' './node_modules/nodemon/bin/nodemon.js --inspect --trace-deprecation --trace-warnings'",
+    "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,VULKANO -c green,magenta 'vite' './node_modules/nodemon/bin/nodemon.js --inspect --trace-deprecation --trace-warnings'",
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.8.1",
+    "@vulkano/core": "^1.10.0",
     "axios": "^1.7.2",
     "concurrently": "^8.2.2",
     "moment": "^2.30.1",

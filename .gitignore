@@ -63,7 +63,7 @@ public/css/index*.css
 public/css/app*.css
 public/css/cms*.css
 
-public/manifest*.json
+public/.vite
 
 # HTML
 public/index.html
