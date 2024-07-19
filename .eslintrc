@@ -23,6 +23,7 @@
     "Promise": true,
     "Paginate": true,
     "Upload": true,
+    "Download": true,
     "Utils": true,
     "i18n": true,
     "Cloud": true,
