@@ -5,10 +5,10 @@
       <img src="/img/vulkano-logo-optimized.png" alt="Vulkano logo" />
     </a>
     <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite/vite.svg" alt="Vite logo" />
+      <img src="/img/vite/vite.svg" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
-      <img src="/vite/vue.svg" alt="Vue logo" />
+      <img src="/img/vite/vue.svg" alt="Vue logo" />
     </a>
   </div>
 
