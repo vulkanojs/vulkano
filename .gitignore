@@ -63,6 +63,8 @@ public/css/index*.css
 public/css/app*.css
 public/css/cms*.css
 
+public/manifest*.json
+
 # HTML
 public/index.html
 public/cms/index.html

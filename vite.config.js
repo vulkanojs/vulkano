@@ -3,30 +3,34 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import eslint from 'vite-plugin-eslint';
+import devManifest from 'vite-plugin-dev-manifest';
 
 /**
  * Allow the hash for files
  */
+
 const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'true' ? true : false;
 
-// https://vitejs.dev/config/
 export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        quietDeps: true
+        quietDeps: true,
+        includePaths: [
+          './',
+        ]
       }
     }
   },
   build: {
-    root: './',
     emptyOutDir: false,
-    outDir: path.resolve(__dirname, 'public'),
+    outDir: `${path.resolve(__dirname, 'public')}`,
     rollupOptions: {
-      // external: /\/img\/.*/,
+      // overwrite default .html entry
       input: {
-        app: path.resolve(__dirname, 'client/index.html'),
-        cms: path.resolve(__dirname, 'cms/index.html'),
+        app: 'client/app.js',
+        cms: 'cms/cms.js',
       },
       output: {
         chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
@@ -48,11 +52,31 @@ export default defineConfig({
           return `js/[name]${hash}[extname]`;
 
         },
-      },
+      }
     },
   },
   plugins: [
-    vue()
+    {
+      name: 'override-config',
+      config: () => ({
+        build: {
+          manifest: 'manifest.json',
+        },
+      }),
+    },
+    eslint,
+    devManifest({
+      manifestName: `manifest.${process.env.NODE_ENV || 'development'}`
+    }),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => [
+            // ADD YOUR CUSTOM TAGS
+          ].includes(tag),
+        }
+      }
+    })
   ],
   resolve: {
     alias: {

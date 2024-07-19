@@ -1,20 +1,20 @@
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
-    <title>VulkanoJS</title>
+    <title>CMS - VulkanoJS</title>
     <meta charset=UTF-8 >
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/favicon.png?v={{ app.pkg.version }}" />
 
-    {{ vite({ entry: 'app', type: 'style' }) | safe }}
+    {{ vite({ entry: 'cms', type: 'style' }) | safe }}
 
   </head>
   <body>
 
     <div id="app">{% block content %} {% endblock %}</div>
 
-    {{ vite({ entry: 'app', type: 'script' }) | safe }}
+    {{ vite({ entry: 'cms', type: 'script' }) | safe }}
 
   </body>
 </html>

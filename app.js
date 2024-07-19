@@ -10,20 +10,4 @@
 
 const vulkano = require('@vulkano/core');
 
-// Import Vite support
-const enableViteSupport = require('./app/config/vite');
-
-const {
-  NODE_ENV,
-  VITE_PROXY_PORT
-} = process.env || {};
-
-if (NODE_ENV === 'production' || !VITE_PROXY_PORT) {
-
-  vulkano();
-
-} else {
-
-  enableViteSupport(vulkano);
-
-}
+vulkano();

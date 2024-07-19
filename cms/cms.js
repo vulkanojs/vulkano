@@ -1,3 +1,3 @@
 import '@cms/style.scss';
 
-console.log('cms');
+console.log('CMS');
