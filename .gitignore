@@ -63,8 +63,6 @@ public/css/index*.css
 public/css/app*.css
 public/css/cms*.css
 
-public/.vite
-
 # HTML
 public/index.html
 public/cms/index.html

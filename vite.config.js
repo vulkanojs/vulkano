@@ -24,6 +24,7 @@ export default defineConfig({
     }
   },
   build: {
+    manifest: true,
     emptyOutDir: false,
     outDir: `${path.resolve(__dirname, 'public')}`,
     rollupOptions: {
@@ -56,14 +57,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    {
-      name: 'override-config',
-      config: () => ({
-        build: {
-          manifest: '.vite/manifest.json',
-        },
-      }),
-    },
     eslint,
     devManifest({
       manifestName: `.vite/manifest.${process.env.NODE_ENV || 'development'}`
