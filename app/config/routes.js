@@ -27,6 +27,7 @@ module.exports = {
    * - Easy mode
    */
   '/': 'HomeController.get',
+  '/admin*': 'HomeController.cms',
 
   /**
    * Your Routes as definition

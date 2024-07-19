@@ -8,6 +8,12 @@ module.exports = {
 
     res.render('home/index.html');
 
-  }
+  },
+
+  cms(req, res) {
+
+    res.render('home/cms.html');
+
+  },
 
 };
