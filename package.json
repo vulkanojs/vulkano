@@ -22,7 +22,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.10.0",
+    "@vulkano/core": "^1.11.0",
     "axios": "^1.7.2",
     "concurrently": "^8.2.2",
     "moment": "^2.30.1",
