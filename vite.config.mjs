@@ -13,11 +13,15 @@ import devManifest from 'vite-plugin-dev-manifest';
 const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'true' ? true : false;
 
 export default defineConfig({
+  server: {
+    host: process.env.VITE_HOST || 'localhost'
+  },
   css: {
     preprocessorOptions: {
       scss: {
         quietDeps: true,
-        includePaths: [
+        silenceDeprecations: ['import'],
+        loadPaths: [
           './',
         ]
       }
