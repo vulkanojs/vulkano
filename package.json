@@ -4,7 +4,7 @@
   "description": "A MVC framework using Express 4",
   "license": "MIT",
   "engines": {
-    "node": "^20"
+    "node": "^20 || ^22"
   },
   "main": "app.js",
   "author": "Vulkano Team",
@@ -22,7 +22,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.14.0",
+    "@vulkano/core": "^1.14.1",
     "axios": "^1.8.1",
     "concurrently": "^9.1.2",
     "moment": "^2.30.1",
@@ -44,13 +44,13 @@
     "@babel/preset-stage-1": "^7.8.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "babel-loader": "^9.2.1",
-    "eslint": "^9.21.0",
+    "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "sass": "^1.85.1",
     "vite": "^6.2.0",
     "webpack": "^5.98.0"
