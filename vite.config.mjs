@@ -2,6 +2,7 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
+import dotenv from 'dotenv';
 import vue from '@vitejs/plugin-vue';
 import eslint from 'vite-plugin-eslint';
 import devManifest from 'vite-plugin-dev-manifest';
@@ -9,6 +10,8 @@ import devManifest from 'vite-plugin-dev-manifest';
 /**
  * Allow the hash for files
  */
+
+dotenv.config();
 
 const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'true' ? true : false;
 
@@ -23,6 +26,10 @@ export default defineConfig({
         silenceDeprecations: ['import'],
         loadPaths: [
           './',
+          './node_modules/foundation-sites/scss',
+          './node_modules/@mdi/font/scss',
+          './node_modules/element-plus',
+          './node_modules/aos/src/sass'
         ]
       }
     }

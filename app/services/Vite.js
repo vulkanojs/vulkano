@@ -12,10 +12,10 @@ module.exports = {
     let manifestPath = null;
 
     const env = String(process.env.NODE_ENV || 'development').toLowerCase();
-    const isProd = env === 'production' ? true : false;
+    const isDev = env === 'development' ? true : false;
 
     try {
-      manifestPath = isProd
+      manifestPath = !isDev
         ? fs.readFileSync(`${this.buildFolder()}/manifest.json`, 'utf8')
         : fs.readFileSync(`${this.buildFolder()}/manifest.${env}.json`, 'utf8');
     } catch {
@@ -23,7 +23,7 @@ module.exports = {
     }
 
     if (!manifestPath) {
-      if (isProd) {
+      if (!isDev) {
         console.log(`No Vite Manifest exists. Path: ${this.buildFolder()}/manifest.json. Should hot server be running?`);
       } else {
         console.log(`No Vite Manifest exists. Path: ${this.buildFolder()}/manifest.${env}.json. Should hot server be running?`);
