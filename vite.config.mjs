@@ -17,6 +17,10 @@ const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'tru
 
 export default defineConfig({
   server: {
+    server: {
+    cors: {
+      origin: '*'
+    },
     host: process.env.VITE_HOST || 'localhost'
   },
   css: {
