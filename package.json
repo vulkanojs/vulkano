@@ -22,18 +22,19 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.15.2",
-    "axios": "^1.8.4",
-    "concurrently": "^9.1.2",
-    "dotenv": "^16.4.7",
+    "@vulkano/core": "^1.15.6",
+    "axios": "^1.13.1",
+    "concurrently": "^9.2.1",
+    "dotenv": "^17.2.3",
+    "gsap": "^3.13.0",
     "moment": "^2.30.1",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "promise.prototype.finally": "^3.1.8",
     "underscore": "^1.13.7",
-    "vite-plugin-dev-manifest": "^1.4.0",
+    "vite-plugin-dev-manifest": "^1.4.1",
     "vite-plugin-eslint": "^1.8.1",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
