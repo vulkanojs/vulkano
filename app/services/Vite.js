@@ -2,31 +2,37 @@ const fs = require('fs');
 
 module.exports = {
 
-  buildPath: '',
-
   init(buildPath) {
-
-    this.buildPath = buildPath || 'public/.vite';
 
     // we must have a manifest file...
     let manifestPath = null;
 
-    const env = String(process.env.NODE_ENV || 'development').toLowerCase();
-    const isDev = env === 'development' ? true : false;
+    const viteFolder = [ABS_PATH, (buildPath || 'public/.vite')].join('/');
 
-    try {
-      manifestPath = !isDev
-        ? fs.readFileSync(`${this.buildFolder()}/manifest.json`, 'utf8')
-        : fs.readFileSync(`${this.buildFolder()}/manifest.${env}.json`, 'utf8');
-    } catch {
-      manifestPath = null;
+    const env = String(process.env.NODE_ENV || 'development').toLowerCase();
+
+    const isProd = env === 'production' ? true : false;
+
+    // Get the main manifest file
+    if (fs.existsSync(`${viteFolder}/manifest.json`)) {
+      manifestPath = fs.readFileSync(`${viteFolder}/manifest.json`, 'utf8');
     }
 
+    // if in dev, try to get the env specific manifest file
+    if (!isProd) {
+      if (fs.existsSync(`${viteFolder}/manifest.${env}.json`)) {
+        manifestPath = fs.readFileSync(`${viteFolder}/manifest.${env}.json`, 'utf8');
+      } else if (manifestPath) {
+        console.log(`No Vite Manifest for env: ${env} exists. Fallback: manifest.json.`);
+      }
+    }
+
+    // Show warning if no manifest found
     if (!manifestPath) {
-      if (!isDev) {
-        console.log(`No Vite Manifest exists. Path: ${this.buildFolder()}/manifest.json. Should hot server be running?`);
+      if (isProd) {
+        console.log(`No Vite Manifest exists. Path: ${viteFolder}/manifest.json. Should hot server be running?`);
       } else {
-        console.log(`No Vite Manifest exists. Path: ${this.buildFolder()}/manifest.${env}.json. Should hot server be running?`);
+        console.log(`No Vite Manifest exists. Path: ${viteFolder}/manifest.${env}.json. Should hot server be running?`);
       }
     }
 
@@ -39,13 +45,17 @@ module.exports = {
     if (!url) {
 
       return {
+        env,
         url: '',
-        inputs: manifest
+        inputs: manifest || {}
       };
 
     }
 
-    return manifest;
+    return {
+      env,
+      ...manifest
+    };
 
   },
 
