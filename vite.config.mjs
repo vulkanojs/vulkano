@@ -16,8 +16,7 @@ dotenv.config();
 const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'true' ? true : false;
 
 export default defineConfig({
-  server: {
-    server: {
+  server: {    
     cors: {
       origin: '*'
     },
