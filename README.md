@@ -45,7 +45,7 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 ## Installation
 
 ```bash
-bun install       # or npm install
+pnpm install       # or npm install
 ```
 
 ---
@@ -54,9 +54,9 @@ bun install       # or npm install
 
 | Command          | Description                               |
 |------------------|-------------------------------------------|
-| `bun run dev`    | Start Express + Vite dev server with HMR  |
-| `bun run build`  | Build frontend assets into `public/`      |
-| `bun run start`  | Start Express in production mode          |
+| `pnpm run dev`    | Start Express + Vite dev server with HMR  |
+| `pnpm run build`  | Build frontend assets into `public/`      |
+| `pnpm run start`  | Start Express in production mode          |
 
 ---
 
