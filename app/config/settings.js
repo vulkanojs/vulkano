@@ -36,8 +36,8 @@ module.exports = {
 
     // Additional config to mongoose
     config: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
       // family: 4 // 4 (IPv4), 6 (IPv6), or null (default: OS family)
       // useFindAndModify: false,
       // useCreateIndex: true
