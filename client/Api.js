@@ -1,105 +1,66 @@
-import axios from 'axios';
-import { shim } from 'promise.prototype.finally';
+const BASE = '/api';
 
-// Enable finally promisse into axios ...finally( () => { })
-shim();
+function getHeaders(props = {}) {
+  return {
+    'Content-Type': 'application/json',
+    ...(props.headers || {})
+  };
+}
 
-const domainBase = '/api';
+async function request(method, path, body, props = {}) {
+  const options = {
+    method,
+    headers: getHeaders(props),
+  };
 
-axios.defaults.baseURL = domainBase;
+  if (body !== undefined) {
+    options.body = JSON.stringify(body);
+  }
 
-// Interceptor after send request
-axios.interceptors.response.use( (res) => res, (error) => {
+  const response = await fetch(`${BASE}${path}`, options);
 
-  const {
-    response
-  } = error;
+  // Interceptor: handle error responses
+  if (!response.ok) {
+    // const { status } = response;
+    // const url = `${BASE}${path}`;
+    //
+    // if (status === 401 && !url.includes('/auth/')) {
+    //   window.location.href = '/login/';
+    //   throw new Error('Invalid token');
+    // }
 
-  // const {
-  //   status
-  // } = response;
+    return Promise.reject(response);
+  }
 
-  // const {
-  //   url
-  // } = response.config;
-
-  // if ( (status) === 401 && url.indexOf('/auth/') < 0 ) {
-  //   window.location.href = '/login/';
-  //   throw new Error('Invalid token');
-  // }
-
-  return Promise.reject(response);
-
-});
+  const json = await response.json().catch(() => null);
+  return json ? (json.data || {}) : null;
+}
 
 // API.js
 export default {
 
   all(requests) {
-
-    return axios.all(requests)
-      .then(
-
-        axios.spread( (...responses) => {
-
-          return responses;
-
-        })
-
-      );
-
+    return Promise.all(requests);
   },
 
   get(path, props) {
-
-    return axios
-      .get(path, props || {})
-      .then( (response) => {
-        const {
-          data
-        } = response || {};
-        return data ? (data.data || {}) : null;
-      });
-
+    return request('GET', path, undefined, props);
   },
 
   post(path, payload, props) {
-
-    return axios
-      .post(path, payload, props || {})
-      .then( (response) => {
-        const {
-          data
-        } = response || {};
-        return data ? (data.data || {}) : null;
-      });
-
+    return request('POST', path, payload, props);
   },
 
   put(path, payload, props) {
+    return request('PUT', path, payload, props);
+  },
 
-    return axios
-      .put(path, payload, props || {})
-      .then( (response) => {
-        const {
-          data
-        } = response || {};
-        return data ? (data.data || {}) : null;
-      });
-
+  patch(path, payload, props) {
+    return request('PATCH', path, payload, props);
   },
 
   delete(path, props) {
-
-    return axios
-      .delete(path, props || {})
-      .then( (response) => {
-        const {
-          data
-        } = response || {};
-        return data ? (data.data || {}) : true;
-      });
-
+    return request('DELETE', path, undefined, props).then((data) => data || true);
   }
 
 };
