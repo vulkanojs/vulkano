@@ -5,6 +5,13 @@
 module.exports = {
 
   /**
+   * Fillable fields for the update method
+   * to prevent update of non-allowed fields like createdAt, updatedAt, etc.
+   * @type Array
+   */
+  fillable: ['name', 'age'],
+
+  /**
    * Fields
    */
   attributes: {
