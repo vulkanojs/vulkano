@@ -1,3 +1,16 @@
+/**
+ * Pads a string to a certain length with another string.
+ * The padding is applied from the left, right, or both sides of the string.
+ *
+ * Example: {{ strpad('hello world', 20, '*', 'left') }} => '*********hello world'
+ *
+ * @param {*} str
+ * @param {*} _len
+ * @param {*} _pad
+ * @param {*} _dir
+ * @returns String
+ */
+
 module.exports = (str, _len, _pad, _dir) => {
 
   const STR_PAD_LEFT = 1;
