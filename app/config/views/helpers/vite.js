@@ -1,3 +1,18 @@
+/**
+ * Custom backend integration for Vite asset injection.
+ * Reads the Vite manifest (dev or production) from `app.vite` to dynamically
+ * inject the correct <script> or <link> tags into Nunjucks templates.
+ * Supports two asset types via the `type` param: "script" and "style(s)".
+ * In development, it emits the Vite HMR client + module entry; in production
+ * it resolves the hashed filenames from the manifest and appends a cache-bust
+ * query string using the app version.
+ *
+ * In your template, you can define the CSS and JS entries like this:
+ *
+ * CSS: {{ vite({ entry: 'app', type: 'style' }) | safe }}
+ * JS: {{ vite({ entry: 'app', type: 'script' }) | safe }}
+ *
+ */
 module.exports = (props) => {
 
   const {
