@@ -22,7 +22,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@vulkano/core": "^1.16.1",
+    "@vulkano/core": "^1.18.0",
     "concurrently": "^9.2.1",
     "gsap": "^3.15.0",
     "vite-plugin-dev-manifest": "^1.4.1",

@@ -1,5 +1,3 @@
-/* global Vite */
-
 /**
  * Local Bootstrap
  */
@@ -9,7 +7,7 @@ module.exports = (start) => {
   // Start app
   start( () => {
 
-    app.vite = Vite.init();
+    // @TODO: We can do some local setup here if needed here.
 
   });
 
