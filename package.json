@@ -1,55 +1,31 @@
 {
-  "name": "vulkano-app",
-  "version": "2.1.0",
-  "description": "A MVC framework using Express 4",
-  "license": "MIT",
+  "name": "vulkano",
+  "version": "3.0.0",
+  "private": true,
   "engines": {
-    "node": "^22"
+    "node": ">=22"
   },
   "main": "app.js",
-  "author": "Vulkano Team",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vulkanojs/vulkano.git"
-  },
-  "keywords": [
-    "node",
-    "heroku",
-    "express"
-  ],
   "scripts": {
-    "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,VULKANO -c green,magenta 'vite' './node_modules/nodemon/bin/nodemon.js --inspect --trace-deprecation --trace-warnings'",
-    "start": "node app.js"
+    "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,APP -c green,magenta 'vp dev' './node_modules/nodemon/bin/nodemon.js --inspect'",
+    "start": "node app.js",
+    "build": "vp build",
+    "preview": "vp preview",
+    "lint": "vp lint"
   },
   "dependencies": {
-    "@vulkano/core": "^1.18.0",
+    "@vulkano/core": "^1.20.0",
     "concurrently": "^9.2.1",
-    "gsap": "^3.15.0",
-    "vite-plugin-dev-manifest": "^1.4.1",
-    "vite-plugin-eslint": "^1.8.1",
-    "vue": "^3.5.33",
-    "vue-router": "^4.6.4"
+    "dotenv": "^17.4.2",
+    "vite-plugin-dev-manifest": "catalog:",
+    "vue": "^3.5.34",
+    "vue-router": "^5.0.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/eslint-parser": "^7.28.5",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-syntax-jsx": "^7.27.1",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-react": "^7.28.5",
-    "@babel/preset-stage-1": "^7.8.3",
-    "@vitejs/plugin-vue": "^5.2.1",
-    "babel-loader": "^10.0.0",
-    "eslint": "^8.45.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "@vitejs/plugin-vue": "^6.0.7",
     "nodemon": "^3.1.14",
-    "sass": "^1.93.2",
-    "vite": "^6.2.6",
-    "webpack": "^5.102.1"
-  }
+    "vite-plus": "catalog:",
+    "sass": "^1.99.0"
+  },
+  "packageManager": "pnpm@11.1.1"
 }

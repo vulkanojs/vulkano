@@ -8,19 +8,11 @@ export default {
 
   },
 
-  data() {
+  setup() {
 
     return {
 
     };
-
-  },
-
-  methods: {
-
-  },
-
-  mounted() {
 
   }
 

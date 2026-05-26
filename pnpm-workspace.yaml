@@ -1,0 +1,22 @@
+minimumReleaseAge: 40
+
+catalogMode: prefer
+
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite-plus: latest
+  vite-plugin-dev-manifest: ^1.5.0
+overrides:
+  vite: "catalog:"
+  vitest: "catalog:"
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"
+allowBuilds:
+  '@parcel/watcher': true
+  '@vulkano/core': true

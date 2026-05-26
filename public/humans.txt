@@ -1,8 +1,0 @@
-/* humanstxt.org */
-
-/* TEAM */
-Jose Paternina
-@josedaniel
-
-Ivan Melendez
-@argordmel

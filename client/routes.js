@@ -4,7 +4,7 @@ import { createRouter } from 'vue-router';
 import Layout from '@client/layouts/Layout.vue';
 
 // Views
-import Homepage from '@client/views/Home/Home.vue';
+import Homepage from '@client/views/Home/Index.vue';
 
 const routes = [
   {

@@ -1,3 +1,5 @@
+import { ref } from 'vue';
+
 export default {
 
   // Props
@@ -5,19 +7,15 @@ export default {
     msg: String
   },
 
-  // Data
-  data() {
+  setup() {
+
+    const count = ref(1);
 
     return {
 
-      count: 1
+      count
 
     };
-
-  },
-
-  // Methods
-  methods: {
 
   }
 

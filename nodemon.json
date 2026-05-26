@@ -3,7 +3,6 @@
   "ignore": [
     ".git/",
     "public/",
-    "cms/",
     "client/",
     "nbproject/"
   ],
