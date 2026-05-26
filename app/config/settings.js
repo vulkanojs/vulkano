@@ -1,8 +1,3 @@
-/**
- * Server Config
- *
- */
-
 module.exports = {
 
   // Port
@@ -14,7 +9,7 @@ module.exports = {
     // MONGO_URI connection or connetion key (development, production)
     connection: process.env.MONGO_URI || null,
 
-    // Settings before to connect
+    // Settings before to connect (MONGODB)
     settings: {
       strictQuery: false,
       debug: false
@@ -22,11 +17,7 @@ module.exports = {
 
     // Additional config to mongoose
     config: {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-      // family: 4 // 4 (IPv4), 6 (IPv6), or null (default: OS family)
-      // useFindAndModify: false,
-      // useCreateIndex: true
+
     }
 
   }
