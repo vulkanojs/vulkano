@@ -47,32 +47,102 @@ framework/
 
 ## Key conventions
 
-### Naming: controllers in plural, models in singular
+### Naming: controllers in plural (recommended but not mandatory), models in singular
 `@vulkano/core` pairs each model with a controller by name, so the naming convention is what makes the auto-routing work:
-- **Model** → singular PascalCase (e.g., `Project.js` → `global.Project`)
-- **Controller** → plural PascalCase + `Controller` suffix (e.g., `ProjectsController.js`)
+- **Model** → singular PascalCase (e.g., `Product.js` → `global.Product`)
+- **Controller** → plural PascalCase + `Controller` suffix (e.g., `ProductsController.js`)
 
 ### Backend routing: convention over configuration
-`@vulkano/core` maps browser/API URLs to controllers automatically — no manual route wiring needed for the common cases. The URL segments map to `/:resource/:method?/:param?`, resolving to `<Resource>sController.<method>(param)`:
+`@vulkano/core` maps browser/API URLs to controllers automatically — no manual route wiring needed for the common cases. The URL segments map to `/:resource/:method?/:param?`, resolving to `<Resource>Controller.<method>(param)`:
 
 ```
-GET /projects/edit/1
+GET /products/edit/1
      │        │    │
      │        │    └── param  → passed as the method argument
-     │        └─────── method → ProjectsController.edit
-     └──────────────── resource ("projects") → ProjectsController
+     │        └─────── method → ProductsController.edit
+     └──────────────── resource ("products") → ProductsController
 ```
 
-REST-style verbs follow the same resource → controller mapping:
-- `GET /product` → `ProductsController.get`
-- `GET /product/:id` → `ProductsController['get :id']`
-- `POST /product` → `ProductsController.post`
-- `PUT /product/:id` → `ProductsController['put :id']`
-- `PATCH /product/:id` → `ProductsController['patch :id']`
-- `DELETE /product/:id` → `ProductsController['delete :id']`
-- `POST /product/save` → `ProductsController['post save']`
+REST-style verbs (HTTP METHODS) follow the same resource → controller mapping:
+- `GET /products` → `ProductsController.get`
+- `GET /products/:id` → `ProductsController['get :id']`
+- `POST /products` → `ProductsController.post`
+- `PUT /products/:id` → `ProductsController['put :id']`
+- `PATCH /products/:id` → `ProductsController['patch :id']`
+- `DELETE /products/:id` → `ProductsController['delete :id']`
 
-`app/config/routes.js` is optional — use it to add explicit mappings when a URL doesn't fit the resource/method convention, without giving up the convention for the rest of the app.
+#### Method key convention: `'<verb>? <path tail>'`
+A controller method key is `<path tail>` on its own, or `'<verb> <path tail>'` when the verb isn't GET. The auto-router only ever reassigns the HTTP method when the key has a space-separated verb prefix — otherwise it defaults to **GET**. So:
+- `get(req, res)` / `'get :id'` — the plain REST verbs already covered above.
+- A **custom action name with no verb prefix** (no space in the key) is still GET, e.g. `me(req, res)` on `AuthController` → `GET /api/auth/me`. Don't write `'get me'`; it's redundant.
+- A **custom action that isn't GET** needs the verb spelled out, e.g. `'post login'` → `POST /api/auth/login`, `'post logout'` → `POST /api/auth/logout`.
+- The path tail can carry arbitrary nested segments and multiple params — the auto-router just appends whatever follows the verb straight onto the URL:
+
+```js
+// domain.com/api/products/
+// controllers/api/ProductsController.js
+module.exports = {
+
+  // GET domain.com/api/products/123/variants/988
+  'get :id/variants/:variant': (req, res) => {
+    // req.params → { id: '123', variant: '988' }
+  }
+
+};
+```
+
+```js
+// domain.com/api/auth/
+// controllers/api/AuthController.js
+module.exports = {
+
+  // GET /api/auth/me — no verb prefix needed, GET is the default
+  me(req, res) { },
+
+  // POST /api/auth/login
+  'post login': (req, res) => { },
+
+  // POST /api/auth/logout
+  'post logout': (req, res) => { }
+
+};
+```
+
+All of this is mapped automatically — no `routes.js` entry needed. The one hard rule: the resource segment in the URL is always the requesting controller's own filename (`ProductsController` → `products`).
+
+#### When you actually need `app/config/routes.js`
+`routes.js` exists for flexibility/customization, or as a fallback for whatever the convention can't resolve on its own:
+- **You want a URL shape the convention can't produce at all**, e.g. an absolute path (`/`), or breaking the "resource segment = controller filename" rule entirely (a catch-all like `/*` for the frontend router).
+- **For more routes as definition**:
+  ```js
+
+  // Most flexible
+  '/test': (req, res) => {
+    res.json({ message: 'Hello, world!' });
+  }
+  ```
+- **For more complex and advanced routing as method**:
+  ```js
+
+  // More advanced — `app` is the global Vulkano object; the Express instance lives at `app.vulkano`
+  custom() {
+
+    app.vulkano.get('/test', (req, res) => {
+      res.json({ hello: 'world' });
+    });
+
+    app.vulkano.get('/test2', (req, res) => {
+      res.json({ hello: 'world2' });
+    });
+
+    app.vulkano.get('/test3', (req, res) => {
+      res.json({ hello: 'world3' });
+    });
+
+  },
+  ```
+
+For everything else don't add entries to `routes.js`; a redundant explicit entry just gives the route two sources of truth that can drift apart.
 
 ### Controllers stay thin — business logic lives in the model
 Controllers only orchestrate the HTTP request/response cycle: read params, call the model, send the response with `res.vsr(...)` for REST API or `res.render(...)` for server-side rendering. They must **not** contain business logic, validation rules, or data manipulation — that belongs on the model (as instance/static methods, hooks, or virtuals), so it stays reusable outside the HTTP layer (crontabs, sockets, other models, tests).
