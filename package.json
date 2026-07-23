@@ -14,18 +14,18 @@
     "lint": "vp lint"
   },
   "dependencies": {
-    "@vulkano/core": "^1.20.0",
-    "concurrently": "^9.2.1",
+    "@vulkano/core": "^1.20.2",
+    "concurrently": "^10.0.3",
     "dotenv": "^17.4.2",
     "vite-plugin-dev-manifest": "catalog:",
-    "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.7",
+    "@vitejs/plugin-vue": "^6.0.8",
     "nodemon": "^3.1.14",
     "vite-plus": "catalog:",
-    "sass": "^1.99.0"
+    "sass": "^1.101.6"
   },
   "packageManager": "pnpm@11.1.1"
 }

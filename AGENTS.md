@@ -47,40 +47,122 @@ framework/
 
 ## Key conventions
 
-### Backend routing (auto by convention)
-`@vulkano/core` maps URLs to controllers automatically:
-- `GET /product` → `ProductController.get`
-- `GET /product/:id` → `ProductController['get :id']`
-- `POST /product` → `ProductController.post`
-- `PUT /product/:id` → `ProductController['put :id']`
-- `PATCH /product/:id` → `ProductController['patch :id']`
-- `DELETE /product/:id` → `ProductController['delete :id']`
-- `POST /product/save` → `ProductController['post save']`
+### Naming: controllers in plural, models in singular
+`@vulkano/core` pairs each model with a controller by name, so the naming convention is what makes the auto-routing work:
+- **Model** → singular PascalCase (e.g., `Project.js` → `global.Project`)
+- **Controller** → plural PascalCase + `Controller` suffix (e.g., `ProjectsController.js`)
 
-### Scaffold controllers
-Point a controller at a model and get a full REST API for free:
+### Backend routing: convention over configuration
+`@vulkano/core` maps browser/API URLs to controllers automatically — no manual route wiring needed for the common cases. The URL segments map to `/:resource/:method?/:param?`, resolving to `<Resource>sController.<method>(param)`:
+
+```
+GET /projects/edit/1
+     │        │    │
+     │        │    └── param  → passed as the method argument
+     │        └─────── method → ProjectsController.edit
+     └──────────────── resource ("projects") → ProjectsController
+```
+
+REST-style verbs follow the same resource → controller mapping:
+- `GET /product` → `ProductsController.get`
+- `GET /product/:id` → `ProductsController['get :id']`
+- `POST /product` → `ProductsController.post`
+- `PUT /product/:id` → `ProductsController['put :id']`
+- `PATCH /product/:id` → `ProductsController['patch :id']`
+- `DELETE /product/:id` → `ProductsController['delete :id']`
+- `POST /product/save` → `ProductsController['post save']`
+
+`app/config/routes.js` is optional — use it to add explicit mappings when a URL doesn't fit the resource/method convention, without giving up the convention for the rest of the app.
+
+### Controllers stay thin — business logic lives in the model
+Controllers only orchestrate the HTTP request/response cycle: read params, call the model, send the response with `res.vsr(...)` for REST API or `res.render(...)` for server-side rendering. They must **not** contain business logic, validation rules, or data manipulation — that belongs on the model (as instance/static methods, hooks, or virtuals), so it stays reusable outside the HTTP layer (crontabs, sockets, other models, tests).
+
+#### For REST API controllers, the convention is to have a single `get` method that returns JSON:
 ```js
 module.exports = {
-  scaffold: 'ModelName',
-  allowedMethods: ['get', 'post', 'put', 'patch', 'delete']
+
+  // Example: GET /api/products?page=1 → controllers/api/ProductsController.get
+  get(req, res) {
+
+    // Status code: 200 (default)
+    res.vsr(Product.getAll(req.query || {}));
+
+  }
+
 };
 ```
 
-### Models
-Files in `app/models/` are auto-loaded as globals. A file `Product.js` becomes `global.Product`.
-Every model gets `active`, `createdAt`, `updatedAt` automatically.
+#### For Server Side Rendering (SSR) controllers, the convention is to have a single `get` method that renders the view:
+```js
+module.exports = {
+
+  // Example: GET /home/ → controllers/HomeController.get
+  get(req, res) {
+
+    res.render('home/index.html');
+
+  },
+
+};
+```
+
+### Scaffold controllers
+Point a controller at a model and get a full REST API for free — the simplest way to keep a controller free of logic when it's a plain CRUD resource:
+```js
+module.exports = {
+
+  scaffold: 'Product', //ModelName
+
+  allowedMethods: ['get', 'post', 'put', 'patch', 'delete']
+
+};
+```
+
+A scaffold controller wires each allowed HTTP method to the matching standard CRUD method on the model (`getAll`, `get<ModelName>`, `create`, `update`, `delete` — see [Models](#models-business-logic-lives-here) below), so the model still needs those methods implemented or auto-generated.
+
+NOTE: To find examples with the best practices, look in `@vulkano/core/examples/controllers` to find a well-structured controller for server side rendering, like `ExampleController.js`, REST API like `RestExampleController.js` and Scaffold REST API like `RestScaffoldController.js`.
+
+### Models: business logic lives here
+Files in `app/models/` are auto-loaded as globals. A file `Project.js` becomes `global.Project` (singular).
+Every model gets `attributes` (Mongoose schema fields), plus `active`, `createdAt`, `updatedAt` automatically.
+
+Models are where validation, data manipulation, and business rules belong — not just the raw Mongoose schema. Controllers should only ever call methods on the model; they shouldn't reach into `Model.find(...)` or manipulate documents directly.
+
+#### Standard CRUD methods
+Every model is expected to expose this same set of methods, so controllers can call them the same way regardless of the resource:
+
+| Method | Purpose |
+|---|---|
+| `getAll(props)` | List/paginate records. `props` = `{ page, perPage, search, sort }` |
+| `get<ModelName>(id)` | Get a single record by id (e.g. `getProject(id)`) |
+| `create(data)` | Create a new record |
+| `update(id, data)` | Update a record by id |
+| `delete(id)` | Soft-delete a record (sets `active: false`) |
+
+#### Hooks
+Models can define `beforeSave(cb)` and `afterSave(data, cb)` for side effects tied to persistence (e.g. sending an email, syncing a related record). Keep these focused on cross-cutting effects, not core validation — validation belongs in `attributes`.
+
+NOTE: To find examples with the best practices for available methods ahd hooks, look in `@vulkano/core/examples/models` and read the file `Example.js`, and Scaffold Model API `ExampleWithScaffold.js`.
 
 ### Services / libs
 Files in `app/services/` are auto-loaded as globals. PascalCase filename = global name.
 Framework globals available everywhere: `VSError`, `Jwt`, `Paginate`, `Merge`, `Encrypter`, `Filter`, `Crontab`, `ApiClient`, `i18n`, `mongoose`.
 
 ### Responses
-All controller actions use `res.vsr(promise, statusCode?)`:
+
+#### REST API responses
+All controller actions in the REST API use `res.vsr(promise, statusCode?)`:
 ```js
 res.vsr(Promise.resolve({ data }));         // 200
 res.vsr(Promise.resolve({ data }), 201);    // 201
 res.vsr(VSError.notFound('Item'));           // 404
 res.vsr(VSError.reject('Not allowed', 403)); // 403
+```
+
+#### Server Side Rendering responses
+All controller actions in the SSR use `res.render(template, data?)`:
+```js
+res.render('home/index.html', { title: 'Home' });
 ```
 
 ### Explicit routes (`app/config/routes.js`)
@@ -99,7 +181,7 @@ module.exports = {
 
 ```
 PORT=8000
-HOST=
+HOST=localhost
 MONGO_URI=mongodb://localhost:27017/myapp
 SALT_KEY=random-string
 JWT_SECRET=supersecret
