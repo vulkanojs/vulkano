@@ -78,13 +78,68 @@ VITE_CHUNK_NAMES=false
 
 ---
 
+## Working with your AI agent
+
+Be specific about the layer, the data, and the behavior you want.
+
+Instead of: *"add a contact form"*
+Say: *"add a contact form with name, email, and message fields, a
+`ContactController` that validates them and saves a `Contact` model, and a success message on the frontend"*
+
+Instead of: *"add authentication"*
+Say: *"add JWT login using the existing `@vulkano/core` auth conventions, with a `User` model and a login view under `client/views/Login`"*
+
+Instead of: *"show a list of users"*
+Say: *"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"*
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the controller/model/view
+conventions your agent should follow.
+
+---
+
 ## Deployment
+
+### PM2 (SSH)
 
 The project ships with an `ecosystem.config.js` for PM2:
 
 ```bash
 pm2 start ecosystem.config.js
 ```
+
+### Docker
+
+Build and run the production image directly:
+
+```bash
+docker build -t vulkano-framework .
+docker run --env-file .env -p 8000:8000 vulkano-framework
+```
+
+Or use Docker Compose, which reads `.env` for you:
+
+```bash
+docker compose up --build
+```
+
+By default this only starts the `app` service — set `MONGO_URI` in `.env` to
+point at an external MongoDB (Atlas, a managed instance, etc). If you'd
+rather run MongoDB locally in a container, start the `local-db` profile
+instead:
+
+```bash
+docker compose --profile local-db up --build
+```
+
+### Coolify
+
+Use the **Docker Compose** deployment type in Coolify and point it at this
+repo — it picks up `docker-compose.yml` and `nixpacks.toml` automatically.
+
+`.env` is gitignored and never reaches the build, so set your environment
+variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET`, etc) in Coolify's
+own **Environment Variables** panel for the app — Coolify injects them into
+the running container at deploy time.
 
 ---
 
