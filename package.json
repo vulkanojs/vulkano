@@ -12,7 +12,8 @@
     "build": "vp build",
     "preview": "vp preview",
     "lint": "vp lint",
-    "test": "vp test"
+    "test": "vp test",
+    "cleanup": "node scripts/cleanup.js"
   },
   "dependencies": {
     "@vulkano/core": "^1.20.2",
