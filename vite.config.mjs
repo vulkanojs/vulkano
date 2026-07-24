@@ -63,13 +63,16 @@ export default defineConfig({
           // Move files which end with css to public/css
           if (/\.css$/.test(name || '')) {
             return `css/[name]${hash}[extname]`;
-
           }
 
           return `js/[name]${hash}[extname]`;
         },
       },
     },
+  },
+  test: {
+    environment: 'node',
+    include: ['test/**/*.test.js'],
   },
   plugins: [
     devManifest({
