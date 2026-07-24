@@ -17,13 +17,11 @@ framework/
 │   │   ├── express/        # cookies, cors, csp, helmet, json, jwt, permissionPolicy, settings
 │   │   └── locales/        # i18n files
 │   ├── controllers/        # Convention-based request handlers
+│   │   ├── sockets/        # Socket.io handlers
 │   │   └── api/            # Scaffold or custom API controllers
 │   ├── models/             # Mongoose models (auto-loaded as globals)
 │   ├── services/           # Shared libs (auto-loaded as globals)
-│   ├── views/              # Nunjucks/Handlebars templates
-│   └── tests/
-│       ├── unit/           # Unit tests for models/services (Vitest, via `pnpm test:backend`)
-│       └── integration/    # Integration tests for controllers/routes
+│   └── views/              # Nunjucks/Handlebars layouts
 │
 ├── client/                 # Vue 3 main app
 │   ├── app.js              # Vue entry — mounts App.vue, registers $api global
