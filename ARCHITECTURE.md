@@ -227,6 +227,12 @@ res.vsr(VSError.notFound('Item'));           // 404
 res.vsr(VSError.reject('Not allowed', 403)); // 403
 ```
 
+Every `res.vsr` response is wrapped in the same envelope, regardless of success or failure:
+
+```json
+{ "success": true, "statusCode": 200, "data": { … } }
+```
+
 #### Server Side Rendering responses
 All controller actions in the SSR use `res.render(template, data?)`:
 ```js
@@ -241,6 +247,71 @@ module.exports = {
   '/admin*': 'HomeController.cms',
 };
 ```
+
+## Frontend — Vue 3 + Vite
+
+The `client/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
+
+### Entry point — `client/app.js`
+```js
+import { createApp } from 'vue';
+import { createWebHistory } from 'vue-router';
+
+import '@client/style.scss';
+
+import createRouter from '@client/routes';
+import App from '@client/App.vue';
+import Api from '@client/Api';
+
+const router = createRouter(createWebHistory());
+
+const app = createApp(App);
+app.config.globalProperties.$api = Api;
+
+app.use(router).mount('#app');
+```
+
+### Adding a route — `client/routes.js`
+```js
+import { createRouter } from 'vue-router';
+
+import Layout from '@client/layouts/Layout.vue';
+import Homepage from '@client/views/Home/Index.vue';
+
+const routes = [
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      { path: '', component: Homepage },
+    ],
+  }
+];
+
+export default (history) => createRouter({ history, routes });
+```
+
+### Calling the API from a component
+`$api` is registered as a global property, so it's available in every component:
+```vue
+<script>
+export default {
+  async created() {
+    this.products = await this.$api.get('/product');
+  }
+}
+</script>
+```
+
+`client/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
+
+### Vite (`vite.config.mjs`)
+- **Single entry point**: `client/app.js` — Rolldown builds one bundle, no separate admin/CMS bundle
+- **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
+- **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
+- **Alias**: `@client` → `client/`
+- **Manifest**: `vite-plugin-dev-manifest` writes `public/.vite/manifest.<NODE_ENV>.json`, which the Nunjucks templates read to inject the correct `<script>`/`<link>` tags in dev and production
+- **Cache hashing**: controlled by `VITE_CHUNK_NAMES` — `true` adds `-[hash]` to output filenames, `false` (default) keeps plain names for simpler debugging
 
 ## Dependencies — what and why
 
