@@ -95,6 +95,20 @@ Say: *"add a `/users` route backed by `UserController#index` that returns pagina
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the controller/model/view
 conventions your agent should follow.
 
+### The `inbox/` folder
+
+Drop any files here that you want your AI agent to work with — logos,
+images, fonts, PDFs — then tell your agent to use them, e.g. *"use the
+logo in inbox/ for the header"*. Files dropped in `inbox/` are not
+committed by default (see `inbox/.gitignore`).
+
+For images, run the following to convert `.jpg`/`.jpeg`/`.png` files in
+`inbox/` to `.webp` in place (smaller file size, originals are kept):
+
+```bash
+pnpm run inbox:webp
+```
+
 ---
 
 ## Deployment
