@@ -44,7 +44,9 @@ framework/
 ## Key conventions
 
 ### Naming: controllers in plural (recommended but not mandatory), models in singular
+
 `@vulkano/core` pairs each model with a controller by name, so the naming convention is what makes the auto-routing work:
+
 - **Model** → singular PascalCase (e.g., `Product.js` → `global.Product`)
 - **Controller** → plural PascalCase + `Controller` suffix (e.g., `ProductsController.js`)
 -
@@ -53,6 +55,7 @@ framework/
 By convention, model files should be named in singular (e.g. `User.js`), and the collection binding is automatic and singular-lowercase: `User.js` → collection `user`, `Project.js` → collection `project` (never pluralized like `users`/`projects`). Any script or tool that talks to the database directly (seeds, migrations, ad-hoc queries) must target that singular lowercase collection name to match what the running app actually uses.
 
 ### Backend conventions — owned by `@vulkano/core`
+
 Routing (convention over configuration, method key convention, `app/config/routes.js`), the thin-controller/business-logic-in-model split, scaffold controllers, the model CRUD interface and hooks, auto-loaded globals, and the `res.vsr`/`res.render` response conventions are all defined by the framework core, not by this template. Source of truth: [`@vulkano/core` README](node_modules/@vulkano/core/README.md) (also mirrored at https://github.com/vulkanojs/vulkano-core). For worked examples, see `@vulkano/core/examples/controllers` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`) and `@vulkano/core/examples/models` (`Example.js`, `ExampleWithScaffold.js`).
 
 This template only adds what follows below: the frontend, the dependency list, and deployment.
@@ -62,6 +65,7 @@ This template only adds what follows below: the frontend, the dependency list, a
 The `client/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
 
 ### Entry point — `client/app.js`
+
 ```js
 import { createApp } from 'vue';
 import { createWebHistory } from 'vue-router';
@@ -81,6 +85,7 @@ app.use(router).mount('#app');
 ```
 
 ### Adding a route — `client/routes.js`
+
 ```js
 import { createRouter } from 'vue-router';
 
@@ -91,9 +96,7 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    children: [
-      { path: '', component: Homepage },
-    ],
+    children: [{ path: '', component: Homepage }]
   }
 ];
 
@@ -101,20 +104,23 @@ export default (history) => createRouter({ history, routes });
 ```
 
 ### Calling the API from a component
+
 `$api` is registered as a global property, so it's available in every component:
+
 ```vue
 <script>
 export default {
   async created() {
     this.products = await this.$api.get('/product');
   }
-}
+};
 </script>
 ```
 
 `client/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
 ### Vite (`vite.config.mjs`)
+
 - **Single entry point**: `client/app.js` — Rolldown builds one bundle, no separate admin/CMS bundle
 - **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
 - **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
@@ -124,15 +130,15 @@ export default {
 
 ## Dependencies — what and why
 
-| Package | Purpose |
-|---------|---------|
-| `@vulkano/core` | The framework core (Express, Mongoose, Socket.io, etc.) |
-| `vue` + `vue-router` | Frontend SPA |
-| `vite-plus` + `@vitejs/plugin-vue` | Frontend bundler |
-| `concurrently` | Runs vp + nodemon together in `npm run dev` |
-| `vite-plugin-dev-manifest` | Writes manifest.json for asset injection in dev mode |
-| `sass` | SCSS compilation |
-| `nodemon` | Auto-restarts Vulkano on file changes (dev only) |
+| Package                            | Purpose                                                 |
+| ---------------------------------- | ------------------------------------------------------- |
+| `@vulkano/core`                    | The framework core (Express, Mongoose, Socket.io, etc.) |
+| `vue` + `vue-router`               | Frontend SPA                                            |
+| `vite-plus` + `@vitejs/plugin-vue` | Frontend bundler                                        |
+| `concurrently`                     | Runs vp + nodemon together in `npm run dev`             |
+| `vite-plugin-dev-manifest`         | Writes manifest.json for asset injection in dev mode    |
+| `sass`                             | SCSS compilation                                        |
+| `nodemon`                          | Auto-restarts Vulkano on file changes (dev only)        |
 
 ## Deployment
 

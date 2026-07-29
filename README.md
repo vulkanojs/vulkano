@@ -27,12 +27,12 @@ For the project structure, routing conventions, and controller/model/response co
 
 ## Stack
 
-| Layer     | Technology                                   |
-|-----------|----------------------------------------------|
+| Layer     | Technology                                     |
+| --------- | ---------------------------------------------- |
 | Backend   | Node.js 22, Express 4, Mongoose, @vulkano/core |
-| Frontend  | Vue 3, Vue Router, Vite                      |
-| Styling   | SCSS, Foundation Sites                       |
-| Dev tools | Nodemon, ESLint, PM2                         |
+| Frontend  | Vue 3, Vue Router, Vite                        |
+| Styling   | SCSS, Foundation Sites                         |
+| Dev tools | Nodemon, ESLint, PM2                           |
 
 ---
 
@@ -54,13 +54,13 @@ pnpm install       # or npm install
 
 ## Dev workflow
 
-| Command          | Description                               |
-|------------------|-------------------------------------------|
-| `pnpm run dev`    | Start Express + Vite dev server with HMR  |
-| `pnpm run build`  | Build frontend assets into `public/`      |
-| `pnpm run start`  | Start Express in production mode          |
-| `pnpm run lint`   | Lint via `vp lint`                        |
-| `pnpm run test`   | Run tests via `vp test`                   |
+| Command          | Description                              |
+| ---------------- | ---------------------------------------- |
+| `pnpm run dev`   | Start Express + Vite dev server with HMR |
+| `pnpm run build` | Build frontend assets into `public/`     |
+| `pnpm run start` | Start Express in production mode         |
+| `pnpm run lint`  | Lint via `vp lint`                       |
+| `pnpm run test`  | Run tests via `vp test`                  |
 
 ---
 
@@ -82,15 +82,15 @@ VITE_CHUNK_NAMES=false
 
 Be specific about the layer, the data, and the behavior you want.
 
-Instead of: *"add a contact form"*
-Say: *"add a contact form with name, email, and message fields, a
-`ContactController` that validates them and saves a `Contact` model, and a success message on the frontend"*
+Instead of: _"add a contact form"_
+Say: _"add a contact form with name, email, and message fields, a
+`ContactController` that validates them and saves a `Contact` model, and a success message on the frontend"_
 
-Instead of: *"add authentication"*
-Say: *"add JWT login using the existing `@vulkano/core` auth conventions, with a `User` model and a login view under `client/views/Login`"*
+Instead of: _"add authentication"_
+Say: _"add JWT login using the existing `@vulkano/core` auth conventions, with a `User` model and a login view under `client/views/Login`"_
 
-Instead of: *"show a list of users"*
-Say: *"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"*
+Instead of: _"show a list of users"_
+Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"_
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the controller/model/view
 conventions your agent should follow.
@@ -98,8 +98,8 @@ conventions your agent should follow.
 ### The `inbox/` folder
 
 Drop any files here that you want your AI agent to work with — logos,
-images, fonts, PDFs — then tell your agent to use them, e.g. *"use the
-logo in inbox/ for the header"*. Files dropped in `inbox/` are not
+images, fonts, PDFs — then tell your agent to use them, e.g. _"use the
+logo in inbox/ for the header"_. Files dropped in `inbox/` are not
 committed by default (see `inbox/.gitignore`).
 
 For images, run the following to convert `.jpg`/`.jpeg`/`.png` files in

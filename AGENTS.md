@@ -35,7 +35,7 @@ VITE_CHUNK_NAMES=false
 
 ## Security considerations
 
-- Never commit credentials, API keys, tokens, private keys, or production configuration values. Treat untracked local  configuration as sensitive unless   a tracked authority explicitly says otherwise.
+- Never commit credentials, API keys, tokens, private keys, or production configuration values. Treat untracked local configuration as sensitive unless a tracked authority explicitly says otherwise.
 - Treat request data as untrusted. Validate the expected type, range, and business rules at the boundary; filtering alone is not authorization or a substitute for context-appropriate output escaping.
 - Enforce authentication and authorization for every protected action or resource. Do not rely on routes, navigation, or client-side controls as the access boundary; verify the relevant source and tests when changing it.
 - Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
