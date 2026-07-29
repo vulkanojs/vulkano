@@ -1,21 +1,17 @@
 .home {
-
   img {
-
     height: 6rem;
     padding: 1.5rem;
     will-change: filter;
     transition: filter 300ms;
     max-width: 150px;
-
   }
 
   a {
-
     &:first-child {
       &:hover {
         img {
-          filter: drop-shadow(0 0 2em #5B3328aa);
+          filter: drop-shadow(0 0 2em #5b3328aa);
         }
       }
     }
@@ -35,7 +31,5 @@
         }
       }
     }
-
   }
-
 }

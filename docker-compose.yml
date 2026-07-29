@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "${PORT:-8000}:${PORT:-8000}"
+      - '${PORT:-8000}:${PORT:-8000}'
     env_file:
       - .env
     restart: unless-stopped
@@ -12,7 +12,7 @@ services:
     profiles:
       - local-db
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - mongo-data:/data/db
     restart: unless-stopped

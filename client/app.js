@@ -15,5 +15,4 @@ const app = createApp(App);
 
 app.config.globalProperties.$api = Api;
 
-app.use(router)
-  .mount('#app');
+app.use(router).mount('#app');

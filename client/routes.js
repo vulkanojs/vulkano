@@ -14,8 +14,8 @@ const routes = [
       {
         path: '',
         component: Homepage
-      },
-    ],
+      }
+    ]
   }
 ];
 

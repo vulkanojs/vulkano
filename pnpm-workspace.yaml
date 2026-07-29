@@ -15,15 +15,15 @@ catalog:
   vue: ^3.5.40
   vue-router: ^5.2.0
 overrides:
-  vite: "catalog:"
-  vitest: "catalog:"
+  vite: 'catalog:'
+  vitest: 'catalog:'
 peerDependencyRules:
   allowAny:
     - vite
     - vitest
   allowedVersions:
-    vite: "*"
-    vitest: "*"
+    vite: '*'
+    vitest: '*'
 allowBuilds:
   '@parcel/watcher': true
   '@vulkano/core': true

@@ -12,10 +12,12 @@ const allowHashForCache = String(process.env.VITE_CHUNK_NAMES || false) === 'tru
 
 export default defineConfig({
   staged: {
-    '*': 'vp check --fix',
+    '*': 'vp check --fix'
   },
   fmt: {
-    singleQuote: true
+    singleQuote: true,
+    trailingComma: 'none',
+    htmlWhitespaceSensitivity: 'strict'
   },
   lint: {
     options: {
@@ -27,18 +29,16 @@ export default defineConfig({
     cors: {
       origin: '*'
     },
-    host: process.env.VITE_HOST || 'localhost',
+    host: process.env.VITE_HOST || 'localhost'
   },
   css: {
     preprocessorOptions: {
       scss: {
         quietDeps: true,
         silenceDeprecations: ['import'],
-        loadPaths: [
-          './'
-        ],
-      },
-    },
+        loadPaths: ['./']
+      }
+    }
   },
   build: {
     manifest: true,
@@ -47,7 +47,7 @@ export default defineConfig({
     rollupOptions: {
       // overwrite default .html entry
       input: {
-        app: 'client/app.js',
+        app: 'client/app.js'
       },
       output: {
         chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
@@ -66,31 +66,32 @@ export default defineConfig({
           }
 
           return `js/[name]${hash}[extname]`;
-        },
-      },
-    },
+        }
+      }
+    }
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.js'],
+    include: ['test/**/*.test.js']
   },
   plugins: [
     devManifest({
-      manifestName: `.vite/manifest.${process.env.NODE_ENV || 'development'}`,
+      manifestName: `.vite/manifest.${process.env.NODE_ENV || 'development'}`
     }),
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => [
-            // ADD YOUR CUSTOM TAGS
-          ].includes(tag),
+          isCustomElement: (tag) =>
+            [
+              // ADD YOUR CUSTOM TAGS
+            ].includes(tag)
         }
       }
-    }),
+    })
   ],
   resolve: {
     alias: {
-      '@client': path.resolve(__dirname, 'client') + '/',
-    },
-  },
+      '@client': path.resolve(__dirname, 'client') + '/'
+    }
+  }
 });

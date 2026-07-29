@@ -7,7 +7,7 @@ const BASE = '/api';
 function getHeaders(props = {}) {
   return {
     'Content-Type': 'application/json',
-    ...(props.headers),
+    ...props.headers
   };
 }
 
@@ -44,14 +44,15 @@ async function request(method, path, body, props = {}) {
   }
 
   const json = await response.json().catch(() => null);
-  return json ? (json.data || {}) : null;
+
+  return json ? json.data || {} : null;
+
 }
 
 /**
  * Shared API client helpers used across the client application.
  */
 export default {
-
   /** Resolve multiple requests at once. */
   all: (requests) => Promise.all(requests),
 
@@ -69,5 +70,4 @@ export default {
 
   /** Perform a DELETE request and normalize empty responses to `true`. */
   delete: (path, props) => request('DELETE', path, undefined, props).then((d) => d || true)
-
 };

@@ -1,5 +1,4 @@
 module.exports = {
-
   apps: [
     {
       name: 'vulkano',
@@ -25,7 +24,6 @@ module.exports = {
   ],
 
   deploy: {
-
     production: {
       user: 'SSH_USERNAME',
       port: 'SSH_PORT',
@@ -33,8 +31,10 @@ module.exports = {
       ref: 'origin/production',
       repo: 'GIT_REPOSITORY',
       path: 'DESTINATION_PATH',
-      'pre-setup': 'echo "commands or local script path to be run on the host before the setup process starts"',
-      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano && pm2 save'
+      'pre-setup':
+        'echo "commands or local script path to be run on the host before the setup process starts"',
+      'post-deploy':
+        'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano && pm2 save'
     },
 
     staging: {
@@ -44,10 +44,10 @@ module.exports = {
       ref: 'origin/production',
       repo: 'GIT_REPOSITORY',
       path: 'DESTINATION_PATH',
-      'pre-setup': 'echo "commands or local script path to be run on the host before the setup process starts"',
-      'post-deploy': 'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano-staging && pm2 save'
+      'pre-setup':
+        'echo "commands or local script path to be run on the host before the setup process starts"',
+      'post-deploy':
+        'echo yes | npm install && pm2 startOrRestart ecosystem.config.js --only vulkano-staging && pm2 save'
     }
-
   }
-
 };

@@ -2,9 +2,6 @@
   "name": "vulkano",
   "version": "3.0.0",
   "private": true,
-  "engines": {
-    "node": ">=22"
-  },
   "main": "app.js",
   "scripts": {
     "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,APP -c green,magenta 'vp dev' './node_modules/nodemon/bin/nodemon.js --inspect'",
@@ -30,6 +27,9 @@
     "sass": "catalog:",
     "sharp": "catalog:",
     "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "packageManager": "pnpm@11.1.1"
 }

@@ -29,24 +29,26 @@ describe('stripHelloWorldTemplate', () => {
     const result = stripHelloWorldTemplate(source);
 
     expect(result).not.toContain('HelloWorld');
-    expect(result).toBe([
-      '<template>',
-      '',
-      '  <div class="home">',
-      '    <a href="https://github.com/vulkanojs/vulkano" target="_blank">',
-      '      <img src="/img/vulkano-logo-optimized.png" alt="Vulkano logo" />',
-      '    </a>',
-      '  </div>',
-      '',
-      '  <p>',
-      '    Edit',
-      '  </p>',
-      '',
-      '</template>',
-      '',
-      '<script src="./Index.js"></script>',
-      ''
-    ].join('\n'));
+    expect(result).toBe(
+      [
+        '<template>',
+        '',
+        '  <div class="home">',
+        '    <a href="https://github.com/vulkanojs/vulkano" target="_blank">',
+        '      <img src="/img/vulkano-logo-optimized.png" alt="Vulkano logo" />',
+        '    </a>',
+        '  </div>',
+        '',
+        '  <p>',
+        '    Edit',
+        '  </p>',
+        '',
+        '</template>',
+        '',
+        '<script src="./Index.js"></script>',
+        ''
+      ].join('\n')
+    );
   });
 });
 
@@ -78,24 +80,26 @@ describe('stripHelloWorldScript', () => {
     const result = stripHelloWorldScript(source);
 
     expect(result).not.toContain('HelloWorld');
-    expect(result).toBe([
-      'export default {',
-      '',
-      '  components: {',
-      '',
-      '  },',
-      '',
-      '  setup() {',
-      '',
-      '    return {',
-      '',
-      '    };',
-      '',
-      '  }',
-      '',
-      '};',
-      ''
-    ].join('\n'));
+    expect(result).toBe(
+      [
+        'export default {',
+        '',
+        '  components: {',
+        '',
+        '  },',
+        '',
+        '  setup() {',
+        '',
+        '    return {',
+        '',
+        '    };',
+        '',
+        '  }',
+        '',
+        '};',
+        ''
+      ].join('\n')
+    );
   });
 });
 
