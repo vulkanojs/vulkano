@@ -18,16 +18,16 @@
   },
   "dependencies": {
     "@vulkano/core": "^1.20.2",
-    "concurrently": "^10.0.3",
+    "concurrently": "catalog:",
     "dotenv": "^17.4.2",
     "vite-plugin-dev-manifest": "catalog:",
-    "vue": "^3.5.40",
-    "vue-router": "^5.2.0"
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.8",
-    "nodemon": "^3.1.14",
-    "sass": "^1.101.6",
+    "@vitejs/plugin-vue": "catalog:",
+    "nodemon": "catalog:",
+    "sass": "catalog:",
     "sharp": "catalog:",
     "vite-plus": "catalog:"
   },

@@ -5,9 +5,15 @@ catalogMode: prefer
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: latest
+  vite-plus: ^0.2.6
   vite-plugin-dev-manifest: ^1.5.0
   sharp: ^0.35.3
+  '@vitejs/plugin-vue': ^6.0.8
+  nodemon: ^3.1.14
+  sass: ^1.102.0
+  concurrently: ^10.0.4
+  vue: ^3.5.40
+  vue-router: ^5.2.0
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
