@@ -28,9 +28,22 @@ framework/
 │   ├── App.vue
 │   ├── routes.js           # Vue Router routes
 │   ├── Api.js              # Native fetch wrapper (replaces axios)
+│   ├── style.scss          # Single style entry point — chains components/views/layouts index
 │   ├── components/
+│   │   ├── _index.scss     # Aggregator — imports every component's own _index.scss
+│   │   └── MyComponent/
+│   │       ├── MyComponent.vue
+│   │       ├── MyComponent.js
+│   │       └── _index.scss
 │   ├── layouts/
+│   │   ├── _index.scss     # Aggregator — imports every layout's own _index.scss
+│   │   └── Layout.vue / Layout.js
 │   └── views/
+│       ├── _index.scss     # Aggregator — imports every view's own _index.scss
+│       └── MyView/
+│           ├── MyView.vue
+│           ├── MyView.js
+│           └── _index.scss
 │
 └── public/                 # Built assets (output of vite build)
     ├── js/
@@ -107,21 +120,56 @@ export default (history) => createRouter({ history, routes });
 
 `$api` is registered as a global property, so it's available in every component:
 
-```vue
-<script>
+```js
+// MyComponent.js
 export default {
   async created() {
     this.products = await this.$api.get('/product');
   }
 };
-</script>
 ```
 
 `client/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
+### Component convention — `.vue` / `.js` pairing
+
+Each component splits its options/logic into a sibling `.js` file, imported by the `.vue` file via `<script src="./X.js">`; the `.vue` file carries the template and (optionally) scoped styles. Views and components additionally carry an `_index.scss` partial (e.g. `views/MyView/_index.scss`, `components/MyComponent/_index.scss`).
+
+#### `client/components/` — shared/reusable components
+
+Reusable components (as opposed to `views/`, which are the top-level states the store's status drives) live under `client/components/`, one subfolder per component:
+
+```
+components/
+  _index.scss           # imports every component's own _index.scss
+  MyComponent/
+    MyComponent.vue      # HTML
+    MyComponent.js       # Logic
+    _index.scss          # Styles
+```
+
+`components/_index.scss` is the aggregator — each new component adds its own `@import './MyComponent/_index.scss';` line there. Individual `.vue` files do NOT import their own `_index.scss` — all imports flow from `client/style.scss`, which imports `components/_index.scss` (and `views/_index.scss`, and `layouts/_index.scss` if that folder exists), so there is a single entry point for every style partial in the widget.
+
+#### `client/views/` — same aggregator convention
+
+`views/` follows the identical pattern: `views/_index.scss` is the aggregator, each view adds its own `@import './MyView/_index.scss';`-style line there. Same rule as `components/` — the view's own `.vue` file doesn't import its own `_index.scss`; `client/style.scss` is the one place that chains `@client/components/index`, `@client/views/index`, and `@client/layouts/index` together.
+
+```
+views/
+  _index.scss           # imports every view's own _index.scss
+  MyView/
+    MyView.vue          # HTML
+    MyView.js           # Logic
+    _index.scss         # Styles
+```
+
+### Layout — CSS Grid
+
+All layout — components and views, any dimension, any nesting level — uses CSS Grid (`display: grid`) in the `_index.scss`. No Flexbox, anywhere.
+
 ### Vite (`vite.config.mjs`)
 
-- **Single entry point**: `client/app.js` — Rolldown builds one bundle, no separate admin/CMS bundle
+- **Entry points**: `rollupOptions.input` (an object) currently maps a single key, `app: 'client/app.js'`. Vite supports multiple entries — each additional key builds its own bundle (e.g. a future CMS app in its own top-level folder, mirroring `client/`'s structure). The Nunjucks `vite()` helper already takes an `entry` param (`vite({ entry: 'app', type: 'script' })`), so wiring a new bundle into a template only needs the matching `entry:` value — no other config changes. Not in use yet — there's currently only one entry (`app`)
 - **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
 - **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
 - **Alias**: `@client` → `client/`
