@@ -4,7 +4,10 @@
     ".git/",
     "public/",
     "client/",
-    "nbproject/",
+    "docs/",
+    "test",
+    "scripts",
+    "inbox",    
     ".md"
   ],
   "env": {
