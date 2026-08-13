@@ -57,6 +57,7 @@ VITE_CHUNK_NAMES=false
 - [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
 - [ ] Public behavior, routes, and compatibility risks are called out explicitly.
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
+- [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
 
 <!--VITE PLUS START-->
 
