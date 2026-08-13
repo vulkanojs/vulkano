@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "private": true,
   "main": "app.js",
-  "scripts": {
-    "dev": "node ./node_modules/concurrently/dist/bin/concurrently -n VITE,APP -c green,magenta 'vp dev' './node_modules/nodemon/bin/nodemon.js --inspect'",
+  "scripts": {    
+    "dev": "node ./node_modules/concurrently/dist/bin/index.js -n VITE,APP -c green,magenta 'vp dev' './node_modules/nodemon/bin/nodemon.js --inspect'",
     "start": "node app.js",
     "build": "vp build",
     "preview": "vp preview",
