@@ -81,6 +81,8 @@ This template only adds what follows below: the frontend, the dependency list, a
 
 The `client/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
 
+Prefer the **Composition API** (`setup()`, `ref`/`reactive`, composables) over the Options API for new and edited components — do not add new `data()`/`methods`/`created()`-style options blocks.
+
 ### Entry point — `client/app.js`
 
 ```js
@@ -89,14 +91,15 @@ import { createWebHistory } from 'vue-router';
 
 import '@client/style.scss';
 
-import createRouter from '@client/routes';
-import App from '@client/App.vue';
 import Api from '@client/Api';
 
-const router = createRouter(createWebHistory());
+import createRouter from '@client/routes';
+import App from '@client/App.vue';
 
 const app = createApp(App);
 app.config.globalProperties.$api = Api;
+
+const router = createRouter(createWebHistory());
 
 app.use(router).mount('#app');
 ```
@@ -122,13 +125,30 @@ export default (history) => createRouter({ history, routes });
 
 ### Calling the API from a component
 
-`$api` is registered as a global property, so it's available in every component:
+`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from '@client/Api'` directly in components:
 
 ```js
 // MyComponent.js
+import { ref, onMounted, getCurrentInstance, toRef } from 'vue';
+
 export default {
-  async created() {
-    this.products = await this.$api.get('/product');
+  setup(props) {
+    /**
+     * INSTANCE (for $api variable)
+     */
+    const { $api } = getCurrentInstance().proxy || {};
+
+    /**
+     * REACTIVE FIELDS
+     */
+    const sku = toRef(props, 'sku');
+    const products = ref([]);
+
+    onMounted(async () => {
+      products.value = await $api.get('/product');
+    });
+
+    return { products, sku };
   }
 };
 ```
@@ -167,9 +187,72 @@ views/
     _index.scss         # Styles
 ```
 
+### State — `client/store/`
+
+Split state into one [Pinia](https://pinia.vuejs.org/) store per concern — not one global store. If a payload carries data for multiple entities (e.g. an event, its attendee, and a campaign), split it into independent stores rather than one combined store:
+
+```
+store/
+  useEventStore.js
+  useAttendeeStore.js
+  useCampaignStore.js
+```
+
+Each store owns only its own entity's state, getters, and actions — a component importing `useAttendeeStore` should never need to reach into event or campaign state. This keeps each store small, its logic easy to follow, and its mutations traceable to one concern instead of a shared blob every component can write to.
+
+```js
+// store/useEventStore.js
+import { ref, getCurrentInstance } from 'vue';
+import { defineStore } from 'pinia';
+
+export const useEventStore = defineStore('event', () => {
+  const { $api } = getCurrentInstance().proxy || {};
+  const current = ref(null);
+
+  async function fetch(id) {
+    current.value = await $api.get(`/event/${id}`);
+  }
+
+  return { current, fetch };
+});
+```
+
+(setup-style store, in line with the Composition API preference above — not the options-style `defineStore('event', { state, actions })`.)
+
+Naming: `use<Entity>Store` (singular, matching the model naming convention), file per store, no aggregator/barrel file — import each store directly where it's used.
+
+**Pinia is not yet a dependency of this project** — add it (`pnpm add pinia`) and register it in `client/app.js` (`app.use(createPinia())`) before creating the first store.
+
+**Testing** — each store gets its own test file (e.g. `test/store/useEventStore.test.js`), independent of other stores' tests. Because stores are split by concern, tests can exercise one store's actions/getters in isolation, with `createPinia()` + `setActivePinia()` in `beforeEach`, without needing to set up unrelated entity state. Mock `$api` calls at the store boundary rather than hitting the real API.
+
 ### Layout — CSS Grid
 
 All layout — components and views, any dimension, any nesting level — uses CSS Grid (`display: grid`) in the `_index.scss`. No Flexbox, anywhere.
+
+### CSS naming — BEM
+
+Every `_index.scss` follows BEM: block is the component/view's root section, elements are `__container`/`__content` (or another noun scoped to that block), state/variant modifiers use `--` (e.g. `--opened`):
+
+```scss
+// MyComponent/_index.scss
+.my-component {
+  display: grid;
+
+  &__container {
+    display: grid;
+  }
+
+  &__content {
+    display: grid;
+  }
+
+  &--opened {
+    // state override
+  }
+}
+```
+
+Block name matches the component/view folder (kebab-case). No nested selectors beyond block/element/modifier — don't reach into a child block's internals from a parent's stylesheet.
 
 ### Vite (`vite.config.mjs`)
 
