@@ -62,7 +62,6 @@ framework/
 
 - **Model** → singular PascalCase (e.g., `Product.js` → `global.Product`)
 - **Controller** → plural PascalCase + `Controller` suffix (e.g., `ProductsController.js`)
--
 - **MongoDB collection naming:** a model only maps to a table/collection if it defines `attributes` (schema fields) — a model file with no `attributes` is just a plain global, not backed by a collection.
 
 By convention, model files should be named in singular (e.g. `User.js`), and the collection binding is automatic and singular-lowercase: `User.js` → collection `user`, `Project.js` → collection `project` (never pluralized like `users`/`projects`). Any script or tool that talks to the database directly (seeds, migrations, ad-hoc queries) must target that singular lowercase collection name to match what the running app actually uses.
@@ -298,8 +297,7 @@ Block name matches the component/view folder (kebab-case). No nested selectors b
 
 - **Entry points**: `rollupOptions.input` (an object) currently maps a single key, `app: 'client/app.js'`. Vite supports multiple entries — each additional key builds its own bundle (e.g. a future CMS app in its own top-level folder, mirroring `client/`'s structure). The Nunjucks `vite()` helper already takes an `entry` param (`vite({ entry: 'app', type: 'script' })`), so wiring a new bundle into a template only needs the matching `entry:` value — no other config changes. Not in use yet — there's currently only one entry (`app`)
 - **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
-- **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
-- **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR (Hot Module Replacement) — edited modules are swapped in the running app over the existing socket connection, so a full page reload isn't needed; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
+- **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR (Hot Module Replacement) — edited modules are swapped in the running app over the existing socket connection, so a full page reload isn't needed; CORS is open (`origin: '*'`) so the two servers talk freely; `host: process.env.VITE_HOST || true` binds all interfaces by default so it prints a LAN URL too (`Network: http://<your-ip>:5173/`) — useful for testing from a phone on the same network. Set `VITE_HOST` in `.env` only if you need to force a specific host (e.g. a fixed IP/hostname); leave it unset for the auto-detected default
 - **Alias**: `@client` → `client/`
 - **Manifest**: `vite-plugin-dev-manifest` writes `public/.vite/manifest.<NODE_ENV>.json`, which the Nunjucks templates read to inject the correct `<script>`/`<link>` tags in dev and production
 - **Cache hashing**: controlled by `VITE_CHUNK_NAMES` — `true` adds `-[hash]` to output filenames, `false` (default) keeps plain names for simpler debugging
