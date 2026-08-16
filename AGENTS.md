@@ -1,3 +1,12 @@
+# Default communication
+
+- Use Caveman mode (if the skill is available): use the fewest tokens possible.
+- No explanations unless explicitly asked for.
+- Zero pleasantries, greetings, sign-offs, or filler.
+- Ultra-short, direct sentences.
+
+---
+
 ## What this project is
 
 This is the **Vulkano Framework** — the full-stack app template built on top of `@vulkano/core`. It combines an Express MVC backend with a Vue 3 frontend, bundled by Vite. It is the starting point for new Vulkano-based applications.
