@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@lucide/vue':
+      specifier: ^1.31.0
+      version: 1.31.0
     '@vitejs/plugin-vue':
       specifier: ^6.0.8
       version: 6.0.8
@@ -45,6 +48,9 @@ importers:
 
   .:
     dependencies:
+      '@lucide/vue':
+        specifier: 'catalog:'
+        version: 1.31.0(vue@3.5.40)
       '@vulkano/core':
         specifier: 'catalog:'
         version: 1.22.0(chokidar@3.6.0)
@@ -320,6 +326,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@lucide/vue@1.31.0':
+    resolution: {integrity: sha512-NtjEHhcAa7umPh40wrRmlESJqNGdnpc7LziBKFnW3fmlrW0g2xMCDpdWU7WeEHRSl3xOpxbqiFTLKxoK3CoVCg==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   '@mongodb-js/saslprep@1.4.13':
     resolution: {integrity: sha512-E3Sv4eCYAlKYUTx8S3ioQcDUscOif+8zZ5OnW1IzJ+Tt+EO+ke8mn+Y3FX6N1H79picwbdOavVOb1jPi2EOyrg==}
@@ -2949,6 +2960,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lucide/vue@1.31.0(vue@3.5.40)':
+    dependencies:
+      vue: 3.5.40
 
   '@mongodb-js/saslprep@1.4.13':
     dependencies:

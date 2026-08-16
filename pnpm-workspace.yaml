@@ -15,6 +15,7 @@ catalog:
   vue: ^3.5.40
   vue-router: ^5.2.0
   '@vulkano/core': ^1.22.0
+  '@lucide/vue': ^1.31.0
 overrides:
   vite: 'catalog:'
   vitest: 'catalog:'
