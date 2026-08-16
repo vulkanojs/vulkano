@@ -1,25 +1,13 @@
-export default {
+import { ref } from 'vue';
 
+export default {
   name: 'Layout',
 
-  components: {
-
-  },
-
-  computed: {
-
-  },
-
-  data() {
+  setup() {
+    const loading = ref(true);
 
     return {
-      loading: true
+      loading
     };
-
-  },
-
-  methods: {
-
   }
-
 };

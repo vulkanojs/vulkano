@@ -56,6 +56,7 @@ VITE_CHUNK_NAMES=false
 - Enforce authentication and authorization for every protected action or resource. Do not rely on routes, navigation, or client-side controls as the access boundary; verify the relevant source and tests when changing it.
 - Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
 - Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=22`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
+- When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`me` action convention — see [ARCHITECTURE.md](ARCHITECTURE.md#authentication)). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
 
 ## Safety boundaries
 
@@ -81,6 +82,7 @@ VITE_CHUNK_NAMES=false
 Tailwind + shadcn-vue live isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [ARCHITECTURE.md](ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
 
 Setup, for reference:
+
 - `components.json` (repo root) is the shadcn-vue CLI config — `aliases` point at `@client/components/ui`.
 - `client/components/ui/tailwind.css` is the isolated Tailwind entry: `source(none)` + `@source './**/*.{vue,js}'` scopes scanning to that folder only, `prefix(tw)` namespaces every utility class (`tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. It is imported once, directly in `client/app.js` — not chained through `client/style.scss`.
 - `client/components/ui/lib/utils.js` exports `cn()` (clsx + tailwind-merge), the standard shadcn helper for merging class strings.

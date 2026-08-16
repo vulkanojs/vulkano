@@ -77,10 +77,11 @@ A controller file may only have, outside of `module.exports`, its `require`/impo
 ```js
 // app/controllers/ProductsController.js
 const exceljs = require('exceljs'); // ok: import
-const VAR_NAME = 'value';     // no top-level constants or variables hardcoded (template-specific)
+const VAR_NAME = 'value'; // no top-level constants or variables hardcoded (template-specific)
 
 module.exports = {
-  get(req, res) {                       // ok: this IS a controller method
+  get(req, res) {
+    // ok: this IS a controller method
     res.vsr(exceljs.download());
   }
 };
@@ -105,7 +106,7 @@ For a constant that should behave as a true global (not nested under `config`), 
 
 ```js
 // app/config/bootstrap.js
-global.HOLDER_TYPES = ['user', 'company'];   // usage anywhere: HOLDER_TYPES
+global.HOLDER_TYPES = ['user', 'company']; // usage anywhere: HOLDER_TYPES
 module.exports = (start) => {
   start(() => {});
 };
@@ -116,6 +117,14 @@ module.exports = (start) => {
 Routing (convention over configuration, method key convention, `app/config/routes.js`), the thin-controller/business-logic-in-model split, scaffold controllers, the model CRUD interface and hooks, cron jobs (`Crontab.schedule(...)` registered in `app/config/bootstrap.js`), auto-loaded globals, and the `res.vsr`/`res.render` response conventions are all defined by the framework core, not by this template. Source of truth: [`@vulkano/core` README](node_modules/@vulkano/core/README.md) (also mirrored at https://github.com/vulkanojs/vulkano-core). For worked examples, see `@vulkano/core/examples/controllers` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`) and `@vulkano/core/examples/models` (`Example.js`, `ExampleWithScaffold.js`).
 
 This template only adds what follows below: the controller/config conventions above, the frontend, the dependency list, and deployment.
+
+### Authentication
+
+The core wires JWT (`Jwt.encode`/`Jwt.decode`, `express-jwt` middleware — see [`@vulkano/core` README § JWT Authentication](node_modules/@vulkano/core/README.md)), but doesn't prescribe a model/controller shape. Recommended convention for this template:
+
+- **Dedicated model** — `Auth`/`User` (whichever this app calls it), not login logic bolted onto an unrelated model.
+- **Dedicated controller** — `app/controllers/api/AuthController.js`, following the core's method-key convention: `'post login'` (`POST /api/auth/login`), `'post logout'` (`POST /api/auth/logout`), `me` (`GET /api/auth/me` — no verb prefix needed, `GET` is the default; returns the current session's user or `401`).
+- **`httpOnly` cookie, not `localStorage`** — on successful login, set the JWT as an `httpOnly` (and `secure` in production) cookie rather than returning it in the response body for client-side storage. `Jwt.getToken(req)` already reads from cookie, header, or query param, so this doesn't require custom token-extraction logic. `localStorage`/`sessionStorage` are readable by any script on the page — a stored token there is exposed to XSS.
 
 ## Frontend — Vue 3 + Vite
 

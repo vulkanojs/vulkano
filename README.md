@@ -39,6 +39,7 @@ For the project structure, routing conventions, and controller/model/response co
 ## Requirements
 
 - **Node.js** `^22`
+- **Vite+ CLI** (`vp`) — installs Vite, Vitest, and the rest of the toolchain globally. See [viteplus.dev](https://viteplus.dev/guide/) for the install command, then verify with `vp help`.
 - **MongoDB** (optional — only needed if you use models)
 - **Redis** (optional — Socket.io adapter or sessions)
 
@@ -50,17 +51,28 @@ For the project structure, routing conventions, and controller/model/response co
 pnpm install       # or npm install
 ```
 
+**New project?** Strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view) before you start building:
+
+```bash
+pnpm run cleanup
+```
+
+Asks for confirmation (`yes`) before deleting anything. Skip this if you want to keep the demo as a reference.
+
 ---
 
 ## Dev workflow
 
-| Command          | Description                              |
-| ---------------- | ---------------------------------------- |
-| `pnpm run dev`   | Start Express + Vite dev server with HMR |
-| `pnpm run build` | Build frontend assets into `public/`     |
-| `pnpm run start` | Start Express in production mode         |
-| `pnpm run lint`  | Lint via `vp lint`                       |
-| `pnpm run test`  | Run tests via `vp test`                  |
+| Command            | Description                              |
+| ------------------ | ---------------------------------------- |
+| `pnpm run dev`     | Start Express + Vite dev server with HMR |
+| `pnpm run cleanup` | Remove demo boilerplate (new projects)   |
+| `pnpm run build`   | Build frontend assets into `public/`     |
+| `pnpm run start`   | Start Express in production mode         |
+| `pnpm run lint`    | Lint via `vp lint`                       |
+| `pnpm run test`    | Run tests via `vp test`                  |
+
+`pnpm run dev` starts Express and the Vite dev server together, but **only one port matters**: open `http://localhost:$PORT` (`8000` by default, set in `.env`). Express serves the page and injects the Vite-bundled frontend automatically — no need to also open `localhost:5173` in a second tab, that's Vite's internal dev server, not a second app.
 
 ---
 
@@ -93,7 +105,39 @@ Instead of: _"show a list of users"_
 Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"_
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the controller/model/view
-conventions your agent should follow.
+conventions your agent should follow, and [AGENTS.md](AGENTS.md) for the
+rules your agent reads automatically (Claude Code, and any tool that
+honors `AGENTS.md`/`CLAUDE.md`) — workflow, security boundaries, and
+handoff checklist.
+
+### Common tasks
+
+#### Add a new table/collection
+
+1. Tell your AI agent: _"add a `[table]` model with fields `[...]`"_
+2. The agent will create/update `app/models/[table].js`
+
+#### Save data through the API
+
+1. Tell your AI agent: _"add a route to save `[table]` to the database"_ — usually `domain.com/api/[table]`
+2. The agent creates the matching controller under `app/controllers/api/` and wires it to the model
+
+#### Show records — frontend view or backend view
+
+Say which one you want, they're not the same:
+
+- **Frontend view** (Vue SPA, client-rendered): _"create a view to show `[table]` records"_ → `client/views/[Table]/Index.vue`, fetches data via `client/Api.js`
+- **Backend view** (Nunjucks, server-rendered): _"create a backend view to show `[table]` records"_ → `app/views/[table]/index.html`, rendered by the controller via `res.vsr`/`res.render`
+
+#### Add a form
+
+1. Tell your AI agent: _"create a route to create a form"_ (e.g. _"add a `/posts/new` route with a form to create a `Post`"_)
+2. The agent adds the route in `client/routes.js` and a view under `client/views/`, wired to the API route that saves the model
+
+| Task          | What to tell your agent                                        |
+| ------------- | -------------------------------------------------------------- |
+| New component | _"add a `PostCard` component"_ → `client/components/PostCard/` |
+| Run checks    | `vp check` (format/lint/typecheck) and `vp test` (tests)       |
 
 ### The `inbox/` folder
 
