@@ -132,15 +132,14 @@ import { createWebHistory } from 'vue-router';
 
 import '@client/style.scss';
 
-import Api from '@client/Api';
-
 import createRouter from '@client/routes';
 import App from '@client/App.vue';
+import Api from '@client/Api';
+
+const router = createRouter(createWebHistory());
 
 const app = createApp(App);
 app.config.globalProperties.$api = Api;
-
-const router = createRouter(createWebHistory());
 
 app.use(router).mount('#app');
 ```
@@ -299,6 +298,7 @@ Block name matches the component/view folder (kebab-case). No nested selectors b
 
 - **Entry points**: `rollupOptions.input` (an object) currently maps a single key, `app: 'client/app.js'`. Vite supports multiple entries — each additional key builds its own bundle (e.g. a future CMS app in its own top-level folder, mirroring `client/`'s structure). The Nunjucks `vite()` helper already takes an `entry` param (`vite({ entry: 'app', type: 'script' })`), so wiring a new bundle into a template only needs the matching `entry:` value — no other config changes. Not in use yet — there's currently only one entry (`app`)
 - **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
+- **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
 - **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR (Hot Module Replacement) — edited modules are swapped in the running app over the existing socket connection, so a full page reload isn't needed; CORS is open (`origin: '*'`) so the two servers talk freely; host is `VITE_HOST` (defaults to `localhost`)
 - **Alias**: `@client` → `client/`
 - **Manifest**: `vite-plugin-dev-manifest` writes `public/.vite/manifest.<NODE_ENV>.json`, which the Nunjucks templates read to inject the correct `<script>`/`<link>` tags in dev and production
