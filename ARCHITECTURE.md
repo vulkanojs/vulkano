@@ -71,11 +71,52 @@ By convention, model files should be named in singular (e.g. `User.js`), and the
 
 When a function parameter or binding is intentionally unused (e.g. a `catch` block that doesn't need the error), prefix it with `_` so the linter's `no-unused-vars` rule doesn't flag it: `catch (_err) {`.
 
+### Controllers — no top-level functions or variables (template-specific)
+
+A controller file may only have, outside of `module.exports`, its `require`/import statements. No helper functions, no top-level `const`/`let` — only the exported object and its methods:
+
+```js
+// app/controllers/ProductsController.js
+const exceljs = require('exceljs'); // ok: import
+const VAR_NAME = 'value';     // no top-level constants or variables hardcoded (template-specific)
+
+module.exports = {
+  get(req, res) {                       // ok: this IS a controller method
+    res.vsr(exceljs.download());
+  }
+};
+```
+
+If a method needs helper logic, extract it into `app/services/<Name>.js` (auto-loaded as a global by the core, like models — see `app/services/` in the tree above) and call the service from the controller. Business rules and reusable logic belong in the service (or the model), not the controller.
+
+### Global constants hardcoded — `app/config/common.js` or `bootstrap.js`
+
+Shared constants used across controllers/services/models go in `app/config/common.js`, exported like any other config file. The core exposes every `app/config/*.js` file as `app.config.<filename>` (see `app.config = allConfig` in `@vulkano/core/app.js`), so `app/config/common.js` becomes readable as `app.config.common`:
+
+```js
+// app/config/common.js
+module.exports = {
+  HOLDER_TYPES: ['user', 'company']
+};
+
+// usage anywhere: app.config.common.HOLDER_TYPES
+```
+
+For a constant that should behave as a true global (not nested under `config`), register it in `app/config/bootstrap.js` instead:
+
+```js
+// app/config/bootstrap.js
+global.HOLDER_TYPES = ['user', 'company'];   // usage anywhere: HOLDER_TYPES
+module.exports = (start) => {
+  start(() => {});
+};
+```
+
 ### Backend conventions — owned by `@vulkano/core`
 
-Routing (convention over configuration, method key convention, `app/config/routes.js`), the thin-controller/business-logic-in-model split, scaffold controllers, the model CRUD interface and hooks, auto-loaded globals, and the `res.vsr`/`res.render` response conventions are all defined by the framework core, not by this template. Source of truth: [`@vulkano/core` README](node_modules/@vulkano/core/README.md) (also mirrored at https://github.com/vulkanojs/vulkano-core). For worked examples, see `@vulkano/core/examples/controllers` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`) and `@vulkano/core/examples/models` (`Example.js`, `ExampleWithScaffold.js`).
+Routing (convention over configuration, method key convention, `app/config/routes.js`), the thin-controller/business-logic-in-model split, scaffold controllers, the model CRUD interface and hooks, cron jobs (`Crontab.schedule(...)` registered in `app/config/bootstrap.js`), auto-loaded globals, and the `res.vsr`/`res.render` response conventions are all defined by the framework core, not by this template. Source of truth: [`@vulkano/core` README](node_modules/@vulkano/core/README.md) (also mirrored at https://github.com/vulkanojs/vulkano-core). For worked examples, see `@vulkano/core/examples/controllers` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`) and `@vulkano/core/examples/models` (`Example.js`, `ExampleWithScaffold.js`).
 
-This template only adds what follows below: the frontend, the dependency list, and deployment.
+This template only adds what follows below: the controller/config conventions above, the frontend, the dependency list, and deployment.
 
 ## Frontend — Vue 3 + Vite
 
