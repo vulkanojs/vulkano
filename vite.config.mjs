@@ -29,7 +29,7 @@ export default defineConfig({
     cors: {
       origin: '*'
     },
-    host: process.env.VITE_HOST || 'localhost'
+    host: process.env.VITE_HOST || true
   },
   css: {
     preprocessorOptions: {
@@ -72,7 +72,11 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.js']
+    include: ['test/**/*.test.js'],
+    setupFiles: ['test/helpers/bootstrap.js'],
+    pool: 'forks',
+    isolate: false,
+    fileParallelism: false
   },
   plugins: [
     devManifest({

@@ -72,8 +72,8 @@ HOST=localhost
 MONGO_URI=mongodb://localhost:27017/myapp
 SALT_KEY=random-string
 JWT_SECRET=supersecret
-VITE_HOST=localhost
 VITE_CHUNK_NAMES=false
+# VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
 ```
 
 ---
