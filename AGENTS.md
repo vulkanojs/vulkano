@@ -18,6 +18,8 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions.
 
+**Read every `.md` file referenced from this one** (`ARCHITECTURE.md`, `README.md`, and any other linked doc) before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [ARCHITECTURE.md § Backend conventions](ARCHITECTURE.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+
 ---
 
 ## Quick workflow

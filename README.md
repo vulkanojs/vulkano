@@ -21,7 +21,11 @@ Vulkano is a full-stack framework that gives you a convention-based Express API 
 
 Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 
-For the project structure, routing conventions, and controller/model/response conventions, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+---
+
+## Project structure
+
+`app/` is the Express backend, `client/` is the Vue 3 SPA. Full folder layout, routing conventions, and controller/model/response conventions: see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 ---
 
