@@ -67,6 +67,23 @@ VITE_CHUNK_NAMES=false
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
 - [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
 
+## UI components — shadcn-vue
+
+Tailwind + shadcn-vue live isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [ARCHITECTURE.md](ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
+
+Setup, for reference:
+- `components.json` (repo root) is the shadcn-vue CLI config — `aliases` point at `@client/components/ui`.
+- `client/components/ui/tailwind.css` is the isolated Tailwind entry: `source(none)` + `@source './**/*.{vue,js}'` scopes scanning to that folder only, `prefix(tw)` namespaces every utility class (`tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. It is imported once, directly in `client/app.js` — not chained through `client/style.scss`.
+- `client/components/ui/lib/utils.js` exports `cn()` (clsx + tailwind-merge), the standard shadcn helper for merging class strings.
+
+To add a component:
+
+```
+pnpm dlx shadcn-vue@latest add <component>
+```
+
+The CLI reads `components.json` and drops the component into `client/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
+
 <!--VITE PLUS START-->
 
 # Using Vite+, the Unified Toolchain for the Web
