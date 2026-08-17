@@ -1,0 +1,16 @@
+# ref: https://scrutinizer-ci.com/docs/configuration/build_reference
+build:
+  environment:
+    node: 22
+  nodes:
+    analysis:
+      dependencies:
+        override:
+          - corepack enable
+          - pnpm install --frozen-lockfile
+
+filter:
+  dependency_paths:
+    - 'node_modules/'
+  excluded_paths:
+    - 'public/'
