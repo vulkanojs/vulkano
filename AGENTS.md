@@ -61,6 +61,10 @@ VITE_CHUNK_NAMES=false
 - When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`me` action convention — see [ARCHITECTURE.md](ARCHITECTURE.md#authentication)). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
 - Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` either — same XSS exposure as the token. After login, fetch the current user via `GET /api/auth/me` (or `/api/auth/current`), and re-fetch it on every route change (router guard) instead of caching it client-side.
 
+## Visual verification (frontend)
+
+For `client/` changes, don't just read the diff — look at it running. If the `chrome-devtools` MCP is available, use it: check first whether the port (`8000`/`$PORT`) is already in use — if it's this project already running (the user may have started it themselves), navigate straight to it, don't restart it, and ask the user first if you're unsure whether it's safe to touch. If it's a different, unrelated project holding that port, don't kill it — start this one with `PORT=<alt> pnpm run dev` for the check instead. Navigate, take a screenshot, and check the console/network tab for new errors. Stop only the dev server you started yourself once you're done — never a server you didn't start. This is how you catch layout, styling, and runtime issues that a type-check or `vp check` can't — treat it as part of verifying the change, not an optional extra.
+
 ## Safety boundaries
 
 - CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
@@ -76,6 +80,7 @@ VITE_CHUNK_NAMES=false
 - [ ] Existing unrelated changes in the worktree remain untouched.
 - [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `ARCHITECTURE.md`).
 - [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
+- [ ] For `client/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
 - [ ] Public behavior, routes, and compatibility risks are called out explicitly.
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
 - [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
