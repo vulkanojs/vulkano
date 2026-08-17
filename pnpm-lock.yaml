@@ -13,8 +13,8 @@ catalogs:
       specifier: ^6.0.8
       version: 6.0.8
     '@vulkano/core':
-      specifier: ^1.22.0
-      version: 1.22.0
+      specifier: ^1.22.1
+      version: 1.22.1
     concurrently:
       specifier: ^10.0.4
       version: 10.0.4
@@ -52,7 +52,7 @@ importers:
         version: 1.31.0(vue@3.5.40)
       '@vulkano/core':
         specifier: 'catalog:'
-        version: 1.22.0(chokidar@3.6.0)
+        version: 1.22.1(chokidar@3.6.0)
       concurrently:
         specifier: 'catalog:'
         version: 10.0.4
@@ -1124,8 +1124,8 @@ packages:
   '@vue/shared@3.5.40':
     resolution: {integrity: sha512-WxnBtruIqOoV3rA4jeKDWzrYI5h7Cp4+pjwDi8kWGHz+IslhiN+wguLVVhtv2l8VoU02rzDCVfDjgCl1lNpZVg==}
 
-  '@vulkano/core@1.22.0':
-    resolution: {integrity: sha512-7+RKLIX83/XS4vNYBH1xO64gAVNMuM+fG2/BZbZPiFDbmhRK9dDM7/XU5qWjk2WX1zBQq93Q6jeTmcQQB7Wf4w==}
+  '@vulkano/core@1.22.1':
+    resolution: {integrity: sha512-MTlF3VfJbOzVXf2SRQmD/SH3hYkza1rFt+PwSccD1tq60juSO1VjV3+axL1qFbmrdCbvhPPKrRaeYnMAaUKnxQ==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -1321,6 +1321,10 @@ packages:
   basic-auth@2.0.1:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
+
+  bcryptjs@3.0.3:
+    resolution: {integrity: sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==}
+    hasBin: true
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -3481,10 +3485,11 @@ snapshots:
 
   '@vue/shared@3.5.40': {}
 
-  '@vulkano/core@1.22.0(chokidar@3.6.0)':
+  '@vulkano/core@1.22.1(chokidar@3.6.0)':
     dependencies:
       '@socket.io/mongo-adapter': 0.4.0(socket.io-adapter@2.5.8)
       '@socket.io/redis-adapter': 8.3.0(socket.io-adapter@2.5.8)
+      bcryptjs: 3.0.3
       compression: 1.8.1
       connect-timeout: 1.9.1
       cookie-parser: 1.4.7
@@ -3645,6 +3650,8 @@ snapshots:
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  bcryptjs@3.0.3: {}
 
   binary-extensions@2.3.0: {}
 

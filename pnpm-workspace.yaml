@@ -1,4 +1,6 @@
 minimumReleaseAge: 40
+minimumReleaseAgeExclude:
+  - '@vulkano/core'
 
 catalogMode: prefer
 
@@ -14,7 +16,7 @@ catalog:
   concurrently: ^10.0.4
   vue: ^3.5.40
   vue-router: ^5.2.0
-  '@vulkano/core': ^1.22.0
+  '@vulkano/core': ^1.22.1
   '@lucide/vue': ^1.31.0
 overrides:
   vite: 'catalog:'
