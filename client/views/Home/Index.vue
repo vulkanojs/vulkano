@@ -15,7 +15,7 @@
 
   <p>
     Edit Current View:
-    <code>/views/Home/Home.vue</code> to test HMR
+    <code>/views/Home/Index.vue</code> to test HMR
   </p>
 
   <div class="ai-cheatsheet">
@@ -54,4 +54,4 @@
   </div>
 </template>
 
-<script src="./Home.js"></script>
+<script src="./Index.js"></script>

@@ -40,15 +40,15 @@ framework/
 │   │   └── Layout.vue / Layout.js
 │   └── views/
 │       ├── _index.scss     # Aggregator — imports every view's own _index.scss (or module's)
-│       ├── MyView/          # /my-view → views/MyView/MyView.*
-│       │   ├── MyView.vue
-│       │   ├── MyView.js
+│       ├── MyView/          # /my-view → views/MyView/Index.*
+│       │   ├── Index.vue
+│       │   ├── Index.js
 │       │   └── _index.scss
-│       └── MyModule/        # /my-module/my-view → views/MyModule/MyView/MyView.*
+│       └── MyModule/        # /my-module/my-view → views/MyModule/MyView/Index.*
 │           ├── _index.scss  # Aggregator — imports every child view's _index.scss
 │           └── MyView/
-│               ├── MyView.vue
-│               ├── MyView.js
+│               ├── Index.vue
+│               ├── Index.js
 │               └── _index.scss
 │
 └── public/                 # Built assets (output of vite build)
@@ -164,8 +164,8 @@ app.use(router).mount('#app');
 import { createRouter } from 'vue-router';
 
 import Layout from '@client/layouts/Layout.vue';
-import Homepage from '@client/views/Home/Home.vue';
-import Users from '@client/views/System/Users/Users.vue';
+import Homepage from '@client/views/Home/Index.vue';
+import Users from '@client/views/System/Users/Index.vue';
 
 const routes = [
   {
@@ -183,16 +183,17 @@ export default (history) => createRouter({ history, routes });
 
 ### Route ↔ view naming convention
 
-Route path and view folder/file mirror each other — no code generates this, it's a naming
-discipline followed by hand when adding a route:
+Route path and view folder mirror each other — no code generates this, it's a naming discipline
+followed by hand when adding a route. The leaf view file is always `Index.vue` / `Index.js`
+(never named after the view) — the folder name is what identifies the view:
 
-- **Single segment**: `/users` → `views/Users/Users.vue` (+ `Users.js`, `_index.scss`). Folder
-  name, file basename, and route segment all match, just cased differently (kebab-case URL →
-  PascalCase folder/file).
+- **Single segment**: `/users` → `views/Users/Index.vue` (+ `Index.js`, `_index.scss`). Folder
+  name and route segment match, cased differently (kebab-case URL → PascalCase folder); the file
+  itself is always `Index.*`.
 - **Modular (nested) routes**: each path segment becomes a nested folder under `views/`, in
-  PascalCase; the last segment names the leaf view file too:
-  - `/system/users` → `views/System/Users/Users.vue`
-  - `/config/categories` → `views/Config/Categories/Categories.vue`
+  PascalCase; the leaf folder still holds `Index.vue` / `Index.js`:
+  - `/system/users` → `views/System/Users/Index.vue`
+  - `/config/categories` → `views/Config/Categories/Index.vue`
 - A module folder (`System/`, `Config/`) gets its own `_index.scss` aggregator that imports its
   child views' `_index.scss` files — same pattern `views/_index.scss` already uses for leaf
   views, one level deeper. `views/_index.scss` then imports the module's `_index.scss` instead of
@@ -200,6 +201,7 @@ discipline followed by hand when adding a route:
 
 `routes.js` stays a hand-written array (no auto-discovery of `views/`) — this convention only
 makes the import path predictable from the URL, so a route can be located without grepping.
+
 ### SPA catch-all — `app/config/routes.js`
 
 Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
@@ -268,12 +270,14 @@ components/
 
 `views/` follows the identical pattern: `views/_index.scss` is the aggregator, each view adds its own `@import './MyView/_index.scss';`-style line there. Same rule as `components/` — the view's own `.vue` file doesn't import its own `_index.scss`; `client/style.scss` is the one place that chains `@client/components/index`, `@client/views/index`, and `@client/layouts/index` together.
 
+Unlike `components/`, a view's `.vue`/`.js` files are always named `Index.vue` / `Index.js` — the folder name is what identifies the view (and, per the route convention above, mirrors the URL segment):
+
 ```
 views/
   _index.scss           # imports every view's own _index.scss
   MyView/
-    MyView.vue          # HTML
-    MyView.js           # Logic
+    Index.vue           # HTML
+    Index.js            # Logic
     _index.scss         # Styles
 ```
 
