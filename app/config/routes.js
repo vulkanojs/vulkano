@@ -24,7 +24,10 @@ module.exports = {
 
   '/': 'HomeController.get',
 
-  // Catch-all for Vue Router (SPA)
+  // Catch-all for Vue Router (SPA) — must stay last so it never shadows
+  // /api/* convention routes, which @vulkano/core registers before
+  // config/routes.js entries. Without this, a hard refresh on any
+  // client-side route (e.g. /login, /forbidden) 404s at the server.
   // '/*': 'HomeController.get',
 
 };

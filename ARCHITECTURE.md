@@ -170,6 +170,18 @@ const routes = [
 
 export default (history) => createRouter({ history, routes });
 ```
+### SPA catch-all — `app/config/routes.js`
+
+Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
+
+```js
+module.exports = {
+  '/': 'HomeController.get',
+  '/*': 'HomeController.get' // must stay last — see note below
+};
+```
+
+Safe because `@vulkano/core` registers convention routes (`app/controllers/api/*` → `/api/*`) before `config/routes.js` entries (`bootstrap/server.js`), so `/*` never shadows an API route. If this catch-all goes missing again, every non-`/` client route will 404 on refresh while still working via in-app `<router-link>`/`router.push` navigation — that split symptom is the tell.
 
 ### Calling the API from a component
 
