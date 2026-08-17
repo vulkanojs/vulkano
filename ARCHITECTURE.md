@@ -39,11 +39,17 @@ framework/
 │   │   ├── _index.scss     # Aggregator — imports every layout's own _index.scss
 │   │   └── Layout.vue / Layout.js
 │   └── views/
-│       ├── _index.scss     # Aggregator — imports every view's own _index.scss
-│       └── MyView/
-│           ├── MyView.vue
-│           ├── MyView.js
-│           └── _index.scss
+│       ├── _index.scss     # Aggregator — imports every view's own _index.scss (or module's)
+│       ├── MyView/          # /my-view → views/MyView/MyView.*
+│       │   ├── MyView.vue
+│       │   ├── MyView.js
+│       │   └── _index.scss
+│       └── MyModule/        # /my-module/my-view → views/MyModule/MyView/MyView.*
+│           ├── _index.scss  # Aggregator — imports every child view's _index.scss
+│           └── MyView/
+│               ├── MyView.vue
+│               ├── MyView.js
+│               └── _index.scss
 │
 └── public/                 # Built assets (output of vite build)
     ├── js/
@@ -158,18 +164,42 @@ app.use(router).mount('#app');
 import { createRouter } from 'vue-router';
 
 import Layout from '@client/layouts/Layout.vue';
-import Homepage from '@client/views/Home/Index.vue';
+import Homepage from '@client/views/Home/Home.vue';
+import Users from '@client/views/System/Users/Users.vue';
 
 const routes = [
   {
     path: '/',
     component: Layout,
-    children: [{ path: '', component: Homepage }]
+    children: [
+      { path: '', component: Homepage },
+      { path: '/system/users', component: Users }
+    ]
   }
 ];
 
 export default (history) => createRouter({ history, routes });
 ```
+
+### Route ↔ view naming convention
+
+Route path and view folder/file mirror each other — no code generates this, it's a naming
+discipline followed by hand when adding a route:
+
+- **Single segment**: `/users` → `views/Users/Users.vue` (+ `Users.js`, `_index.scss`). Folder
+  name, file basename, and route segment all match, just cased differently (kebab-case URL →
+  PascalCase folder/file).
+- **Modular (nested) routes**: each path segment becomes a nested folder under `views/`, in
+  PascalCase; the last segment names the leaf view file too:
+  - `/system/users` → `views/System/Users/Users.vue`
+  - `/config/categories` → `views/Config/Categories/Categories.vue`
+- A module folder (`System/`, `Config/`) gets its own `_index.scss` aggregator that imports its
+  child views' `_index.scss` files — same pattern `views/_index.scss` already uses for leaf
+  views, one level deeper. `views/_index.scss` then imports the module's `_index.scss` instead of
+  each leaf directly.
+
+`routes.js` stays a hand-written array (no auto-discovery of `views/`) — this convention only
+makes the import path predictable from the URL, so a route can be located without grepping.
 ### SPA catch-all — `app/config/routes.js`
 
 Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
