@@ -59,6 +59,7 @@ VITE_CHUNK_NAMES=false
 - Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
 - Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=22`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
 - When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`me` action convention — see [ARCHITECTURE.md](ARCHITECTURE.md#authentication)). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
+- Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` either — same XSS exposure as the token. After login, fetch the current user via `GET /api/auth/me` (or `/api/auth/current`), and re-fetch it on every route change (router guard) instead of caching it client-side.
 
 ## Safety boundaries
 
