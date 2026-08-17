@@ -1,16 +1,29 @@
 # ref: https://scrutinizer-ci.com/docs/configuration/build_reference
 build:
-  environment:
-    node: 22
+  image: default-jammy # newer Node/corepack needs a newer glibc than Scrutinizer's default base image
   nodes:
     analysis:
+      environment:
+        node:
+          version: 22
       dependencies:
         override:
           - corepack enable
           - pnpm install --frozen-lockfile
+      tests:
+        override:
+          - js-scrutinizer-run
+          -
+            command: eslint-run
+            use_website_config: false
+    tests: true
+
+checks:
+  javascript: true
 
 filter:
   dependency_paths:
     - 'node_modules/'
   excluded_paths:
     - 'public/'
+    - '*.min.js'
