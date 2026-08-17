@@ -13,7 +13,6 @@ build:
       tests:
         override:
           - js-scrutinizer-run
-    tests: true
 
 checks:
   javascript: true

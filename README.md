@@ -11,6 +11,7 @@
 <p align="center">
   <a href="https://opencollective.com/vulkanojs#backer"><img src="https://opencollective.com/vulkanojs/backers/badge.svg" alt="Backers"></a>
   <a href="https://opencollective.com/vulkanojs#sponsor"><img src="https://opencollective.com/vulkanojs/sponsors/badge.svg" alt="Sponsors"></a>
+  <a href="https://scrutinizer-ci.com/g/vulkanojs/vulkano/?branch=master"><img src="https://scrutinizer-ci.com/g/vulkanojs/vulkano/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"></a>
 </p>
 
 ---
