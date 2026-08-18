@@ -96,6 +96,13 @@ VITE_CHUNK_NAMES=false
 - Still set the correct `type` on every `<input>` (`email`, `number`, `date`, `range`, `tel`, …) — this is about semantics/mobile keyboard/a11y, not the validation-UI point above, and stays required even though native validation bubbles are suppressed.
 - `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `client/components/ui/`) instead, for visual consistency with the rest of the design system.
 
+## Frontend assets (images, fonts, files)
+
+- Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `client/`, and not pulled through the Vite bundler via `@client`/relative `import`/`src="@client/..."`.
+- Reference them by absolute path from the app root: `/img/<name>.webp`, `/fonts/<name>.woff2`, `/files/<name>`. Same in CSS `url(...)`.
+- Namespace per feature when a design drops multiple files at once (e.g. `public/img/<section>/background.webp`) to avoid collisions in the flat `public/img/` root.
+- Optimize photographic images to `.webp` first via `scripts/inbox-webp.js` (drop source in `inbox/`, run the script, move the `.webp` output into `public/`).
+
 ## Microinteractions (frontend)
 
 - Every async action (fetch, submit, delete) needs a `loading` state: spinner/skeleton, disabled or `--loading` button state, visual feedback while waiting for the response.
