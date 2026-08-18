@@ -89,6 +89,8 @@ For `client/` changes, don't just read the diff — look at it running. If the `
 
 Tailwind + shadcn-vue live isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [ARCHITECTURE.md](ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
 
+The isolation is about styling method only (Tailwind utilities vs. SCSS/BEM) — it does **not** exempt `ui/` from the project's logic/template/style separation ([ARCHITECTURE.md § Component convention](ARCHITECTURE.md#component-convention--vue--js-pairing)). This applies to any external component library vendored into the codebase, not just shadcn-vue — whatever CLI or copy-paste source generates it, split it before committing: `Component.vue` (template only) and `Component.js` (logic, imported via `<script src="./Component.js">`); styling stays inline as the library's own classes in the `.vue` file (no `_index.scss` needed where there's no BEM to aggregate). The shadcn-vue CLI in particular scaffolds a single `.vue` file with an inline `<script setup>` block — after running `pnpm dlx shadcn-vue add <component>`, manually extract that block into a sibling `Component.js` and point the `.vue` file at it before committing.
+
 Setup, for reference:
 
 - `components.json` (repo root) is the shadcn-vue CLI config — `aliases` point at `@client/components/ui`.
