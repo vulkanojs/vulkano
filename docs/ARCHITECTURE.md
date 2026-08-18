@@ -1,14 +1,14 @@
 # Architecture
 
-Project structure overview for the Vulkano Framework. See [docs/BACKEND.md](docs/BACKEND.md) for backend (`app/`) conventions and [docs/FRONTEND.md](docs/FRONTEND.md) for frontend (`client/`) conventions. See [AGENTS.md](AGENTS.md) for workflow, safety, and security rules. See [docs/ANALYTICS.md](docs/ANALYTICS.md) for the tracking convention and [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work.
+Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.md) for backend (`app/`) conventions, [FRONTEND.md](FRONTEND.md) for frontend (`client/`) conventions, and [SEO.md](SEO.md) for the SEO convention referenced in [Multiple entry points](#multiple-entry-points--front--cms-or-any-other-split-app) below. See [../AGENTS.md](../AGENTS.md) for workflow, safety, and security rules. See [ANALYTICS.md](ANALYTICS.md) for the tracking convention and [ACCESSIBILITY.md](ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work.
 
 ## Project structure
 
 ```
 framework/
 ├── app.js                  # Entry point — calls vulkano()
-├── vite.config.js          # Vite config (entry points: client)
-├── nodemon.json            # Nodemon watches app/ only (ignores public/, client/, cms/)
+├── vite.config.mjs         # Vite config (entry points: client/ — add more per § Multiple entry points below)
+├── nodemon.json            # Nodemon watches app/ only (ignores public/, client/, docs/, test, scripts, inbox)
 │
 ├── app/                    # Backend
 │   ├── config/
@@ -57,6 +57,33 @@ framework/
     ├── img/
     └── files/              # Uploaded files
 ```
+
+---
+
+## Multiple entry points — front + CMS (or any other split app)
+
+A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form) and a CMS/admin panel — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project.
+
+```
+client/                   # Front — public, SEO area
+├── app.js
+├── App.vue
+├── routes.js
+└── ...
+
+cms/                       # CMS — internal, logged-in area
+├── app.js
+├── App.vue
+├── routes.js
+└── ...
+```
+
+Wire the second entry:
+
+- **`vite.config.mjs`** — add a second key to `build.rollupOptions.input` (e.g. `{ app: 'client/app.js', cms: 'cms/app.js' }`). Each key becomes a separate bundle, addressable from a template by that name.
+- **`nodemon.json`** — add the new client folder to `ignore` alongside `client/`, same reason: it's frontend source, not backend, and doesn't need an app restart on change.
+- **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `cms.html` for CMS), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the CMS layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
+- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per [docs/FRONTEND.md § SPA catch-all](FRONTEND.md#spa-catch-all--appconfigroutesjs), scoped to that area's path prefix (e.g. `/cms/*` → `CmsController.get`, rendering the CMS layout) instead of one global `/*` for everything.
 
 ---
 
