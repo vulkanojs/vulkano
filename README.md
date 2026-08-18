@@ -26,7 +26,7 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 
 ## Project structure
 
-`app/` is the Express backend, `client/` is the Vue 3 SPA. Full folder layout, routing conventions, and controller/model/response conventions: see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+`app/` is the Express backend, `client/` is the Vue 3 SPA. Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Backend conventions (routing, controller/model): see **[docs/BACKEND.md](docs/BACKEND.md)**. Frontend conventions: see **[docs/FRONTEND.md](docs/FRONTEND.md)**.
 
 ---
 
@@ -109,7 +109,7 @@ Say: _"add JWT login using the existing `@vulkano/core` auth conventions, with a
 Instead of: _"show a list of users"_
 Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"_
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the controller/model/view
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the controller/model/view
 conventions your agent should follow, and [AGENTS.md](AGENTS.md) for the
 rules your agent reads automatically (Claude Code, and any tool that
 honors `AGENTS.md`/`CLAUDE.md`) — workflow, security boundaries, and
@@ -156,6 +156,17 @@ For images, run the following to convert `.jpg`/`.jpeg`/`.png` files in
 
 ```bash
 pnpm run inbox:webp
+```
+
+Then use `<picture>` with the `.webp` as the primary source and the
+original as fallback, plus explicit `width`/`height` (prevents layout
+shift) and `loading="lazy"` for below-the-fold images:
+
+```html
+<picture>
+  <source srcset="/img/hero.webp" type="image/webp" />
+  <img src="/img/hero.jpg" alt="..." width="1200" height="600" loading="lazy" />
+</picture>
 ```
 
 ---

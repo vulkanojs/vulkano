@@ -20,9 +20,9 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 - **Package manager**: `pnpm`
 - **Node**: `>=22`
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [docs/ANALYTICS.md](docs/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out.
 
-**Read every `.md` file referenced from this one** (`ARCHITECTURE.md`, `README.md`, and any other linked doc) before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [ARCHITECTURE.md § Backend conventions](ARCHITECTURE.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+**Read every `.md` file referenced from this one** (`docs/ARCHITECTURE.md`, `docs/ANALYTICS.md`, `docs/ACCESSIBILITY.md`, `README.md`, and any other linked doc) before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [docs/BACKEND.md § Backend conventions](docs/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
 
 ---
 
@@ -30,7 +30,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure, routing conven
 
 1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `client/` (frontend), or both.
 2. Record existing worktree changes (`git status`) and leave unrelated files untouched.
-3. Make the smallest change that satisfies the task while following the conventions in [ARCHITECTURE.md](ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
+3. Make the smallest change that satisfies the task while following the conventions in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
 4. Run `vp check` and `vp test` for the affected boundary before considering the task done.
 5. Review changed paths and diff quality before handing off the work.
 
@@ -53,7 +53,7 @@ VITE_CHUNK_NAMES=false
 - **DRY**: don't repeat code blocks — extract reusable functions/components instead of copy-pasting.
 - **KISS**: write simple code a human understands fast. Avoid clever tricks and long functions. Use clear names for variables and functions.
 - **Divide and conquer**: keep components small, each doing one task. Split large components into smaller pieces rather than growing one file.
-- **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see [ARCHITECTURE.md](ARCHITECTURE.md#component-convention--vue--js-pairing).
+- **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see [docs/FRONTEND.md](docs/FRONTEND.md#component-convention--vue--js-pairing).
 
 ## Security considerations
 
@@ -62,7 +62,7 @@ VITE_CHUNK_NAMES=false
 - Enforce authentication and authorization for every protected action or resource. Do not rely on routes, navigation, or client-side controls as the access boundary; verify the relevant source and tests when changing it.
 - Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
 - Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=22`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
-- When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`me` action convention — see [ARCHITECTURE.md](ARCHITECTURE.md#authentication)). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
+- When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`me` action convention — see [docs/BACKEND.md](docs/BACKEND.md#authentication)). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
 - Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` either — same XSS exposure as the token. After login, fetch the current user via `GET /api/auth/me` (or `/api/auth/current`), and re-fetch it on every route change (router guard) instead of caching it client-side.
 
 ## Form fields (frontend)
@@ -92,32 +92,33 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
-- Do not duplicate large manuals here — link to [ARCHITECTURE.md](ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
+- Do not duplicate large manuals here — link to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
 
 ## Before handoff checklist
 
 - [ ] The changed paths match the requested scope.
 - [ ] Existing unrelated changes in the worktree remain untouched.
-- [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `ARCHITECTURE.md`).
+- [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `docs/ARCHITECTURE.md`).
 - [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
 - [ ] For `client/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
 - [ ] Public behavior, routes, and compatibility risks are called out explicitly.
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
 - [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
+- [ ] For frontend changes involving user interaction (form, button, download, video, page), analytics tracking was added per [docs/ANALYTICS.md](docs/ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
+- [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
 
-## UI components — shadcn-vue
+## UI components — shadcn-vue (not installed yet)
 
-Tailwind + shadcn-vue live isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [ARCHITECTURE.md](ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
+**Not currently a dependency of this project** — see [docs/FRONTEND.md § Tailwind + shadcn-vue](docs/FRONTEND.md#tailwind--shadcn-vue--not-installed-note-for-future). Only bring it in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.). When that need comes up:
 
-The isolation is about styling method only (Tailwind utilities vs. SCSS/BEM) — it does **not** exempt `ui/` from the project's logic/template/style separation ([ARCHITECTURE.md § Component convention](ARCHITECTURE.md#component-convention--vue--js-pairing)). This applies to any external component library vendored into the codebase, not just shadcn-vue — whatever CLI or copy-paste source generates it, split it before committing: `Component.vue` (template only) and `Component.js` (logic, imported via `<script src="./Component.js">`); styling stays inline as the library's own classes in the `.vue` file (no `_index.scss` needed where there's no BEM to aggregate). The shadcn-vue CLI in particular scaffolds a single `.vue` file with an inline `<script setup>` block — after running `pnpm dlx shadcn-vue add <component>`, manually extract that block into a sibling `Component.js` and point the `.vue` file at it before committing.
+- Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `client/components/ui/`.
+- Keep Tailwind + shadcn-vue isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
+- Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `client/app.js` — not chained through `client/style.scss`.
+- Add the shadcn `cn()` helper (clsx + tailwind-merge) under `client/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
 
-Setup, for reference:
+The isolation is about styling method only (Tailwind utilities vs. SCSS/BEM) — it does **not** exempt `ui/` from the project's logic/template/style separation ([docs/FRONTEND.md § Component convention](docs/FRONTEND.md#component-convention--vue--js-pairing)). This applies to any external component library vendored into the codebase, not just shadcn-vue — whatever CLI or copy-paste source generates it, split it before committing: `Component.vue` (template only) and `Component.js` (logic, imported via `<script src="./Component.js">`); styling stays inline as the library's own classes in the `.vue` file (no `_index.scss` needed where there's no BEM to aggregate). The shadcn-vue CLI in particular scaffolds a single `.vue` file with an inline `<script setup>` block — after running `pnpm dlx shadcn-vue add <component>`, manually extract that block into a sibling `Component.js` and point the `.vue` file at it before committing.
 
-- `components.json` (repo root) is the shadcn-vue CLI config — `aliases` point at `@client/components/ui`.
-- `client/components/ui/tailwind.css` is the isolated Tailwind entry: `source(none)` + `@source './**/*.{vue,js}'` scopes scanning to that folder only, `prefix(tw)` namespaces every utility class (`tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. It is imported once, directly in `client/app.js` — not chained through `client/style.scss`.
-- `client/components/ui/lib/utils.js` exports `cn()` (clsx + tailwind-merge), the standard shadcn helper for merging class strings.
-
-To add a component:
+To add a component once shadcn-vue is set up:
 
 ```
 pnpm dlx shadcn-vue@latest add <component>
