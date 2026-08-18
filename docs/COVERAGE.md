@@ -1,0 +1,68 @@
+# Coverage report
+
+A structural, project-level snapshot — what core-level capabilities and configuration this project has (or doesn't) today, for management/planning visibility, not a development reference. It is **not** part of the per-task reading list ([AGENTS.md § What this project is](../AGENTS.md#what-this-project-is)) — don't read it before doing controller/model/view/component work, and no task should depend on it being current.
+
+**Maintenance**: update this file only when a task adds/changes/removes a **core-level** capability or configuration — a new entry point, a new `app/config/express/*.js` or `app/config/middlewares/*.js` file, a new deployment mechanism, a testing convention change, a new global lib wired in, etc. Routine controller/model/view/component work that doesn't change what the project *can do* at that level doesn't touch this file. Source of truth for each row is named inline — this file is a snapshot, not a new authority; if a linked doc changes, this goes stale and needs a re-check next time it's updated.
+
+## Backend (`app/`, `@vulkano/core`)
+
+| Area | Status | Where |
+| --- | --- | --- |
+| Routing (convention + explicit) | Built-in (core) | `app/config/routes.js`, [BACKEND.md § Backend conventions](BACKEND.md#backend-conventions--owned-by-vulkanocore) |
+| Controllers / models / scaffold REST | Built-in (core) | `app/controllers/`, `app/models/`, [BACKEND.md](BACKEND.md) |
+| Responses (`res.vsr`) | Built-in (core) | `@vulkano/core` README § Responses |
+| JWT auth | Built-in (core), template convention on top | `@vulkano/core` README § JWT Authentication, [BACKEND.md § Authentication](BACKEND.md#authentication) — httpOnly cookie, not localStorage |
+| CORS | Available, not configured in this project (by design — see [BACKEND.md](BACKEND.md#backend-conventions--owned-by-vulkanocore)) | `app/config/express/cors.js` (created on demand from `@vulkano/core/examples/config/express/cors.js` when a task needs it) |
+| CSP | Available, not configured in this project (by design) | `app/config/express/csp.js` (created on demand) |
+| Security headers (Helmet, Permission-Policy) | Available, not configured in this project (by design) | `app/config/express/helmet.js`, `permissionPolicy.js` (created on demand) |
+| Cookies / sessions | Available, not configured in this project (by design) | `app/config/express/cookies.js` (created on demand) |
+| File uploads | Built-in (core, Multer v2) | `@vulkano/core` README § File Uploads — `req.files` on `multipart/form-data` POST |
+| Password hashing (`Encrypter`, bcrypt-based) | Built-in (core global) | `@vulkano/core` README § Built-in Global Libs — no custom salt code needed, `SALT_KEY` env var feeds it |
+| `ApiClient` (outbound HTTP) | Built-in (core global) | `@vulkano/core` README § Built-in Global Libs |
+| Sockets (Socket.io, Redis/Mongo adapters) | Built-in (core), not configured in this project | `app/controllers/sockets/` (empty), `@vulkano/core` README § Socket.io |
+| Cron jobs | Built-in (core global `Crontab`) | `app/config/bootstrap.js`, `@vulkano/core` README § Cron Jobs |
+| i18n | Built-in (core, i18next) | `app/config/locales/` (not present yet — add per-locale files), `@vulkano/core` README § i18n |
+| Global constants | Convention documented | `app/config/common.js` (has `SEO_DEFAULT_*` today), [BACKEND.md § Global constants](BACKEND.md#global-constants-hardcoded--appconfigcommonjs-or-bootstrapjs) |
+| SEO middleware (title/description/image payload) | Implemented in this project | `app/config/middlewares/seo.js`, `app/config/common.js`, [SEO.md](SEO.md) |
+| Multiple entry points (front + CMS split) | Documented convention, not built yet (single `client/` entry today) | [ARCHITECTURE.md § Multiple entry points](ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app) |
+
+## Frontend (`client/`, Vue 3 + Vite)
+
+| Area | Status | Where |
+| --- | --- | --- |
+| SPA (Vue 3 + Vue Router, Composition API) | Built-in | `client/app.js`, `client/routes.js`, [FRONTEND.md](FRONTEND.md) |
+| SPA catch-all (history mode refresh fix) | Built-in | `app/config/routes.js`, [FRONTEND.md § SPA catch-all](FRONTEND.md#spa-catch-all--appconfigroutesjs) |
+| Route ↔ view naming convention | Convention documented | [FRONTEND.md § Route ↔ view naming](FRONTEND.md#route--view-naming-convention) |
+| Component convention (`.vue`/`.js`/`.scss` split) | Convention documented | [FRONTEND.md § Component convention](FRONTEND.md#component-convention--vue--js-pairing) |
+| Styling (SCSS/BEM, CSS Grid) | Convention documented | `client/style.scss`, [FRONTEND.md § CSS naming](FRONTEND.md#css-naming--bem) |
+| State (`client/store/`) | Convention documented | [FRONTEND.md § State](FRONTEND.md#state--clientstore) |
+| Calling the API (`$api`) | Built-in | `client/Api.js`, [FRONTEND.md § Calling the API](FRONTEND.md#calling-the-api-from-a-component) |
+| Tailwind + shadcn-vue | Documented, **not installed** | [AGENTS.md § UI components](../AGENTS.md#ui-components--shadcn-vue-not-installed-yet), [FRONTEND.md § Tailwind + shadcn-vue](FRONTEND.md#tailwind--shadcn-vue--not-installed-note-for-future) |
+| SEO | Convention + real middleware (front area only) | [SEO.md](SEO.md) |
+| Analytics/tracking | Convention documented, no provider wired yet | [ANALYTICS.md](ANALYTICS.md) — no GA/Pixel/GTM ID configured in this project |
+| Accessibility minimums | Convention documented | [ACCESSIBILITY.md](ACCESSIBILITY.md) |
+| Form fields (required-asterisk, JS validation, no native UI) | Convention documented | [AGENTS.md § Form fields](../AGENTS.md#form-fields-frontend) |
+| Microinteractions (loading/hover/transition states) | Convention documented | [AGENTS.md § Microinteractions](../AGENTS.md#microinteractions-frontend) |
+| Image pipeline (`inbox/` → `.webp` conversion) | Implemented | `scripts/inbox-webp.js`, `pnpm run inbox:webp`, [README.md § The inbox folder](../README.md#the-inbox-folder) |
+| GSAP / AOS (advanced/scroll animations) | Allowed, not installed | [AGENTS.md § Microinteractions](../AGENTS.md#microinteractions-frontend) — install on first use, call it out in the diff |
+
+## Project-level / tooling
+
+| Area | Status | Where |
+| --- | --- | --- |
+| Toolchain (Vite+, Rolldown, Vitest, Oxlint, Oxfmt) | Built-in | `vp check`, `vp test`, `vp build`, [AGENTS.md § Using Vite+](../AGENTS.md#using-vite-the-unified-toolchain-for-the-web) |
+| New-project cleanup (strip demo boilerplate) | Implemented | `scripts/cleanup.js`, `pnpm run cleanup` |
+| Deployment: PM2 | Implemented | `ecosystem.config.js` |
+| Deployment: Docker / Docker Compose | Implemented | `Dockerfile`, `docker-compose.yml` |
+| Deployment: Coolify | Documented (uses the Docker Compose files above) | [README.md § Coolify](../README.md#coolify) |
+| CI/CD pipeline | **TBD** — no automated pipeline yet, deploys are manual | [ARCHITECTURE.md § Deployment](ARCHITECTURE.md#deployment) |
+| Backend tests (controllers/models/services/middleware) | Convention + harness implemented (`test/helpers/bootstrap.js`, `TEST_MONGO_URI` mandatory, `test/app/controllers/Home.http.test.js` as the first example) | [TESTING.md](TESTING.md) |
+| Browser E2E | Agent-driven via Playwright MCP / chrome-devtools MCP, no committed test suite | [TESTING.md § Browser E2E](TESTING.md#browser-e2e) |
+| Planning/specs workflow (`superpowers` skill) | Convention documented | `.claude/superpowers/plans/`, `.claude/superpowers/specs/`, [AGENTS.md § Default communication](../AGENTS.md#default-communication) |
+| Per-area requirements (SEO/Analytics/Accessibility toggle) | Convention documented | [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) |
+
+## Not covered / explicitly out of scope
+
+- **Vue SSR or prerendering** — not used; SEO is handled by backend views instead ([SEO.md § Default rule](SEO.md#default-rule)).
+- **CORS/CSP/Helmet/cookies/sessions/i18n/sockets configuration** — the core supports all of these, but no `app/config/express/*.js` or `app/config/locales/*.js` files exist in this project yet, by design ([BACKEND.md](BACKEND.md#backend-conventions--owned-by-vulkanocore)) — every request currently runs on core defaults until a task needs one customized.
+- **CI/CD, structured logging/monitoring, DB migrations/seeds, rate limiting, cookie-consent/privacy** — none of these are covered by any doc yet; explicitly deferred for now, not silently missed.

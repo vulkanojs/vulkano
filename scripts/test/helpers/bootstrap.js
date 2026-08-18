@@ -1,5 +1,17 @@
+require('dotenv').config();
+
 process.env.PORT = process.env.TEST_PORT || '8199';
 process.env.NODE_ENV = 'test';
+
+// Mandatory — never run tests against the same MONGO_URI as dev/prod. See docs/TESTING.md § Environment.
+if (!process.env.TEST_MONGO_URI) {
+  throw new Error(
+    'TEST_MONGO_URI is not set. Refusing to run tests against MONGO_URI (dev/prod). ' +
+    'Set TEST_MONGO_URI in .env to a dedicated test database first — see docs/TESTING.md § Environment.'
+  );
+}
+
+process.env.MONGO_URI = process.env.TEST_MONGO_URI;
 
 const vulkano = require('@vulkano/core');
 

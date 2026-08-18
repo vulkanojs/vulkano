@@ -101,6 +101,8 @@ Wire the second entry:
 
 ## Deployment
 
+**CI/CD pipeline: TBD.** No automated pipeline (GitHub Actions or otherwise) exists yet — deploys today are manual, via one of PM2/Docker/Coolify below.
+
 - `ecosystem.config.js` — PM2 config for VPS deployment (bare-metal/VPS, no container)
 - `Dockerfile` — multi-stage build: `build` stage runs `pnpm install --frozen-lockfile` + `pnpm run build` (produces `public/`), `runtime` stage installs prod-only deps and copies `public/`, `app/`, `app.js`; exposes port `8000`, runs `node app.js`
 - `docker-compose.yml` — `app` service builds from the `Dockerfile`, reads `.env` via `env_file`, maps `${PORT:-8000}`; optional `mongo` service under the `local-db` profile for local Mongo without a managed DB

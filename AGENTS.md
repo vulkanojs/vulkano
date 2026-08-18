@@ -23,7 +23,9 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 - **Package manager**: `pnpm`
 - **Node**: `>=22`
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [docs/ANALYTICS.md](docs/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [docs/SEO.md](docs/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
+`docs/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](docs/COVERAGE.md#maintenance).
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [docs/TESTING.md](docs/TESTING.md) for the test convention — every new/changed controller, model, service, or middleware gets a test, and `TEST_MONGO_URI` must be set before running `vp test` at all. See [docs/ANALYTICS.md](docs/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [docs/SEO.md](docs/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
 
 ### Project requirements — SEO / Analytics / Accessibility
 
@@ -44,7 +46,7 @@ Show the user the resulting row so they can correct it before proceeding. From t
 
 A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
 
-**Read every `.md` file referenced from this one** (`docs/ARCHITECTURE.md`, `docs/ANALYTICS.md`, `docs/ACCESSIBILITY.md`, `docs/SEO.md`, `README.md`, and any other linked doc), except any unchecked above, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [docs/BACKEND.md § Backend conventions](docs/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+**Read every `.md` file referenced from this one** (`docs/ARCHITECTURE.md`, `docs/TESTING.md`, `docs/ANALYTICS.md`, `docs/ACCESSIBILITY.md`, `docs/SEO.md`, `README.md`, and any other linked doc), except any unchecked above, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [docs/BACKEND.md § Backend conventions](docs/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
 
 ---
 
