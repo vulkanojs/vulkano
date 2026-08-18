@@ -1,11 +1,22 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>VulkanoJS</title>
+    <title>{{ seo.title }}</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" type="image/png" href="/favicon.png?v={{ app.pkg.version }}" />
+
+    <meta name="description" content="{{ seo.description }}" />
+    <link rel="canonical" href="{{ seo.url }}" />
+    <meta property="og:title" content="{{ seo.title }}" />
+    <meta property="og:description" content="{{ seo.description }}" />
+    <meta property="og:image" content="{{ seo.image }}" />
+    <meta property="og:url" content="{{ seo.url }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ seo.title }}" />
+    <meta name="twitter:description" content="{{ seo.description }}" />
+    <meta name="twitter:image" content="{{ seo.image }}" />
 
     {{ vite({ entry: 'app', type: 'style' }) | safe }}
   </head>
