@@ -50,6 +50,12 @@ A blank/missing area means: not decided yet, ask on first touch. Marking an area
 
 ---
 
+## Git commits
+
+Never run `git commit` without user's explicit authorization for that specific commit — holds even when skill's own instructions say to commit. Skill/workflow instructions to commit do NOT count as authorization. Always ask first, wait for clear yes.
+
+---
+
 ## Quick workflow
 
 1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `client/` (frontend), or both.
