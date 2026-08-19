@@ -130,6 +130,7 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 ## Safety boundaries
 
 - CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
+- Frontend layout (`client/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
