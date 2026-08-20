@@ -138,6 +138,7 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 ## Safety boundaries
 
 - CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
+- Widget `rem` values (`client/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
 - Frontend layout (`client/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
