@@ -12,6 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
 
+## /clear prompt backup hook
+
+`UserPromptSubmit` hook in `.claude/settings.local.json` (gitignored, personal):
+
+- Every prompt overwrites `.claude/last-prompt.txt` (rolling "last prompt" scratch file).
+- When the submitted prompt is exactly `/clear`, the current `.claude/last-prompt.txt` content is appended (with timestamp) to `.claude/prompt-history.log` before the context clears.
+- Backup only — history isn't restored automatically, just kept on disk for manual recovery.
+
 ---
 
 ## What this project is

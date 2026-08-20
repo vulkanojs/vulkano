@@ -5,7 +5,8 @@ local.js
 # NodeJS & Bower Components #
 #############################
 node_modules
-.claude
+.claude/*
+!.claude/settings.json
 
 # OS generated files #
 ######################
