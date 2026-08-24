@@ -160,9 +160,13 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 - [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
 - [ ] For new public/crawlable pages, SEO essentials per [docs/SEO.md](docs/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
 
-## UI components — shadcn-vue (not installed yet)
+## UI components — shadcn-vue or Element Plus (not installed yet)
 
-**Not currently a dependency of this project** — see [docs/FRONTEND.md § Tailwind + shadcn-vue](docs/FRONTEND.md#tailwind--shadcn-vue--not-installed-note-for-future). Only bring it in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.). When that need comes up:
+**Neither is currently a dependency of this project** — see [docs/FRONTEND.md § Component library](docs/FRONTEND.md#component-library--not-installed-note-for-future). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project.
+
+### shadcn-vue
+
+When that need comes up:
 
 - Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `client/components/ui/`.
 - Keep Tailwind + shadcn-vue isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
@@ -178,6 +182,14 @@ pnpm dlx shadcn-vue@latest add <component>
 ```
 
 The CLI reads `components.json` and drops the component into `client/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
+
+### Element Plus
+
+When that need comes up instead:
+
+- Install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
+- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `client/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
+- Override its SCSS theme variables in one dedicated file (e.g. `client/components/ui/element-theme.scss`), imported once in `client/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
 
 <!--VITE PLUS START-->
 
