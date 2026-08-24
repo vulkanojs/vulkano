@@ -20,6 +20,7 @@ Neither is "more correct" — pick whichever the user specifies for that project
 - **Vue**: use [`vue-gtag`](https://github.com/MatteoGabriele/vue-gtag) for GA. Install with `pnpm add vue-gtag` and call this out explicitly in the diff (see [AGENTS.md § Safety boundaries](../AGENTS.md#safety-boundaries) — new dependencies are called out, not silently added).
 - **Vanilla JS** (non-Vue pages, e.g. server-rendered templates with no Vue mount): use the standard `gtag.js` snippet as published by Google, injected in the page `<head>`.
 - Other providers (FB Pixel, Adobe, GTM) follow their own official snippet/SDK — do not build a custom wrapper for them.
+- **GTM**: every link/button/element with tracking (via GTM trigger) must have unique `id` attribute. GTM triggers match by `id` — no unique id, no reliable trigger match.
 
 ## Event naming convention
 
