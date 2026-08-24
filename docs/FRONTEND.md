@@ -183,7 +183,32 @@ export const useEventStore = defineStore('event', () => {
 
 Naming: `use<Entity>Store` (singular, matching the model naming convention), file per store, no aggregator/barrel file — import each store directly where it's used.
 
-**Pinia is not yet a dependency of this project** — add it (`pnpm add pinia`) and register it in `client/app.js` (`app.use(createPinia())`) before creating the first store.
+Pinia is installed by default (`app.use(createPinia())` already registered in `client/app.js`) — just create the store file.
+
+### Global app-shell state — `useAppStore`
+
+App-shell-level state — things there's only ever one of, shared across the whole app regardless of route — lives in a single `useAppStore`, not split per concern like entity stores: a global loading spinner, Socket.io connection status (`connected`/`reconnecting`/`disconnected`), a sidebar-open flag, a theme toggle. This is the one deliberate exception to "one store per concern": these are all facets of the same app shell, read/written from unrelated places (a router guard, the socket client, any component), so bundling them in one store avoids a proliferation of near-empty singleton stores. Entity data (`useEventStore`, etc.) still stays split — this exception is for app-shell/UI state only. Applies to any area of the app (public site, CMS/admin, widget) that needs this kind of shared state:
+
+```js
+// store/useAppStore.js
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+
+export const useAppStore = defineStore('app', () => {
+  const isLoading = ref(false);
+  const socketStatus = ref('disconnected'); // 'connected' | 'reconnecting' | 'disconnected'
+
+  function setLoadingStatus(status) {
+    isLoading.value = status;
+  }
+
+  function setSocketStatus(status) {
+    socketStatus.value = status;
+  }
+
+  return { isLoading, socketStatus, setLoadingStatus, setSocketStatus };
+});
+```
 
 **Testing** — each store gets its own test file (e.g. `test/store/useEventStore.test.js`), independent of other stores' tests. Because stores are split by concern, tests can exercise one store's actions/getters in isolation, with `createPinia()` + `setActivePinia()` in `beforeEach`, without needing to set up unrelated entity state. Mock `$api` calls at the store boundary rather than hitting the real API.
 
@@ -216,14 +241,23 @@ Every `_index.scss` follows BEM: block is the component/view's root section, ele
 
 Block name matches the component/view folder (kebab-case). No nested selectors beyond block/element/modifier — don't reach into a child block's internals from a parent's stylesheet.
 
-## Tailwind + shadcn-vue — not installed, note for future
+## Component library — not installed, note for future
 
-**Not currently a dependency of this project.** If a future need calls for pre-built accessible components (dialogs, dropdowns, etc.), the recommendation is:
+**Not currently a dependency of this project.** If a future need calls for pre-built accessible components (dialogs, dropdowns, etc.), pick one of these two, don't mix both in the same project:
+
+### Option A — Tailwind + shadcn-vue
 
 - Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) only when actually needed.
 - Use the shadcn-vue CLI to pull in components one at a time, as needed — don't bulk-install the whole library.
 - Tailwind utility classes stay scoped to the new shadcn components only. The rest of the project keeps using the existing SCSS/BEM/CSS Grid convention above — no migration, no mixing utility classes into existing `_index.scss`-based components.
 - This lets Tailwind + shadcn-vue coexist with the current styling system rather than replacing it.
+- Prefer this option when the design needs low-level, unstyled primitives to restyle from scratch to match a custom design system.
+
+### Option B — Element Plus
+
+- Install `element-plus` only when actually needed; register components on-demand via its own auto-import plugin (`unplugin-vue-components` + `unplugin-auto-import`) rather than importing the whole library globally.
+- Element Plus ships its own themed CSS (SCSS variables for overriding) — scope any override to the components actually in use, same isolation principle as shadcn: don't let its classes leak into or get mixed with the project's BEM components.
+- Prefer this option when the app needs a large ready-made admin/CMS component set (tables, forms, date pickers, tree views) fast, and a fully custom look matters less than shadcn's blank-slate approach would give.
 
 ## Vite (`vite.config.mjs`)
 

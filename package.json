@@ -19,6 +19,7 @@
     "@vulkano/core": "catalog:",
     "concurrently": "catalog:",
     "dotenv": "^17.4.2",
+    "pinia": "catalog:",
     "vite-plugin-dev-manifest": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"

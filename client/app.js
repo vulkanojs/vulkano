@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import { createWebHistory } from 'vue-router';
 
 import '@client/style.scss';
@@ -15,4 +16,4 @@ const app = createApp(App);
 
 app.config.globalProperties.$api = Api;
 
-app.use(router).mount('#app');
+app.use(createPinia()).use(router).mount('#app');
