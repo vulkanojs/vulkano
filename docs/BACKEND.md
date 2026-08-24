@@ -68,6 +68,22 @@ This template only adds what's documented here: the controller/config convention
 
 **Don't pre-scaffold `app/config/express/*.js` or `app/config/middlewares/*.js` files "just in case."** Every file in both folders is optional — an absent file means the core's default behavior applies, and that's fine until a project actually needs to change it. When a task needs to customize one (enable CORS for a specific origin, add a CSP rule, add a new global middleware, etc.), copy the matching reference from [`@vulkano/core/examples/config/express/`](../node_modules/@vulkano/core/examples/config/express) (or `examples/config/middlewares/`) into `app/config/express/<file>.js` (or `app/config/middlewares/<file>.js`) and edit only what the task requires — don't copy the whole examples folder wholesale.
 
+### `active` field — soft-delete only, never a business enabled/disabled toggle
+
+Every model's `active: Boolean` is reserved for the soft-delete convention (`delete(id) { return this.update(id, { active: false }); }` — record hidden from normal queries, not removed). Do not reuse it as a generic "is this available/paused/enabled" business flag, even when a view's UI shows an "Activar/Desactivar" toggle that looks like it should map 1:1 to `active`.
+
+When a model needs a business-level on/off, paused/live, available/unavailable state, add a dedicated field named for the domain concept instead — e.g. `Product.availability` (`Boolean`, default `true`): whether a product can currently be sold/reserved, independent of physical stock (a product can have `availability: true` with 0 stock on hand, meant to be reserved). Keep `active` exclusively for soft-delete.
+
+### Populate query convention — opt-in joins via `?populate=field1,field2`
+
+A list endpoint that needs related-doc data (e.g. a product's unit/vat/category name, not just its ObjectId) accepts `?populate=unit,vat,category` — a comma-separated string query param, forwarded as-is by the thin controller (`res.vsr(Model.getAll(req.query || {}))`).
+
+Inside the model's `getAll(props)`, check `props.populate.includes('fieldName')` per relation and push a `{ path: 'fieldName', fields: ['name'] }` entry (select only what's needed, not the whole related doc) into a `populate` array. Pass that array as the third arg to `Paginate.get(Model, query, populate)` (`@vulkano/core`'s `libs/Paginate.js`), which maps it into mongoose's real `populate` option via `getPopulatedCollections`. See `app/models/Product.js` `getAll` for the reference implementation.
+
+This is a manual per-model opt-in — the core does not read `populate` from the query automatically. `props.populate` is a plain string, not an array; `.includes()` still works as a substring match, but guard with `(props.populate || '')` in new models since the current `Product.js` implementation throws if the param is missing.
+
+**Why this matters:** replaces the old pattern of firing several `$api.all([...])` calls per lookup table (units, vat types, categories) from the frontend just to build a name-lookup map for rendering a list — one populated list request instead of N. When a new list view needs to display a referenced doc's name, add populate support to that model's `getAll` following this shape rather than adding another parallel frontend fetch.
+
 ### Authentication
 
 The core wires JWT (`Jwt.encode`/`Jwt.decode`, `express-jwt` middleware — see [`@vulkano/core` README § JWT Authentication](../node_modules/@vulkano/core/README.md)), but doesn't prescribe a model/controller shape. Recommended convention for this template:
