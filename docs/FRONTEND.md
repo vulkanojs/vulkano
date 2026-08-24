@@ -216,6 +216,23 @@ export const useAppStore = defineStore('app', () => {
 
 All layout — components and views, any dimension, any nesting level — uses CSS Grid (`display: grid`) in the `_index.scss`. No Flexbox, anywhere.
 
+### Responsive grid system — `client/scss/_grid.scss`
+
+Foundation-style responsive grid, built on CSS Grid, imported once in `client/style.scss`:
+
+```html
+<div class="row">
+  <div class="column small-12 medium-6 large-4">...</div>
+</div>
+```
+
+- `.row`: `display: grid; grid-template-columns: repeat(12, 1fr);` — 12-column grid.
+- `.column`: `grid-column: span 12` default (mobile-first, full row).
+- Size classes `.small-N` / `.medium-N` / `.large-N` / `.xlarge-N` (1-12), each `grid-column: span N` — `small` unscoped (base), `medium`/`large`/`xlarge` wrapped in `min-width` media queries (`$breakpoints` map: medium 40rem/640px, large 64rem/1024px, xlarge 75rem/1200px).
+- Gutter: `0.875rem` (small), `0.9375rem` from `medium` up. `.row--collapsed` removes it (`gap: 0`).
+- Nesting: any `.column` can also carry `.row` to nest a grid inside it — no special helper needed.
+- No offset/push-pull classes (not needed yet — add only when a task requires them).
+
 ## CSS naming — BEM
 
 Every `_index.scss` follows BEM: block is the component/view's root section, elements are `__container`/`__content` (or another noun scoped to that block), state/variant modifiers use `--` (e.g. `--opened`):
