@@ -37,3 +37,15 @@ GA4 only retains **standard fields** (event name, and parameters on recommended 
 > ⚠️ `checkout_error` sends a custom parameter `error_message`. This is not retained in GA4 reports unless you create a matching custom dimension in GA4 Admin → Custom definitions. Create it there, or the data won't be queryable.
 
 Do not assume the user already created the custom dimension — always surface the warning when introducing a new custom event/parameter.
+
+## Private mode warning
+
+New projects default to **noindex/private mode** — see [docs/SEO.md § Private mode / noindex default](SEO.md#private-mode--noindex-default) (`SEO_NOINDEX=true` unless overridden). Analytics tracking still fires in this state, so real traffic can get recorded before the site is meant to be public.
+
+**Whenever a task adds or changes analytics/tracking** (this doc's default rule above), check `app.config.common.SEO_NOINDEX` and, if it's still `true` (the default), warn the user explicitly, e.g.:
+
+> ⚠️ Site is in private mode (`SEO_NOINDEX=true`, `noindex` meta tag active, `public/robots.txt` disallows all). Tracking is wired up but the site isn't indexable yet. Set `SEO_NOINDEX=false` and update `public/robots.txt` when the site launches, so indexing turns on at the same time.
+
+Don't skip this warning silently — it's easy to ship analytics and forget the site is still blocked from search engines, or the reverse.
+
+Full pre-production launch checklist (indexing, robots.txt, sitemap, GA/GTM, meta tags together): [docs/LAUNCH.md](LAUNCH.md).

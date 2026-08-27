@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/png" href="/favicon.png?v={{ app.pkg.version }}" />
 
     <meta name="description" content="{{ seo.description }}" />
+    {% if seo.noindex %}<meta name="robots" content="noindex, nofollow" />{% endif %}
     <link rel="canonical" href="{{ seo.url }}" />
     <meta property="og:title" content="{{ seo.title }}" />
     <meta property="og:description" content="{{ seo.description }}" />

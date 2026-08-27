@@ -160,6 +160,7 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 - [ ] For frontend changes involving user interaction (form, button, download, video, page), analytics tracking was added per [docs/ANALYTICS.md](docs/ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
 - [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
 - [ ] For new public/crawlable pages, SEO essentials per [docs/SEO.md](docs/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
+- [ ] When a task is about deploying/launching to production, run through [docs/LAUNCH.md](docs/LAUNCH.md) (indexing enabled, `robots.txt` regenerated, sitemap present, GA/GTM enabled, meta tags reviewed) before considering the task done.
 
 ## UI components — shadcn-vue or Element Plus (not installed yet)
 

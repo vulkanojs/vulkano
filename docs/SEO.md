@@ -80,9 +80,22 @@ Every backend view that's a crawl target needs a `<title>`/`<meta name="descript
   <meta name="twitter:image" content="{{ seo.image }}" />
   ```
 
+## Private mode / noindex default
+
+New projects start **not indexable** by default — no site should be crawled/ranked before it actually launches.
+
+- `app/config/common.js` — `SEO_NOINDEX: process.env.SEO_NOINDEX !== 'false'` — defaults to `true` (private) unless `SEO_NOINDEX=false` is set in `.env`.
+- `app/config/middlewares/seo.js` — copies it onto `res.locals.seo.noindex` for every request.
+- `app/views/_shared/templates/default.html` — prints `<meta name="robots" content="noindex, nofollow" />` whenever `seo.noindex` is true.
+- `public/robots.txt` ships `Disallow: /` for all user agents by default (private mode) — see below, replace it with real allow rules at launch.
+
+Full pre-production launch checklist (indexing, robots.txt, sitemap, analytics, meta tags together): [docs/LAUNCH.md](LAUNCH.md).
+
+Whenever a task touches analytics/tracking on a project still in this default private state, surface a warning per [docs/ANALYTICS.md § Private mode warning](ANALYTICS.md#private-mode-warning) — tracking on an unindexed site is easy to forget to flip alongside indexing.
+
 ## Sitemap and robots
 
-- `public/robots.txt` — allow crawl of public backend views; disallow the SPA's app-shell prefix if the project reserves one (e.g. `/app/*`) since it has nothing to index anyway.
+- `public/robots.txt` — allow crawl of public backend views; disallow the SPA's app-shell prefix if the project reserves one (e.g. `/app/*`) since it has nothing to index anyway. Starts as blanket `Disallow: /` per private mode above — update at launch.
 - `public/sitemap.xml` — list backend view URLs. Static file for a fixed page set; generate it from a controller/service when the page set is data-driven (e.g. blog posts, products).
 
 ## Structured data
