@@ -6,6 +6,7 @@ local.js
 #############################
 node_modules
 .claude/*
+!.claude/skills*
 !.claude/settings.json
 
 # OS generated files #

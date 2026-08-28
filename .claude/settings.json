@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mkdir -p .claude && jq -r '.prompt // empty' | { read -r p; if [ \"$p\" = \"/clear\" ]; then if [ -s .claude/last-prompt.txt ]; then { printf '\\n---- %s ----\\n' \"$(date '+%Y-%m-%d %H:%M:%S')\"; cat .claude/last-prompt.txt; } >> .claude/prompt-history.log; fi; else printf '%s' \"$p\" > .claude/last-prompt.txt; fi; } 2>/dev/null || true"
+            "command": "mkdir -p .claude && jq -r '.prompt // empty' | { read -r p; if [ \"$p\" = \"/clear\" ]; then if [ -s .claude/last-prompt.log ]; then { printf '\\n---- %s ----\\n' \"$(date '+%Y-%m-%d %H:%M:%S')\"; cat .claude/last-prompt.log; } >> .claude/prompt-history.log; fi; else printf '%s' \"$p\" > .claude/last-prompt.log; fi; } 2>/dev/null || true"
           }
         ]
       }
