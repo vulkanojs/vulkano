@@ -13,7 +13,7 @@ description: Use when adding a Vue Router route, an auth/login guard, a route-ba
 - Adding a login/auth guard
 - Any redirect-based access control (redirect to `/login` if unauthenticated, redirect away from `/login` if already authenticated)
 
-Not for the view's own file layout — see vulkano-frontend-component. Not for the backend `AuthController`/JWT cookie setup — see docs/BACKEND.md § Authentication.
+Not for the view's own file layout — see vulkano-frontend-component. Not for the backend `AuthController`/JWT cookie setup — see vulkano-backend-auth.
 
 ## Adding a route
 ```js
@@ -115,7 +115,7 @@ module.exports = {
 `AdminController.get` renders the CMS entry's own `index.html`/template (its own `vite({ entry: 'admin' })` bundle, not the public front's `app` entry) — the two SPAs don't share a bundle just because they share the Express process.
 
 ## Auth guard — never cache user client-side
-No `localStorage`/`sessionStorage` for the token or the user object — both are XSS-exposed. The JWT lives in an `httpOnly` cookie (set by the backend on login, see docs/BACKEND.md § Authentication); the frontend never reads or stores it directly.
+No `localStorage`/`sessionStorage` for the token or the user object — both are XSS-exposed. The JWT lives in an `httpOnly` cookie (set by the backend on login) — the frontend never reads or stores it directly. See vulkano-backend-auth for the cookie/`AuthController` convention on the backend side.
 
 Re-fetch the current user on every route change instead of caching it in a store across navigations:
 ```js
@@ -124,7 +124,7 @@ router.beforeEach(async (to) => {
   const isAuthRoute = to.path === '/login';
   let user = null;
   try {
-    user = await Api.get('/auth/me'); // 401 → rejects
+    user = await Api.get('/auth/current'); // 401 → rejects
   } catch (_err) {
     user = null;
   }
@@ -134,7 +134,7 @@ router.beforeEach(async (to) => {
   return true;
 });
 ```
-`GET /api/auth/me` (or `/api/auth/current`) is the backend's session-check endpoint — see docs/BACKEND.md § Authentication for the `AuthController` convention it expects (`login`/`logout`/`me` method keys).
+`GET /api/auth/current` is the backend's session-check endpoint — see vulkano-backend-auth for the `AuthController` convention it expects (`login`/`logout`/`current` method keys).
 
 ## After writing
 - Confirm the backend `/*` catch-all still exists if this is the first route added to a fresh project.
@@ -142,4 +142,4 @@ router.beforeEach(async (to) => {
 - Run `vp check` and `vp test`.
 
 ## Reference
-`docs/FRONTEND.md` § Adding a route / SPA catch-all, `docs/BACKEND.md` § Authentication, AGENTS.md § Security considerations (session storage rules).
+`docs/FRONTEND.md` § Adding a route / SPA catch-all, vulkano-backend-auth (backend session-check convention), AGENTS.md § Security considerations (session storage rules).

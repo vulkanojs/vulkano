@@ -83,7 +83,7 @@ Wire the second entry:
 - **`vite.config.mjs`** — add a second key to `build.rollupOptions.input` (e.g. `{ app: 'client/app.js', cms: 'cms/app.js' }`). Each key becomes a separate bundle, addressable from a template by that name.
 - **`nodemon.json`** — add the new client folder to `ignore` alongside `client/`, same reason: it's frontend source, not backend, and doesn't need an app restart on change.
 - **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `cms.html` for CMS), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the CMS layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
-- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per [docs/FRONTEND.md § SPA catch-all](FRONTEND.md#spa-catch-all--appconfigroutesjs), scoped to that area's path prefix (e.g. `/cms/*` → `CmsController.get`, rendering the CMS layout) instead of one global `/*` for everything.
+- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/cms/*` → `CmsController.get`, rendering the CMS layout) instead of one global `/*` for everything.
 
 ---
 
