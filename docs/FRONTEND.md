@@ -1,6 +1,15 @@
 # Frontend
 
-Frontend conventions for the Vulkano Framework (`client/`, Vue 3 + Vite). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules. See also [ANALYTICS.md](ANALYTICS.md) and [ACCESSIBILITY.md](ACCESSIBILITY.md) — both apply to the frontend work described below.
+Frontend conventions for the Vulkano Framework (`client/`, Vue 3 + Vite). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules.
+
+**Component/view layout, routing, forms, analytics, and accessibility are now covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
+- `.claude/skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, Pinia store per concern, BEM styling, CSS Grid layout
+- `.claude/skills/vulkano-frontend-router/SKILL.md` — adding routes, resource+action file naming (`Form.vue` for create+edit), the SPA catch-all(s), auth guard/current-user fetching
+- `.claude/skills/vulkano-frontend-form/SKILL.md` — required-field asterisks, JS-only validation, `fieldErrors` pattern
+- `.claude/skills/vulkano-frontend-analytics/SKILL.md` — tracking wiring ([ANALYTICS.md](ANALYTICS.md))
+- `.claude/skills/vulkano-frontend-a11y/SKILL.md` — accessibility minimums ([ACCESSIBILITY.md](ACCESSIBILITY.md))
+
+This file keeps only what those skills don't cover: the entry point, `$api` usage, state (Pinia), and Vite config.
 
 The `client/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
 
@@ -26,51 +35,9 @@ app.config.globalProperties.$api = Api;
 app.use(router).mount('#app');
 ```
 
-## Adding a route — `client/routes.js`
+## Routing — adding routes, view naming, SPA catch-all
 
-```js
-import { createRouter } from 'vue-router';
-
-import Layout from '@client/layouts/Layout.vue';
-import Homepage from '@client/views/Home/Index.vue';
-import Users from '@client/views/System/Users/Index.vue';
-
-const routes = [
-  {
-    path: '/',
-    component: Layout,
-    children: [
-      { path: '', component: Homepage },
-      { path: '/system/users', component: Users }
-    ]
-  }
-];
-
-export default (history) => createRouter({ history, routes });
-```
-
-## Route ↔ view naming convention
-
-Route path and view folder mirror each other — no code generates this, it's a naming discipline
-followed by hand when adding a route. The leaf view file is always `Index.vue` / `Index.js`
-(never named after the view) — the folder name is what identifies the view:
-
-- **Single segment**: `/users` → `views/Users/Index.vue` (+ `Index.js`, `_index.scss`). Folder
-  name and route segment match, cased differently (kebab-case URL → PascalCase folder); the file
-  itself is always `Index.*`.
-- **Modular (nested) routes**: each path segment becomes a nested folder under `views/`, in
-  PascalCase; the leaf folder still holds `Index.vue` / `Index.js`:
-  - `/system/users` → `views/System/Users/Index.vue`
-  - `/config/categories` → `views/Config/Categories/Index.vue`
-- A module folder (`System/`, `Config/`) gets its own `_index.scss` aggregator that imports its
-  child views' `_index.scss` files — same pattern `views/_index.scss` already uses for leaf
-  views, one level deeper. `views/_index.scss` then imports the module's `_index.scss` instead of
-  each leaf directly.
-
-`routes.js` stays a hand-written array (no auto-discovery of `views/`) — this convention only
-makes the import path predictable from the URL, so a route can be located without grepping.
-
-## SPA catch-all — `app/config/routes.js`
+Covered by `.claude/skills/vulkano-frontend-router/SKILL.md`: `client/routes.js` wiring, route↔view naming (`Index.vue` for plain/nested routes, `Form.vue` for resource create+edit), and the `app/config/routes.js` catch-all(s) (including multi-entry-point `/admin*` setups). Example kept below for the catch-all's HTML5-history rationale:
 
 Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
 
@@ -115,39 +82,9 @@ export default {
 
 `client/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
-## Component convention — `.vue` / `.js` pairing
+## Component/view file layout, CSS Grid, BEM
 
-Each component splits its options/logic into a sibling `.js` file, imported by the `.vue` file via `<script src="./X.js">`; the `.vue` file carries the template and (optionally) scoped styles. Views and components additionally carry an `_index.scss` partial (e.g. `views/MyView/_index.scss`, `components/MyComponent/_index.scss`).
-
-### `client/components/` — shared/reusable components
-
-Reusable components (as opposed to `views/`, which are the top-level states the store's status drives) live under `client/components/`, one subfolder per component:
-
-```
-components/
-  _index.scss           # imports every component's own _index.scss
-  MyComponent/
-    MyComponent.vue      # HTML
-    MyComponent.js       # Logic
-    _index.scss          # Styles
-```
-
-`components/_index.scss` is the aggregator — each new component adds its own `@import './MyComponent/_index.scss';` line there. Individual `.vue` files do NOT import their own `_index.scss` — all imports flow from `client/style.scss`, which imports `components/_index.scss` (and `views/_index.scss`, and `layouts/_index.scss` if that folder exists), so there is a single entry point for every style partial in the widget.
-
-### `client/views/` — same aggregator convention
-
-`views/` follows the identical pattern: `views/_index.scss` is the aggregator, each view adds its own `@import './MyView/_index.scss';`-style line there. Same rule as `components/` — the view's own `.vue` file doesn't import its own `_index.scss`; `client/style.scss` is the one place that chains `@client/components/index`, `@client/views/index`, and `@client/layouts/index` together.
-
-Unlike `components/`, a view's `.vue`/`.js` files are always named `Index.vue` / `Index.js` — the folder name is what identifies the view (and, per the route convention above, mirrors the URL segment):
-
-```
-views/
-  _index.scss           # imports every view's own _index.scss
-  MyView/
-    Index.vue           # HTML
-    Index.js            # Logic
-    _index.scss         # Styles
-```
+Covered by `.claude/skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `client/components/` vs `client/views/` aggregator convention, CSS Grid layout (no Flexbox), BEM naming.
 
 ## State — `client/store/`
 
@@ -212,11 +149,9 @@ export const useAppStore = defineStore('app', () => {
 
 **Testing** — each store gets its own test file (e.g. `test/store/useEventStore.test.js`), independent of other stores' tests. Because stores are split by concern, tests can exercise one store's actions/getters in isolation, with `createPinia()` + `setActivePinia()` in `beforeEach`, without needing to set up unrelated entity state. Mock `$api` calls at the store boundary rather than hitting the real API.
 
-## Layout — CSS Grid
+## Responsive grid system — `client/scss/_grid.scss`
 
-All layout — components and views, any dimension, any nesting level — uses CSS Grid (`display: grid`) in the `_index.scss`. No Flexbox, anywhere.
-
-### Responsive grid system — `client/scss/_grid.scss`
+Extends the CSS Grid rule in `.claude/skills/vulkano-frontend-component/SKILL.md` with the project's Foundation-style column system:
 
 Foundation-style responsive grid, built on CSS Grid, imported once in `client/style.scss`:
 
@@ -232,31 +167,6 @@ Foundation-style responsive grid, built on CSS Grid, imported once in `client/st
 - Gutter: `0.875rem` (small), `0.9375rem` from `medium` up. `.row--collapsed` removes it (`gap: 0`).
 - Nesting: any `.column` can also carry `.row` to nest a grid inside it — no special helper needed.
 - No offset/push-pull classes (not needed yet — add only when a task requires them).
-
-## CSS naming — BEM
-
-Every `_index.scss` follows BEM: block is the component/view's root section, elements are `__container`/`__content` (or another noun scoped to that block), state/variant modifiers use `--` (e.g. `--opened`):
-
-```scss
-// MyComponent/_index.scss
-.my-component {
-  display: grid;
-
-  &__container {
-    display: grid;
-  }
-
-  &__content {
-    display: grid;
-  }
-
-  &--opened {
-    // state override
-  }
-}
-```
-
-Block name matches the component/view folder (kebab-case). No nested selectors beyond block/element/modifier — don't reach into a child block's internals from a parent's stylesheet.
 
 ## Component library — not installed, note for future
 

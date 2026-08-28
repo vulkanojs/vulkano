@@ -57,6 +57,22 @@ module.exports = {
 
 Only add an entry to `app/config/routes.js` when the convention can't express it (absolute path, SPA catch-all, or the route breaks the "resource = controller filename" rule). A redundant explicit entry gives the route two sources of truth.
 
+## Create + edit → one method/route, not two
+Same rule on both sides of a form: don't split create and edit into separate methods/controllers just because one has an `:id` and the other doesn't.
+
+- **API controller**: already the natural shape — `post` (create) and `'put :id'` (update) are two method keys on the *same* controller calling the *same* model, shown above. Don't add a separate `CreateController`/`EditController`.
+- **View controller** serving a form page (`/product/create`, `/product/edit/:id`) — one method renders the same template for both, branching only on whether `:id` is present to prefill data:
+```js
+// app/controllers/ProductsController.js
+module.exports = {
+  'get create': (req, res) => res.render('product/form.html', { product: null }),
+  'get edit :id': (req, res) => {
+    Product.getProduct(req.params.id).then((product) => res.render('product/form.html', { product }));
+  }
+};
+```
+Matches the frontend's single `Form.vue` (branches on route `:id` the same way — see vulkano-frontend-router § Create + Edit) — one template/form markup reused for both actions instead of duplicating it.
+
 ## View vs API response
 - View controller → `res.render('folder/file.html', { ...locals })`. Writing the actual template? See vulkano-backend-views (routes to the Nunjucks or Handlebars skill depending on `app/config/views.js`).
 - API controller → `res.vsr(promise, statusCode?)` → resolves to `{ success, statusCode, data }`. Errors: `VSError.reject(msg, code)`, `VSError.notFound(name)`, or a plain rejection → 500.
