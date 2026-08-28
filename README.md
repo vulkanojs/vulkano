@@ -26,7 +26,10 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 
 ## Project structure
 
-`app/` is the Express backend, `client/` is the Vue 3 SPA. Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Backend conventions (routing, controller/model): see **[docs/BACKEND.md](docs/BACKEND.md)**. Frontend conventions: see **[docs/FRONTEND.md](docs/FRONTEND.md)**.
+- `app/` is the Express backend
+- `client/` is the Vue 3 SPA.
+
+Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `docs/BACKEND.md` and `docs/FRONTEND.md` are thin pointers into them.
 
 ---
 
@@ -89,6 +92,7 @@ HOST=localhost
 MONGO_URI=mongodb://localhost:27017/myapp
 SALT_KEY=random-string
 JWT_SECRET_KEY=supersecret
+# COOKIES_SECRET_KEY=another-secret   # optional, only for signed cookies
 VITE_CHUNK_NAMES=false
 # VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
 ```
@@ -109,11 +113,12 @@ Say: _"add JWT login using the existing `@vulkano/core` auth conventions, with a
 Instead of: _"show a list of users"_
 Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"_
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the controller/model/view
-conventions your agent should follow, and [AGENTS.md](AGENTS.md) for the
-rules your agent reads automatically (Claude Code, and any tool that
-honors `AGENTS.md`/`CLAUDE.md`) — workflow, security boundaries, and
-handoff checklist.
+Claude Code picks up the controller/model/view/auth/testing conventions
+automatically from `.claude/skills/` — no need to paste them into your
+prompt. See [AGENTS.md](AGENTS.md) for the rules your agent reads
+automatically (Claude Code, and any tool that honors
+`AGENTS.md`/`CLAUDE.md`) — workflow, security boundaries, and handoff
+checklist.
 
 ### Common tasks
 
@@ -211,7 +216,7 @@ Use the **Docker Compose** deployment type in Coolify and point it at this
 repo — it picks up `docker-compose.yml` and `nixpacks.toml` automatically.
 
 `.env` is gitignored and never reaches the build, so set your environment
-variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET`, etc) in Coolify's
+variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET_KEY`, etc) in Coolify's
 own **Environment Variables** panel for the app — Coolify injects them into
 the running container at deploy time.
 
