@@ -82,6 +82,7 @@ HOST=localhost
 MONGO_URI=mongodb://localhost:27017/myapp
 SALT_KEY=random-string
 JWT_SECRET_KEY=supersecret
+# COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vulkano-backend-auth skill
 VITE_CHUNK_NAMES=false
 # VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
 ```
@@ -92,6 +93,7 @@ VITE_CHUNK_NAMES=false
 - **KISS**: write simple code a human understands fast. Avoid clever tricks and long functions. Use clear names for variables and functions.
 - **Divide and conquer**: keep components small, each doing one task. Split large components into smaller pieces rather than growing one file.
 - **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see [docs/FRONTEND.md](docs/FRONTEND.md#component-convention--vue--js-pairing).
+- **Unused variables — prefix with `_`**: applies front and back, any language in this repo. When a function parameter or binding is intentionally unused (e.g. a `catch` block that doesn't need the error), prefix it with `_` so the linter's `no-unused-vars` rule doesn't flag it: `catch (_err) {`.
 
 ## Security considerations
 
