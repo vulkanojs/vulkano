@@ -7,7 +7,7 @@ process.env.NODE_ENV = 'test';
 if (!process.env.TEST_MONGO_URI) {
   throw new Error(
     'TEST_MONGO_URI is not set. Refusing to run tests against MONGO_URI (dev/prod). ' +
-    'Set TEST_MONGO_URI in .env to a dedicated test database first — see docs/TESTING.md § Environment.'
+      'Set TEST_MONGO_URI in .env to a dedicated test database first — see docs/TESTING.md § Environment.'
   );
 }
 

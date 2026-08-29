@@ -5,7 +5,6 @@
  */
 
 module.exports = {
-
   /**
    * Fields
    */
@@ -19,10 +18,10 @@ module.exports = {
       required: false,
       validate: {
         validator: (value) => {
-          const isValid = (value >= 21) ? true : false;
+          const isValid = value >= 21 ? true : false;
           return isValid;
         },
-        message: 'Invalid Age: Must be +21.',
+        message: 'Invalid Age: Must be +21.'
       }
     }
     // the fields:
@@ -44,14 +43,13 @@ module.exports = {
    * @returns {Promise}
    */
   getAll(props) {
-
     // Props to Query
     const defaultProps = {
       sort: 'createdAt|DESC',
       searchBy: ['name'],
       filter: {
         active: true
-      },
+      }
     };
 
     // Populate
@@ -62,7 +60,6 @@ module.exports = {
 
     // Pagination
     return Paginate.get(Example, query, populate);
-
   },
 
   /**
@@ -72,23 +69,18 @@ module.exports = {
    * @returns {Promise}
    */
   getExample(_id) {
-
     // This is to prevent error while run the findOne
-    if (!(/^[a-fA-F0-9]{24}$/).test(_id)) {
+    if (!/^[a-fA-F0-9]{24}$/.test(_id)) {
       return VSError.reject('Invalid ID. Record not found', 404);
     }
 
-    return Example.findOne({ _id })
-      .then( (r) => {
+    return Example.findOne({ _id }).then((r) => {
+      if (!r) {
+        return VSError.notFound();
+      }
 
-        if (!r) {
-          return VSError.notFound();
-        }
-
-        return r.toObject({ transform: true });
-
-      });
-
+      return r.toObject({ transform: true });
+    });
   },
 
   /**
@@ -96,10 +88,8 @@ module.exports = {
    * @param {Promise} data
    */
   create(data) {
-
     const obj = new Example(data);
     return obj.save();
-
   },
 
   /**
@@ -109,24 +99,15 @@ module.exports = {
    * @returns {Promise}
    */
   update(_id, data) {
+    return Example.getExample(_id).then((record) => {
+      // Merge current info with incoming values
+      const merged = { ...record, ...data };
 
-    return Example.getExample(_id)
-      .then( (record) => {
-
-        // Merge current info with incoming values
-        const merged = { ...record, ...data };
-
-        return Example
-          .findOneAndUpdate({ _id }, merged, { new: true })
-          .then( (r) => {
-
-            const tmp = r.toObject({ transform: true });
-            return tmp;
-
-          });
-
+      return Example.findOneAndUpdate({ _id }, merged, { new: true }).then((r) => {
+        const tmp = r.toObject({ transform: true });
+        return tmp;
       });
-
+    });
   },
 
   /**
@@ -135,10 +116,8 @@ module.exports = {
    * @returns {Promise}
    */
   delete(id) {
-
     // Soft delete
     return this.update(id, { active: false });
-
   },
 
   /**
@@ -146,7 +125,6 @@ module.exports = {
    * @param {Callback} cb
    */
   beforeSave(cb) {
-
     const data = this;
 
     console.log('Running callback before save');
@@ -154,7 +132,6 @@ module.exports = {
 
     // All good!
     cb();
-
   },
 
   /**
@@ -162,13 +139,10 @@ module.exports = {
    * @param {Callback} cb
    */
   afterSave(data, cb) {
-
     console.log('Running callback after save');
     console.log(data);
 
     // All good!
     cb();
-
-  },
-
+  }
 };

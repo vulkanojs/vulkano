@@ -3,7 +3,6 @@
  */
 
 module.exports = {
-
   /**
    * Fillable fields for the update method
    * to prevent update of non-allowed fields like createdAt, updatedAt, etc.
@@ -24,16 +23,16 @@ module.exports = {
       required: false,
       validate: {
         validator: (value) => {
-          const isValid = (value >= 21) ? true : false;
+          const isValid = value >= 21 ? true : false;
           return isValid;
         },
-        message: 'Invalid Age: Must be +21.',
+        message: 'Invalid Age: Must be +21.'
       }
-    },
+    }
     // the fields:
     // active, createdAt, updatedAt
     // was created automatically
-  },
+  }
 
   // Scaffold (ModelName) - Allowed Methods:
   // ExampleWidthScaffold.getAllExampleWidthScaffold(props)
@@ -43,5 +42,4 @@ module.exports = {
   // ExampleWidthScaffold.getExampleWidthScaffold(id)
   // ExampleWidthScaffold.update(id, payload)
   // ExampleWidthScaffold.delete(id)
-
 };

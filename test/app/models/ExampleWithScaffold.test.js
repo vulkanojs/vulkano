@@ -19,7 +19,9 @@ describe('ExampleWithScaffold model (core scaffold defaults)', () => {
   });
 
   it('rejects a record with age under 21', async () => {
-    await expect(ExampleWithScaffold.create({ name: 'Too Young', age: 20 })).rejects.toThrow('Invalid Age: Must be +21.');
+    await expect(ExampleWithScaffold.create({ name: 'Too Young', age: 20 })).rejects.toThrow(
+      'Invalid Age: Must be +21.'
+    );
   });
 
   it('reads a record by id via getExampleWithScaffold (alias to getByField)', async () => {
@@ -65,10 +67,14 @@ describe('ExampleWithScaffold model (core scaffold defaults)', () => {
   });
 
   it('rejects getByField with a malformed id and no field', async () => {
-    await expect(ExampleWithScaffold.getByField('not-an-id')).rejects.toThrow('Invalid ID. Record not found.');
+    await expect(ExampleWithScaffold.getByField('not-an-id')).rejects.toThrow(
+      'Invalid ID. Record not found.'
+    );
   });
 
   it('rejects getByField with a well-formed id that does not exist', async () => {
-    await expect(ExampleWithScaffold.getByField('64b64f0f0f0f0f0f0f0f0f0f')).rejects.toThrow('Not Found');
+    await expect(ExampleWithScaffold.getByField('64b64f0f0f0f0f0f0f0f0f0f')).rejects.toThrow(
+      'Not Found'
+    );
   });
 });

@@ -22,7 +22,6 @@ function getHeaders(props = {}) {
  * @returns {Promise<any>} The parsed `data` field, an empty object, or `null`.
  */
 async function request(method, path, body, props = {}) {
-
   const options = {
     method,
     headers: getHeaders(props)
@@ -46,7 +45,6 @@ async function request(method, path, body, props = {}) {
   const json = await response.json().catch(() => null);
 
   return json ? json.data || {} : null;
-
 }
 
 /**

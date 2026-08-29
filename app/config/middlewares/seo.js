@@ -1,5 +1,4 @@
 module.exports = (req, res, next) => {
-
   res.locals.seo = {
     title: app.config.common.SEO_DEFAULT_TITLE,
     description: app.config.common.SEO_DEFAULT_DESCRIPTION,
@@ -9,5 +8,4 @@ module.exports = (req, res, next) => {
   };
 
   next();
-
 };

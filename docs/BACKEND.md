@@ -3,6 +3,7 @@
 Backend conventions for the Vulkano Framework (`app/`). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules.
 
 **Controller/route, model, view, and auth work is now covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
+
 - `.claude/skills/vulkano-backend-controller/SKILL.md` — controller placement, routing convention, `res.vsr`/`res.render`, scaffold, sockets
 - `.claude/skills/vulkano-backend-model/SKILL.md` — model naming, schema, standard CRUD methods, hooks, `active`/soft-delete, `autopopulate`/`_buildPopulate`
 - `.claude/skills/vulkano-backend-views/SKILL.md` — `res.render` vs `res.vsr` decision; routes to the Nunjucks or Handlebars skill for actual template syntax (layouts, SEO locals, i18n, formatting helpers, Vite injection)

@@ -16,10 +16,7 @@ const CLEANUP_TARGETS = [
 ];
 
 function stripHelloWorldTemplate(source) {
-  return source.replace(
-    '\n\n  <HelloWorld msg="Vulkano + Vite Plus + Vue 3" />\n',
-    '\n'
-  );
+  return source.replace('\n\n  <HelloWorld msg="Vulkano + Vite Plus + Vue 3" />\n', '\n');
 }
 
 function stripHelloWorldScript(source) {

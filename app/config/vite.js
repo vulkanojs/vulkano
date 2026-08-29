@@ -8,9 +8,8 @@
  * CSS: {{ vite({ entry: 'app', type: 'style' }) | safe }}
  * JS: {{ vite({ entry: 'app', type: 'script' }) | safe }}
  *
-*/
+ */
 module.exports = {
-
   //
   // Enable Vite support.
   // @type Boolean
@@ -22,6 +21,5 @@ module.exports = {
   // Default: 'public/.vite'
   // @type String
   //
-  buildPath: 'public/.vite',
-
+  buildPath: 'public/.vite'
 };

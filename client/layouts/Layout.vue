@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <!--<AppHeader />-->
 
@@ -7,7 +6,6 @@
 
     <!-- <AppFooter /> -->
   </div>
-
 </template>
 
-<script src='./Layout.js'></script>
+<script src="./Layout.js"></script>

@@ -14,11 +14,7 @@ describe('filterConvertibleImages', () => {
       '.gitignore'
     ];
 
-    expect(filterConvertibleImages(filenames)).toEqual([
-      'logo.png',
-      'photo.JPG',
-      'banner.jpeg'
-    ]);
+    expect(filterConvertibleImages(filenames)).toEqual(['logo.png', 'photo.JPG', 'banner.jpeg']);
   });
 
   it('returns an empty array when nothing matches', () => {

@@ -3,6 +3,7 @@
 Frontend conventions for the Vulkano Framework (`client/`, Vue 3 + Vite). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules.
 
 **Component/view layout, routing, forms, analytics, and accessibility are now covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
+
 - `.claude/skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, Pinia store per concern, BEM styling, CSS Grid layout
 - `.claude/skills/vulkano-frontend-router/SKILL.md` — adding routes, resource+action file naming (`Form.vue` for create+edit), the SPA catch-all(s), auth guard/current-user fetching
 - `.claude/skills/vulkano-frontend-form/SKILL.md` — required-field asterisks, JS-only validation, `fieldErrors` pattern

@@ -49,8 +49,8 @@ On the first task touching a new area (no row for it yet in the table below), as
 Show the user the resulting row so they can correct it before proceeding. From then on, treat this table as the answer and don't ask again for that area:
 
 | Area (path/entry point) | SEO | Analytics | Accessibility |
-| ------------------------ | --- | --------- | -------------- |
-| _(none recorded yet)_     |     |           |                |
+| ----------------------- | --- | --------- | ------------- |
+| _(none recorded yet)_   |     |           |               |
 
 A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
 
@@ -110,7 +110,7 @@ VITE_CHUNK_NAMES=false
 ## Form fields (frontend)
 
 - Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view.
-- Never rely on native HTML5 form *validation UI* (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (see `client/views/Login/` for the reference pattern: `novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border).
+- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (see `client/views/Login/` for the reference pattern: `novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border).
 - Still set the correct `type` on every `<input>` (`email`, `number`, `date`, `range`, `tel`, …) — this is about semantics/mobile keyboard/a11y, not the validation-UI point above, and stays required even though native validation bubbles are suppressed.
 - `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `client/components/ui/`) instead, for visual consistency with the rest of the design system.
 

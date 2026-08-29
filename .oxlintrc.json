@@ -29,13 +29,5 @@
     "no-unneeded-ternary": "off",
     "guard-for-in": "off"
   },
-  "ignorePatterns": [
-    "node_modules",
-    "public",
-    "test",
-    "bundle",
-    "tasks",
-    "docs",
-    "setup"
-  ]
+  "ignorePatterns": ["node_modules", "public", "test", "bundle", "tasks", "docs", "setup"]
 }

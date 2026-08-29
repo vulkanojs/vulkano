@@ -19,7 +19,9 @@ describe('Example model', () => {
   });
 
   it('rejects a record with age under 21', async () => {
-    await expect(Example.create({ name: 'Too Young', age: 20 })).rejects.toThrow('Invalid Age: Must be +21.');
+    await expect(Example.create({ name: 'Too Young', age: 20 })).rejects.toThrow(
+      'Invalid Age: Must be +21.'
+    );
   });
 
   it('updates a record by id', async () => {

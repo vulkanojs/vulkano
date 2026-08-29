@@ -1,11 +1,9 @@
 module.exports = {
-
   // Port
   port: process.env.PORT || 8000,
 
   // Connection to Database
   database: {
-
     // MONGO_URI connection or connetion key (development, production)
     connection: process.env.MONGO_URI || null,
 
@@ -16,10 +14,6 @@ module.exports = {
     },
 
     // Additional config to mongoose
-    config: {
-
-    }
-
+    config: {}
   }
-
 };
