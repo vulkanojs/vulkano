@@ -101,7 +101,7 @@ module.exports = {
   update(_id, data) {
     return Example.getExample(_id).then((record) => {
       // Merge current info with incoming values
-      const merged = { ...record, ...data };
+      const merged = Object.assign({}, record, data);
 
       return Example.findOneAndUpdate({ _id }, merged, { new: true }).then((r) => {
         const tmp = r.toObject({ transform: true });

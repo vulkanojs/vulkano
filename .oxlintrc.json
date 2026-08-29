@@ -27,7 +27,15 @@
     "no-underscore-dangle": "off",
     "no-throw-literal": "off",
     "no-unneeded-ternary": "off",
-    "guard-for-in": "off"
+    "guard-for-in": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
   },
   "ignorePatterns": ["node_modules", "public", "test", "bundle", "tasks", "docs", "setup"]
 }
