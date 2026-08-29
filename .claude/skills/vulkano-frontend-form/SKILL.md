@@ -19,10 +19,10 @@ Not for component file layout — see vulkano-frontend-component. Not for a11y a
 
 - `<form novalidate>` — suppresses native validation UI, JS still handles the flow.
 - `fieldErrors` reactive object in component state: `{ email: '', password: '' }`.
-- Every required field's label gets a red asterisk: reuse a shared `.field-required` (or equivalent BEM element) with `color: var(--color-danger-500)` — never hardcode red per view.
+- Every required field's label gets a red asterisk: reuse a shared `.field-required` (or equivalent BEM element) with `color: var(--color-danger-500)` — never hardcode red per view. **Neither the class nor the `--color-danger-500` token exists in a fresh scaffold** (checked: no `client/**/*.scss` defines it) — the first form in a project defines both once, in a shared partial (e.g. `client/scss/_tokens.scss`, imported from `style.scss`), and every form after that reuses them.
 - Error message rendered inline below the input: `<span class="*__field-error">{{ fieldErrors.email }}</span>`.
 - Invalid input gets a `*__input--invalid` class for the red border.
-- Reference implementation: `client/views/Login/` — follow its `novalidate` + `fieldErrors` + `<span class="*__field-error">` + `*__input--invalid` shape exactly rather than reinventing it.
+- No `client/views/Login/` exists in a fresh scaffold — it's not a file to go open and copy. Follow the `novalidate` + `fieldErrors` + `<span class="*__field-error">` + `*__input--invalid` shape from the Skeleton below instead; once a project's first login/form view exists, treat *that* as the local reference for the next one.
 
 ## Skeleton
 
@@ -102,4 +102,4 @@ Setting the correct `type` (`email`, `number`, `date`, `range`, `tel`, ...) is a
 
 ## Reference
 
-`client/views/Login/` (canonical pattern), AGENTS.md § Form fields, docs/ACCESSIBILITY.md § Forms.
+The Skeleton above (canonical pattern — no pre-existing `client/views/Login/` to copy from in a fresh scaffold), AGENTS.md § Form fields, docs/ACCESSIBILITY.md § Forms.
