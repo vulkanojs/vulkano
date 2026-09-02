@@ -12,6 +12,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
 
+## Framework skills inside a superpowers plan (writing-plans / subagent-driven-development)
+
+When writing a plan (`superpowers:writing-plans`) whose tasks touch `app/controllers/*.js`, `app/models/*.js`, `app/views/*.html`, an auth flow, or `client/**` frontend code, load the matching project skill (`vulkano-backend-controller`, `vulkano-backend-model`, `vulkano-backend-views-nunjucks`/`-handlebars`, `vulkano-backend-auth`, `vulkano-frontend-*`) **before finalizing that task's code in the plan** — not later, not by hoping the implementer subagent will discover it.
+
+Why this order matters: under `superpowers:subagent-driven-development`, implementer subagents are dispatched fresh with zero session context — they only see the task brief. If the plan-author (you) didn't consult the relevant skill before writing that task's exact code into the plan/brief, a convention violation ships silently, because the implementer has no reason to go looking for a skill it was never told about.
+
+Checklist per task, at plan-authoring time:
+1. Identify the file type(s) the task creates/modifies.
+2. Load every project skill whose "When to use" matches.
+3. Bake that skill's binding conventions directly into the task's code before it goes in the plan.
+4. Copy the same binding conventions into that task's future task-reviewer dispatch (the "global constraints" block) — the reviewer is also a fresh subagent with no memory of which skills applied.
+
 ## /clear prompt backup hook
 
 `UserPromptSubmit` hook in `.claude/settings.local.json` (gitignored, personal):
