@@ -98,6 +98,33 @@ Matches the frontend's single `Form.vue` (branches on route `:id` the same way �
 
 - No top-level functions/consts outside `module.exports` — only `require`/import statements plus the exported object and its methods. Extract helper logic to `app/services/<Name>.js` (auto-loaded global) or, for business rules, the model.
 - Keep it thin: read params → call model/service → respond. Business logic and validation live on the model, not the controller.
+- **Lookup/mapping tables that translate a request-facing value into a domain value are business logic, not controller wiring** — they belong on the model as an exported property (`Model.SOME_MAP`), not as a controller-local `const`. Easy to miss because the object looks like harmless request-parsing config sitting right next to where it's used. Test: if the mapping encodes a domain rule (which internal types/states a given filter value means), it's the model's job to own it — the controller just reads the param and passes it through.
+
+```js
+// Example: WRONG — app/controllers/api/MovementsController.js
+const DIRECTION_TYPES = { incoming: ['reception'], outcoming: ['supply'] };
+module.exports = {
+  get(req, res) {
+    const types = DIRECTION_TYPES[req.query.direction] || ['reception', 'supply'];
+    res.vsr(Movement.getKardexPage({ ...req.query, types }));
+  },
+  // ...
+};
+
+// Example: RIGHT — app/models/Movement.js
+module.exports = {
+  DIRECTION_TYPES: { incoming: ['reception'], outcoming: ['supply'] },
+  // ...
+};
+// app/controllers/api/MovementsController.js
+module.exports = {
+  get(req, res) {
+    const types = Movement.DIRECTION_TYPES[req.query.direction] || ['reception', 'supply'];
+    res.vsr(Movement.getKardexPage({ ...req.query, types }));
+  },
+  // ...
+};
+```
 - Full CRUD API shortcut — scaffold:
 
 ```js
