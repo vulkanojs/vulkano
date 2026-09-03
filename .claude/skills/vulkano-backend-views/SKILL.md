@@ -16,6 +16,15 @@ If the answer is `res.vsr`, stop here — go to vulkano-backend-controller, noth
 
 If the answer is `res.render`, the actual template syntax (layout inheritance, partials, SEO locals, i18n, formatting helpers, Vite injection) depends on which engine the project uses — this skill doesn't teach that itself, it routes to the skill that does.
 
+## What you can build under `app/views/`
+
+- **Templates/layouts** (`_shared/templates/`) — base `<html>` shell every page wraps into.
+- **Partials** (`_shared/partials/`) — reusable markup fragment included from 2+ views, instead of duplicating.
+- **Error pages** (`_shared/errors/`) — 404/500 templates.
+- **Views** (`<resource>/*.html`) — the actual page rendered per controller action.
+
+Same four concepts in both engines — only the include/extend syntax differs. Go to the engine skill (below) for how to build each one.
+
 ## Which engine?
 
 Check `app/config/views.js`:

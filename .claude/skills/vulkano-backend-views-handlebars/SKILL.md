@@ -27,7 +27,10 @@ Not for Vue components/views (`client/views/`) — see FRONTEND.md. Not for the 
 - Check `app/views/_shared/templates/default.html` (the `defaultLayout`) before writing a new page — it already owns `<head>`.
 - Check whether this view belongs to a public/crawlable area (needs the SEO block) or a CMS/admin area (doesn't) — see AGENTS.md § Project requirements, and ARCHITECTURE.md § Multiple entry points if the project splits front/CMS.
 - Trace the controller action that renders this view — confirm what locals it actually passes (`res.render('x/y.html', { ...locals })`). Don't assume a variable exists in the template; if data is missing, add it in the controller/model, not with a query/fetch from inside the template.
-- Markup repeated across 2+ views → extract to `app/views/_shared/partials/`, included via `{{> name}}`, instead of duplicating.
+- Markup repeated across 2+ views → extract to `app/views/_shared/partials/`, included via `{{> name}}`, instead of duplicating. This applies even when you're adding those 2+ views one at a time in the same task — check back against files you already wrote earlier in the SAME task, not just pre-existing ones. E.g. a branded side-panel/header block copy-pasted into `login.html`, then again into `error.html`, then again into a third view → stop, move it to `_shared/partials/oauth-brand.html` and include it in all three:
+  ```html
+  {{> oauth-brand}}
+  ```
 
 ## File placement
 
