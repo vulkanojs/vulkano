@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "ignore": [".git/", "public/", "client/", "docs/", "test", "scripts", "inbox", ".md"],
+  "ignore": [".git/", "public/", "client/", "docs/", "test", "scripts", "inbox", ".md", "apps/"],
   "env": {
     "NODE_ENV": "development"
   }
