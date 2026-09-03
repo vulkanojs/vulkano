@@ -10,7 +10,7 @@ import App from './App.vue';
 
 import Api from './Api';
 
-const router = createRouter(createWebHistory());
+const router = createRouter(createWebHistory('/admin'));
 
 const app = createApp(App);
 

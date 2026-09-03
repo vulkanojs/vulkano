@@ -22,7 +22,7 @@ Not for the Vue SPA (never SEO-covered — build ranking pages as backend views 
 ```js
 // app/config/middlewares/seo.js
 module.exports = (req, res, next) => {
-  if (req.path.startsWith('/cms')) return next(); // skip early for a non-SEO area's prefix
+  if (req.path.startsWith('/admin')) return next(); // skip early for a non-SEO area's prefix
   res.locals.seo = {
     title: app.config.common.SEO_DEFAULT_TITLE,
     description: app.config.common.SEO_DEFAULT_DESCRIPTION,

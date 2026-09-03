@@ -44,12 +44,12 @@ test/
     website/
       store/<name>.test.js
       integration/<Flow>.test.js
-    cms/
+    admin/
       store/<name>.test.js
       integration/<Flow>.test.js
 ```
 
-Never `test/cms/` as a root-level sibling — that only made sense before the container convention existed.
+Never `test/admin/` as a root-level sibling — that only made sense before the container convention existed.
 
 ## Patterns by test type
 

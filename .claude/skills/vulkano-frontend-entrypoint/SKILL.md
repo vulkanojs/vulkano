@@ -17,7 +17,7 @@ A Vulkano project can have more than one Vue app — public front, CMS/admin, a 
 ## Folder placement — threshold rule
 
 - **1 entrypoint** — `frontend/` stays flat: `frontend/app.js`, `frontend/App.vue`, `frontend/routes.js`, etc. No subfolder.
-- **2+ entrypoints** — `frontend/` becomes a container. Adding the 2nd entrypoint is what triggers the migration: the existing flat app moves to `frontend/website/` (fixed name for the public front), each new one gets its own `frontend/<name>/` (e.g. `frontend/cms/`).
+- **2+ entrypoints** — `frontend/` becomes a container. Adding the 2nd entrypoint is what triggers the migration: the existing flat app moves to `frontend/website/` (fixed name for the public front), each new one gets its own `frontend/<name>/` (e.g. `frontend/admin/`).
 
 ```
 frontend/
@@ -30,7 +30,7 @@ frontend/
 │   ├── components/_index.scss
 │   ├── layouts/
 │   └── views/_index.scss
-└── cms/
+└── admin/
     └── ...              # same shape
 ```
 
@@ -52,7 +52,9 @@ frontend/<name>/
   views/_index.scss
 ```
 
-**Alias per entrypoint:** `vite.config.mjs` `resolve.alias` defines one alias per entrypoint, named after it (e.g. `@website` → `frontend/website/`, `@cms` → `frontend/cms/`). A new entrypoint needs its own alias entry added at the same time — copy the pattern, don't reuse another entrypoint's. Use **relative imports** inside each entrypoint (`./style.scss`, `./routes`, `./App.vue`, `./Api`) for its own files; reach for the entrypoint's own alias only when a deep import reads clearer absolute (e.g. `@cms/components/ui/Button.vue` from a nested file). Never reference another entrypoint's alias (`@website` from inside `frontend/cms/`, or vice versa) — entrypoints stay isolated; share code via a `frontend/shared/` folder instead, imported by relative path.
+**Alias per entrypoint:** `vite.config.mjs` `resolve.alias` defines one alias per entrypoint, named after it (e.g. `@website` → `frontend/website/`, `@admin` → `frontend/admin/`). A new entrypoint needs its own alias entry added at the same time — copy the pattern, don't reuse another entrypoint's. Use **relative imports** inside each entrypoint (`./style.scss`, `./routes`, `./App.vue`, `./Api`) for its own files; reach for the entrypoint's own alias only when a deep import reads clearer absolute (e.g. `@admin/components/ui/Button.vue` from a nested file). Never reference another entrypoint's alias (`@website` from inside `frontend/admin/`, or vice versa) — entrypoints stay isolated; share code via a `frontend/shared/` folder instead, imported by relative path.
+
+**Router base path — required for any non-root entrypoint:** `createWebHistory()` defaults to base `/`, so Vue Router matches routes against the full URL path with no prefix stripped. An entrypoint mounted under a path prefix (e.g. `/admin`) MUST pass that prefix as the base — `createWebHistory('/admin')` in `app.js` — or every route in `routes.js` silently fails to match once served from the real backend URL (works fine in isolation/dev-root testing, breaks only once the catch-all route actually serves it under its prefix). Only the entrypoint mounted at `/` (the public front) omits the base. This must match the catch-all path registered in `app/config/routes.js` exactly (see Wiring below and vulkano-frontend-router § Multiple entry points).
 
 ## Wiring
 
@@ -60,7 +62,7 @@ frontend/<name>/
   ```js
   input: {
     app: 'frontend/website/app.js',
-    cms: 'frontend/cms/app.js'
+    admin: 'frontend/admin/app.js'
   }
   ```
   Each key is a separate bundle, addressable from a template via `vite({ entry: '<key>', type: '...' })`.
@@ -69,17 +71,17 @@ frontend/<name>/
   resolve: {
     alias: {
       '@website': path.resolve(__dirname, 'frontend') + '/website/',
-      '@cms': path.resolve(__dirname, 'frontend') + '/cms/'
+      '@admin': path.resolve(__dirname, 'frontend') + '/admin/'
     }
   }
   ```
 - **`nodemon.json`** — no change needed. `ignore` already has `frontend/`, which covers every entrypoint under it.
 - **Backend template** — `app/views/_shared/templates/<name>.html`, a copy of `default.html` with its own `vite({ entry: '<name>', ... })` calls. Drop the SEO meta block if the area has SEO off (see vulkano-seo).
-- **Backend controller** — one per area (e.g. `CmsController.get`), rendering that area's own view (see vulkano-backend-controller):
+- **Backend controller** — one per area (e.g. `AdminController.get`), rendering that area's own view (see vulkano-backend-controller):
   ```js
   module.exports = {
     get(req, res) {
-      res.render('cms/index.html'); // extends _shared/templates/cms.html
+      res.render('admin/index.html'); // extends _shared/templates/admin.html
     }
   };
   ```
@@ -87,7 +89,7 @@ frontend/<name>/
   ```js
   module.exports = {
     '/': 'HomeController.get',
-    '/cms/*': 'CmsController.get', // must come before '/*'
+    '/admin/*': 'AdminController.get', // must come before '/*'
     '/*': 'HomeController.get'
   };
   ```
@@ -105,7 +107,7 @@ Every new entrypoint is a new "area" per AGENTS.md § Project requirements. Befo
 
 - Confirm `vite.config.mjs` `resolve.alias` has an entry for the new entrypoint (`@<name>` → `frontend/<name>/`) — missing this doesn't break the build, it just leaves the new app without its own alias.
 - Run `pnpm run build` (or `vp build`) and confirm the new entry appears in `public/.vite/manifest.<env>.json`.
-- Hit the new area's path in a browser; confirm a hard refresh doesn't 404 (catch-all working, not just in-app navigation).
+- Hit the new area's path in a browser; confirm a hard refresh doesn't 404 (catch-all working, not just in-app navigation) AND the view actually renders — a 200 with a blank page is the tell for a missing/wrong `createWebHistory(base)` (see Router base path above), not a catch-all problem.
 - Run `vp check` and `vp test`.
 
 ## Reference

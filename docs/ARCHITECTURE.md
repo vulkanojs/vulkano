@@ -7,7 +7,7 @@ Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.m
 ```
 framework/
 ├── app.js                  # Entry point — calls vulkano()
-├── vite.config.mjs         # Vite config (2 entry points by default: frontend/website/, frontend/cms/ — see § Multiple entry points)
+├── vite.config.mjs         # Vite config (2 entry points by default: frontend/website/, frontend/admin/ — see § Multiple entry points)
 ├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, docs/, test, scripts, inbox)
 │
 ├── app/                    # Backend
@@ -24,7 +24,7 @@ framework/
 │   └── views/              # Nunjucks/Handlebars layouts
 │
 ├── frontend/                # Vue 3 apps — ships with 2 entrypoints by default (below); collapse to 1
-│   │                        # flat app with `pnpm run cleanup:entrypoints` if multi-entry isn't needed
+│   │                        # flat app with `pnpm run setup` if multi-entry isn't needed
 │   ├── website/             # Public front — see § Multiple entry points
 │   │   ├── app.js           # Vue entry — mounts App.vue, registers $api global
 │   │   ├── App.vue
@@ -53,7 +53,7 @@ framework/
 │   │               ├── Index.js
 │   │               └── _index.scss
 │   │
-│   └── cms/                 # Admin panel — same shape as website/, minimal by default
+│   └── admin/                # Admin panel — same shape as website/, minimal by default
 │       └── ...
 │
 └── public/                 # Built assets (output of vite build)
@@ -69,12 +69,12 @@ framework/
 
 A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form), a CMS/admin panel, a one-off landing — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project. `.claude/skills/vulkano-frontend-entrypoint/SKILL.md` covers the full scaffold checklist for creating a new one — the summary below is the rationale/reference, that skill is the actionable one.
 
-**This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/cms/` minimal admin panel) so both shapes are demonstrated out of the box. If a project only needs 1, run `pnpm run cleanup:entrypoints` and choose which to keep — it removes the other's frontend folder, backend template/controller/route, and its row in the AGENTS.md table, then flattens `frontend/website/` back to a flat `frontend/`.
+**This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/admin/` minimal admin panel) so both shapes are demonstrated out of the box. If a project only needs 1, run `pnpm run setup` and choose which to keep — it removes the other's frontend folder, backend template/controller/route, and its row in the AGENTS.md table, then flattens the surviving entrypoint back to a flat `frontend/`.
 
 **Threshold rule — flat vs container:**
 
 - **1 entrypoint** — `frontend/` stays flat, exactly like a single-app project: `frontend/app.js`, `frontend/App.vue`, `frontend/routes.js`, etc.
-- **2+ entrypoints** — `frontend/` becomes a container, one subfolder per app. Adding the 2nd entry is what triggers the migration: the existing flat app moves to `frontend/website/` (the public front keeps this fixed name), the new one(s) get `frontend/<name>/` (e.g. `frontend/cms/`, `frontend/landingx/`).
+- **2+ entrypoints** — `frontend/` becomes a container, one subfolder per app. Adding the 2nd entry is what triggers the migration: the existing flat app moves to `frontend/website/` (the public front keeps this fixed name), the new one(s) get `frontend/<name>/` (e.g. `frontend/admin/`, `frontend/landingx/`).
 
 ```
 frontend/
@@ -84,7 +84,7 @@ frontend/
 │   ├── routes.js
 │   └── ...
 │
-├── cms/                     # CMS — internal, logged-in area
+├── admin/                    # Admin — internal, logged-in area
 │   ├── app.js
 │   ├── App.vue
 │   ├── routes.js
@@ -99,10 +99,10 @@ frontend/
 
 Wire a new entry:
 
-- **`vite.config.mjs`** — add a key to `build.rollupOptions.input` (e.g. `{ app: 'frontend/website/app.js', cms: 'frontend/cms/app.js' }`). Each key becomes a separate bundle, addressable from a template by that name.
+- **`vite.config.mjs`** — add a key to `build.rollupOptions.input` (e.g. `{ app: 'frontend/website/app.js', admin: 'frontend/admin/app.js' }`), plus its own alias in `resolve.alias` (e.g. `@admin` → `frontend/admin/`). Each key becomes a separate bundle, addressable from a template by that name.
 - **`nodemon.json`** — no per-app entry needed: `ignore` already covers the whole tree with `frontend/`, since every app lives under that one folder.
-- **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `cms.html` for CMS), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the CMS layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
-- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/cms/*` → `CmsController.get`, rendering the CMS layout) instead of one global `/*` for everything.
+- **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `admin.html` for the admin area), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the admin layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
+- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/admin/*` → `AdminController.get`, rendering the admin layout) instead of one global `/*` for everything.
 
 ---
 

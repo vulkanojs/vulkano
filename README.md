@@ -28,7 +28,7 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 
 - `app/` is the Express backend
 - `frontend/website/` is the public Vue 3 SPA
-- `frontend/cms/` is the admin one with Vue 3 SPA and separate entry point (optional, remove if you don't need it)
+- `frontend/admin/` is the admin one with Vue 3 SPA and separate entry point (optional, remove if you don't need it)
 
 See docs/ARCHITECTURE.md § Multiple entry points.
 
@@ -62,13 +62,13 @@ Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Detail
 pnpm install       # or npm install
 ```
 
-**New project?** Strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view) before you start building:
+**New project?** Run the interactive setup — choose how many frontend entrypoints you want (1 or 2, and which one to keep if 1) and optionally strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view):
 
 ```bash
-pnpm run cleanup
+pnpm run setup
 ```
 
-Asks for confirmation (`yes`) before deleting anything. Skip this if you want to keep the demo as a reference.
+Asks for confirmation before deleting anything. Skip this if you want to keep both entrypoints and the demo as a reference.
 
 ---
 
@@ -77,7 +77,7 @@ Asks for confirmation (`yes`) before deleting anything. Skip this if you want to
 | Command            | Description                              |
 | ------------------ | ---------------------------------------- |
 | `pnpm run dev`     | Start Express + Vite dev server with HMR |
-| `pnpm run cleanup` | Remove demo boilerplate (new projects)   |
+| `pnpm run setup`   | Choose entrypoint count + remove demo boilerplate (new projects) |
 | `pnpm run build`   | Build frontend assets into `public/`     |
 | `pnpm run start`   | Start Express in production mode         |
 | `pnpm run lint`    | Lint via `vp lint`                       |

@@ -85,13 +85,13 @@ export default {
 
 ## Images / static assets
 
-Never `src="@website/..."`/`src="@cms/..."`, a relative `import`, or any other Vite-bundled reference for an image, font, or downloadable file — those live in `public/` and are served as-is by Express, not bundled. Reference them by absolute path from the app root:
+Never `src="@website/..."`/`src="@admin/..."`, a relative `import`, or any other Vite-bundled reference for an image, font, or downloadable file — those live in `public/` and are served as-is by Express, not bundled. Reference them by absolute path from the app root:
 
 ```html
 <img src="/img/logo.png" alt="Vulkano logo" />
 ```
 
-`/img/`, `/fonts/`, `/files/` — never `public/` in the path, never through an entrypoint alias (`@website`, `@cms`). See AGENTS.md § Frontend assets for namespacing and `.webp` optimization.
+`/img/`, `/fonts/`, `/files/` — never `public/` in the path, never through an entrypoint alias (`@website`, `@admin`). See AGENTS.md § Frontend assets for namespacing and `.webp` optimization.
 
 ## Routing
 

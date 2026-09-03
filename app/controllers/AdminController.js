@@ -2,9 +2,9 @@ module.exports = {
   get(req, res) {
     res.locals.seo = {
       ...res.locals.seo,
-      title: 'Vulkano App — CMS'
+      title: 'Vulkano App — Admin'
     };
 
-    res.render('cms/index.html');
+    res.render('admin/index.html');
   }
 };

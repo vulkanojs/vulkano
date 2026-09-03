@@ -9,11 +9,11 @@
 
     <meta name="robots" content="noindex, nofollow" />
 
-    {{ vite({ entry: 'cms', type: 'style' }) | safe }}
+    {{ vite({ entry: 'admin', type: 'style' }) | safe }}
   </head>
   <body>
     <div id="app">{% block content %}{% endblock %}</div>
 
-    {{ vite({ entry: 'cms', type: 'script' }) | safe }}
+    {{ vite({ entry: 'admin', type: 'script' }) | safe }}
   </body>
 </html>

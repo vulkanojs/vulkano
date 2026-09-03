@@ -18,7 +18,7 @@ Not for the form's validation-error JS pattern itself — see vulkano-frontend-f
 ## Images
 
 - Every `<img>` needs a descriptive `alt`. Purely decorative → `alt=""` (empty, never omitted).
-- `src` is an absolute path from `public/` (`/img/...`), never `@website/...`/`@cms/...` or a bundled import — see vulkano-frontend-component § Images / static assets.
+- `src` is an absolute path from `public/` (`/img/...`), never `@website/...`/`@admin/...` or a bundled import — see vulkano-frontend-component § Images / static assets.
 - Icon-only buttons/links need `aria-label` describing the action, not the icon: `aria-label="Close"`, not `aria-label="X icon"`.
 
 ## Navigation

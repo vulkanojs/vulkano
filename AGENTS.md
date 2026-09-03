@@ -64,7 +64,7 @@ Show the user the resulting row so they can correct it before proceeding. From t
 | Area (path/entry point)                 | SEO | Analytics | Accessibility |
 | --------------------------------------- | --- | --------- | ------------- |
 | `/` (`frontend/website/`) — public site | on  | on        | on            |
-| `/cms` (`frontend/cms/`) — admin panel  | off | off       | on            |
+| `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |
 
 A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
 

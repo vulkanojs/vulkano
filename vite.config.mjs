@@ -48,7 +48,7 @@ export default defineConfig({
       // overwrite default .html entry
       input: {
         app: 'frontend/website/app.js',
-        cms: 'frontend/cms/app.js'
+        admin: 'frontend/admin/app.js'
       },
       output: {
         chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
@@ -96,9 +96,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@frontend': path.resolve(__dirname, 'frontend') + '/',
       '@website': path.resolve(__dirname, 'frontend') + '/website/',
-      '@cms': path.resolve(__dirname, 'frontend') + '/cms/'
+      '@admin': path.resolve(__dirname, 'frontend') + '/admin/'
     }
   }
 });

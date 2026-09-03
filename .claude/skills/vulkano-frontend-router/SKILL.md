@@ -7,7 +7,7 @@ description: Use when adding a Vue Router route, an auth/login guard, or a route
 
 ## Overview
 
-`frontend/<entrypoint>?/routes.js` is a hand-written route array (Vue Router, HTML5 history mode) — flat `frontend/routes.js` with 1 entrypoint, one per subfolder once 2+ (`frontend/website/routes.js`, `frontend/cms/routes.js`), each with its own routes. No auto-discovery of `views/`. Auth state is never cached client-side — every route change re-fetches the current user from the backend.
+`frontend/<entrypoint>?/routes.js` is a hand-written route array (Vue Router, HTML5 history mode) — flat `frontend/routes.js` with 1 entrypoint, one per subfolder once 2+ (`frontend/website/routes.js`, `frontend/admin/routes.js`), each with its own routes. No auto-discovery of `views/`. Auth state is never cached client-side — every route change re-fetches the current user from the backend.
 
 ## When to use
 
@@ -116,7 +116,7 @@ module.exports = {
 
 Without it, every non-`/` client route 404s on hard refresh/direct URL while still working via in-app navigation — that split symptom (`<router-link>` works, refresh 404s) is the tell this is missing. Safe to keep last: convention API routes (`app/controllers/api/*`) register before `config/routes.js` entries, so `/*` never shadows an API route.
 
-### Multiple entry points (e.g. a separate `/admin` CMS)
+### Multiple entry points (e.g. a separate `/admin` area)
 
 Creating a brand-new entrypoint (a CMS/admin app, a custom landing, or any other split app separate from the public front) — the flat-vs-container folder migration, Vite/nodemon wiring, and the backend template/controller/catch-all scaffold — is covered by vulkano-frontend-entrypoint. Use it whenever the task is adding the entrypoint itself, not just a route inside one that already exists.
 
@@ -125,12 +125,14 @@ Once that entrypoint exists, each one still needs its **own** backend catch-all,
 ```js
 module.exports = {
   '/': 'HomeController.get',
-  '/admin/*': 'AdminController.get', // scoped catch-all for the CMS entry — must come before '/*'
+  '/admin/*': 'AdminController.get', // scoped catch-all for the admin entry — must come before '/*'
   '/*': 'HomeController.get' // public front catch-all — must stay last
 };
 ```
 
-`AdminController.get` renders the CMS entry's own `index.html`/template (its own `vite({ entry: 'admin' })` bundle, not the public front's `app` entry) — the two SPAs don't share a bundle just because they share the Express process.
+`AdminController.get` renders the admin entry's own `index.html`/template (its own `vite({ entry: 'admin' })` bundle, not the public front's `app` entry) — the two SPAs don't share a bundle just because they share the Express process.
+
+The scoped entrypoint's own `app.js` must pass the same prefix as the Vue Router base (`createWebHistory('/admin')`) — see vulkano-frontend-entrypoint § Router base path. Mismatch between the two is a common miss: the backend route serves the app fine, but every client-side route inside it fails to match because the router is still expecting `/`.
 
 ## Auth guard — never cache user client-side
 
