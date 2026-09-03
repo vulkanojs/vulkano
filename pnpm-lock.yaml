@@ -13,8 +13,8 @@ catalogs:
       specifier: ^6.0.8
       version: 6.0.8
     '@vulkano/core':
-      specifier: ^1.25.0
-      version: 1.25.0
+      specifier: ^1.30.1
+      version: 1.30.1
     concurrently:
       specifier: ^10.0.4
       version: 10.0.4
@@ -55,7 +55,7 @@ importers:
         version: 1.31.0(vue@3.5.40)
       '@vulkano/core':
         specifier: 'catalog:'
-        version: 1.25.0(chokidar@3.6.0)
+        version: 1.30.1(chokidar@3.6.0)
       concurrently:
         specifier: 'catalog:'
         version: 10.0.4
@@ -720,14 +720,14 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@redis/bloom@6.1.0':
-    resolution: {integrity: sha512-Rzascjd9J9bJsM45T/Z9CTg1QY/B63B6YO8QorLVMeXnbBDsKiSCVR/+GQ061hYPk8FpTzWmPY8tAv2sT+JEtQ==}
+  '@redis/bloom@6.2.1':
+    resolution: {integrity: sha512-huQgNLaCIZfQ9SeLn4q9124uOUd8HbZDYHwwUzNcRgHqCHiHKl2dDxMqJCeWh8cMqZAoWuHR8XnWbDMIf+o7ag==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
-      '@redis/client': ^6.1.0
+      '@redis/client': ^6.2.1
 
-  '@redis/client@6.1.0':
-    resolution: {integrity: sha512-7u1LefkezJF0HESlhO7ZFLEPfyY+NejP3SGv+Z4pGaT3oM5GVVLa0u3f4rDLUrcw+SRo8IlX9Y8JAONeDdg1Ag==}
+  '@redis/client@6.2.1':
+    resolution: {integrity: sha512-LzxBY7SIBvvJiyCgcaJZZakE3fJrZZ++i24+EDW9fKpCl68D35uJcKFpZZwCfOoG9WZTbyZlMzMeM0gtOAMU9Q==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
       '@node-rs/xxhash': ^1.1.0
@@ -738,23 +738,23 @@ packages:
       '@opentelemetry/api':
         optional: true
 
-  '@redis/json@6.1.0':
-    resolution: {integrity: sha512-/GFjQA6bu5pG9ClCJAI5Xx4bNXe7UTpxBBlIupBNTrn1+nY860apGnYJuaSCDV2BmEbTidpa7O2qa28oxKx+rg==}
+  '@redis/json@6.2.1':
+    resolution: {integrity: sha512-AFIUJ8Gj0DaaSBHYuSt8+O0oYWM+50OK1c0OmodB7XERIA8+BbyV3O4v76f9iccWasd1/7qjfZTpuzexUaZtrQ==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
-      '@redis/client': ^6.1.0
+      '@redis/client': ^6.2.1
 
-  '@redis/search@6.1.0':
-    resolution: {integrity: sha512-kS5agg+3yZbrdrt8omrew7FLCD8eOm7tarG1CROekPBRe+QGDR9aOpnHIQaYsYi6wPRTH70nQiF06AIjgURefQ==}
+  '@redis/search@6.2.1':
+    resolution: {integrity: sha512-2vfOAOyYFE7UUw3sBBlkqqruBtOUS4HRY5MtW4hp83llrwvtrTE4r22CEqXddlV+54zkLxBE4nmsIJ/dpezQrQ==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
-      '@redis/client': ^6.1.0
+      '@redis/client': ^6.2.1
 
-  '@redis/time-series@6.1.0':
-    resolution: {integrity: sha512-uIDBtV8MmG/xpJsRqbGSO4iX6ryj37MLMP82lRpFvI7ykAVe5GyqgxigEbU+uZNv9kDPNMKw3dvI/S/J1BNBzA==}
+  '@redis/time-series@6.2.1':
+    resolution: {integrity: sha512-kiYniph04dJOole+L359B6C9E+jYS2uDP7hca6Onj0xF38ZIpyxARO0Iq0W4ZRn1e8Q6vqW00QFZVSMRA/2Ijw==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
-      '@redis/client': ^6.1.0
+      '@redis/client': ^6.2.1
 
   '@rolldown/binding-android-arm64@1.0.2':
     resolution: {integrity: sha512-ZS4D1JPGn/MYQN/SYDWftIE/nVsM8j/AFOYEzAoOE2O3NktQOZru+/vYXGbR/qtdLdIfGCP0lcoJiYVzsEz+iQ==}
@@ -1130,8 +1130,8 @@ packages:
   '@vue/shared@3.5.40':
     resolution: {integrity: sha512-WxnBtruIqOoV3rA4jeKDWzrYI5h7Cp4+pjwDi8kWGHz+IslhiN+wguLVVhtv2l8VoU02rzDCVfDjgCl1lNpZVg==}
 
-  '@vulkano/core@1.25.0':
-    resolution: {integrity: sha512-yLQ5FiiFRMsZmFZ7NkV8Tg8zLmqNwJnmvv10GaT2STHNv5LXG7OFgaIGHTa/Bu8/e+FCxBQkEMUKvlzsMl5a1w==}
+  '@vulkano/core@1.30.1':
+    resolution: {integrity: sha512-/zx25BiJrr/yAL2iwhliVd9XCKXzmlldA3fbQY57eejDcK2yNCIsuWOz8iElSGsAZeAHdKhJduDrR7xPlN7V+w==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -1605,8 +1605,8 @@ packages:
   express-unless@2.1.3:
     resolution: {integrity: sha512-wj4tLMyCVYuIIKHGt0FhCtIViBcwzWejX0EjNxveAa6dG+0XBCQhMbx+PnkLkFCxLC69qoFrxds4pIyL88inaQ==}
 
-  express-useragent@2.2.1:
-    resolution: {integrity: sha512-NZxuTG3BkT9lkE50kMPmpGnat8TJF/2XPq4lX+ty+jNvk00G8hyJYDxeddW6vHZFlpB/u7njaiSYfu4fTXE4FQ==}
+  express-useragent@2.2.3:
+    resolution: {integrity: sha512-aFj6prpD69I5pmGIXt5rsSEP5RrFubgVMMsN4fz/rnpE2hMOiMaa3CBLLhGO4t8jLU/uWohInOmZe1drrOyoAw==}
     engines: {node: '>=18'}
 
   express@4.22.2:
@@ -1716,8 +1716,8 @@ packages:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
 
-  i18next@26.3.6:
-    resolution: {integrity: sha512-Bu5Z2nAXgfVyM8xvW3jk9EKRIuX37PudsrBViThNFx7CR7aaYTpP01cxNB/E4c4UUzTDiAZRstEhsRfPOL/8xA==}
+  i18next@26.4.1:
+    resolution: {integrity: sha512-9YbX5E6gd1H+yaOSX3izCsPj5iWXyH7X4oC+iuHHJJw8AeHglzOK5SJf+1CHxaYKYigcea+8jvzSxqYx46YvyA==}
     peerDependencies:
       typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
@@ -2039,8 +2039,8 @@ packages:
     resolution: {integrity: sha512-5+H3MSHNJCcr9M+lVplekrZ4/Dyn3N1dOpvgn9gMwvHJhunc4G8SQcBVd/btBQoVdspVNPjx8Pw03YWBv6uTJg==}
     engines: {node: '>=16.20.1'}
 
-  morgan@1.11.0:
-    resolution: {integrity: sha512-zSkVu3t18r39pw4ixfBKvfZi3y2UOqr7d4WYwcj3m8nXpEQK4rPO6GLzs/CExoRgmX3y9EjmmcXqv6jq0SK46g==}
+  morgan@1.12.0:
+    resolution: {integrity: sha512-OHpTRQwn2ezasILW8iKe+Yww1XsfWsZIpUOLF7RDb2g5GwO3trPaRwi7+8BDiJ7HFx2Kg2mfUdCBcVhwYlOz2g==}
     engines: {node: '>= 0.8.0'}
 
   mpath@0.8.4:
@@ -2068,8 +2068,8 @@ packages:
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
-  multer@2.2.0:
-    resolution: {integrity: sha512-6rdyFg2kLrMh9Jee7/BMPuV9lEAd7lLW2YUpF9/YxR7njyoUwwQ0ZPh3TaIY50Sw6vlyD2HW3wGOkTS4P79xrQ==}
+  multer@2.3.0:
+    resolution: {integrity: sha512-cjNbm3sttszgZeGfJR124D+jFEfkXCVAsoPBmFn9X7UxmDSFHWqE2CoEj0vrmSpuAFnqWR1Szcm9QTsiHr60Xw==}
     engines: {node: '>= 10.16.0'}
 
   nanoid@3.3.16:
@@ -2271,8 +2271,8 @@ packages:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
 
-  redis@6.1.0:
-    resolution: {integrity: sha512-0kvUPM8RHP/ZMa0xYaDTcG5e8tIGW6kz6MToVT0V8iOnk6bkXp2jncGRGe2bZEk41lZwiDspUqjZCSk5ohjcKw==}
+  redis@6.2.1:
+    resolution: {integrity: sha512-Z9VHtgYs48PiQC77X9O2Er8Hj4T+5BtFjT91/vi5Is1D04N72cA946ZslM1ImJw8ZctFBZWAVjM7S5wJNeHMpg==}
     engines: {node: '>= 20.0.0'}
 
   rolldown@1.0.2:
@@ -3145,25 +3145,25 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@redis/bloom@6.1.0(@redis/client@6.1.0)':
+  '@redis/bloom@6.2.1(@redis/client@6.2.1)':
     dependencies:
-      '@redis/client': 6.1.0
+      '@redis/client': 6.2.1
 
-  '@redis/client@6.1.0':
+  '@redis/client@6.2.1':
     dependencies:
       cluster-key-slot: 1.1.2
 
-  '@redis/json@6.1.0(@redis/client@6.1.0)':
+  '@redis/json@6.2.1(@redis/client@6.2.1)':
     dependencies:
-      '@redis/client': 6.1.0
+      '@redis/client': 6.2.1
 
-  '@redis/search@6.1.0(@redis/client@6.1.0)':
+  '@redis/search@6.2.1(@redis/client@6.2.1)':
     dependencies:
-      '@redis/client': 6.1.0
+      '@redis/client': 6.2.1
 
-  '@redis/time-series@6.1.0(@redis/client@6.1.0)':
+  '@redis/time-series@6.2.1(@redis/client@6.2.1)':
     dependencies:
-      '@redis/client': 6.1.0
+      '@redis/client': 6.2.1
 
   '@rolldown/binding-android-arm64@1.0.2':
     optional: true
@@ -3501,7 +3501,7 @@ snapshots:
 
   '@vue/shared@3.5.40': {}
 
-  '@vulkano/core@1.25.0(chokidar@3.6.0)':
+  '@vulkano/core@1.30.1(chokidar@3.6.0)':
     dependencies:
       '@socket.io/mongo-adapter': 0.4.0(socket.io-adapter@2.5.8)
       '@socket.io/redis-adapter': 8.3.0(socket.io-adapter@2.5.8)
@@ -3515,18 +3515,18 @@ snapshots:
       express-handlebars: 9.0.1
       express-jwt: 8.5.1
       express-session: 1.19.0
-      express-useragent: 2.2.1
+      express-useragent: 2.2.3
       frameguard: 4.0.0
       helmet: 8.3.0
-      i18next: 26.3.6
+      i18next: 26.4.1
       include-all: 4.0.3
       jwt-simple: 0.5.6
       mongoose: 8.24.2
       mongoose-paginate-v2: 1.9.5(mongoose@8.24.2)
-      morgan: 1.11.0
-      multer: 2.2.0
+      morgan: 1.12.0
+      multer: 2.3.0
       nunjucks: 3.2.4(chokidar@3.6.0)
-      redis: 6.1.0
+      redis: 6.2.1
       socket.io: 4.8.3
       socket.io-adapter: 2.5.8
       undici: 7.29.0
@@ -3942,7 +3942,7 @@ snapshots:
 
   express-unless@2.1.3: {}
 
-  express-useragent@2.2.1: {}
+  express-useragent@2.2.3: {}
 
   express@4.22.2:
     dependencies:
@@ -4085,7 +4085,7 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  i18next@26.3.6: {}
+  i18next@26.4.1: {}
 
   iconv-lite@0.4.24:
     dependencies:
@@ -4326,7 +4326,7 @@ snapshots:
       - socks
       - supports-color
 
-  morgan@1.11.0:
+  morgan@1.12.0:
     dependencies:
       basic-auth: 2.0.1
       debug: 2.6.9
@@ -4354,7 +4354,7 @@ snapshots:
 
   muggle-string@0.4.1: {}
 
-  multer@2.2.0:
+  multer@2.3.0:
     dependencies:
       append-field: 1.0.0
       busboy: 1.6.0
@@ -4565,13 +4565,13 @@ snapshots:
 
   readdirp@5.0.0: {}
 
-  redis@6.1.0:
+  redis@6.2.1:
     dependencies:
-      '@redis/bloom': 6.1.0(@redis/client@6.1.0)
-      '@redis/client': 6.1.0
-      '@redis/json': 6.1.0(@redis/client@6.1.0)
-      '@redis/search': 6.1.0(@redis/client@6.1.0)
-      '@redis/time-series': 6.1.0(@redis/client@6.1.0)
+      '@redis/bloom': 6.2.1(@redis/client@6.2.1)
+      '@redis/client': 6.2.1
+      '@redis/json': 6.2.1(@redis/client@6.2.1)
+      '@redis/search': 6.2.1(@redis/client@6.2.1)
+      '@redis/time-series': 6.2.1(@redis/client@6.2.1)
     transitivePeerDependencies:
       - '@node-rs/xxhash'
       - '@opentelemetry/api'
