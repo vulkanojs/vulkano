@@ -118,7 +118,21 @@ Without it, every non-`/` client route 404s on hard refresh/direct URL while sti
 
 ### Multiple entry points (e.g. a separate `/admin` CMS)
 
-Not in use in this project yet — documented here for when a second Vite entry (a CMS/admin app, separate from the public front) is added (see docs/FRONTEND.md § Vite entry points). Each entry point is its own SPA and needs its **own** catch-all, scoped to its path prefix, registered **before** the generic `/*` so the more specific pattern isn't shadowed by it:
+Documented here for when a second Vite entry (a CMS/admin app, OAuth UI, or any other split app, separate from the public front) is added (see docs/FRONTEND.md § Vite entry points, docs/ARCHITECTURE.md § Multiple entry points).
+
+**Folder placement — root-level, never nested under `client/`.** `client/` is the public front's own app only. Each new entry point gets its own top-level folder (e.g. `cms/`, `another/`), a sibling of `client/`, not `client/entries/<name>/`. Wire it into `vite.config.mjs`'s `build.rollupOptions.input` by that folder:
+
+```js
+input: {
+  app: 'client/app.js',
+  cms: 'cms/app.js',
+  another: 'another/app.js'
+}
+```
+
+Also add the new folder to `nodemon.json`'s `ignore` list, same as `client/` — it's frontend source, no backend restart needed on change.
+
+Then each entry point is its own SPA and needs its **own** backend catch-all, scoped to its path prefix, registered **before** the generic `/*` so the more specific pattern isn't shadowed by it:
 
 ```js
 module.exports = {
