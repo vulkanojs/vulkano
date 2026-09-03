@@ -21,11 +21,15 @@
  */
 
 module.exports = {
-  '/': 'HomeController.get'
+  '/': 'HomeController.get',
+  '/cms': 'CmsController.get'
 
-  // Catch-all for Vue Router (SPA) — must stay last so it never shadows
-  // /api/* convention routes, which @vulkano/core registers before
-  // config/routes.js entries. Without this, a hard refresh on any
-  // client-side route (e.g. /login, /forbidden) 404s at the server.
+  // Catch-alls for Vue Router (SPA) — each scoped one must come before
+  // the generic '/*' so it isn't shadowed, and all must stay last so
+  // they never shadow /api/* convention routes, which @vulkano/core
+  // registers before config/routes.js entries. Without these, a hard
+  // refresh on any client-side route 404s at the server. Uncomment
+  // once each area has more than one route:
+  // '/cms/*': 'CmsController.get',
   // '/*': 'HomeController.get',
 };
