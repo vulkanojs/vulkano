@@ -11,7 +11,7 @@ Runner is Vitest via `vp test`. Every new/changed controller, model, service, or
 
 ## When to use
 
-Any task that creates/edits `app/controllers/`, `app/models/`, `app/services/`, `app/config/middlewares/`, `app/config/sockets/`, or `frontend/store/` code — after writing the code, write/update its test before considering the task done.
+Any task that creates/edits `app/controllers/`, `app/models/`, `app/services/`, `app/config/middlewares/`, `app/config/sockets/`, or `frontend/<entrypoint>?/store/` code — after writing the code, write/update its test before considering the task done.
 
 ## Before running anything — `TEST_MONGO_URI`
 
@@ -61,7 +61,7 @@ Never `test/cms/` as a root-level sibling — that only made sense before the co
 | Middleware      | `test/app/middlewares/*.test.js`                                                                   | Unit-test with mock `req`/`res`/`next` for pure logic, OR verify end-to-end through a controller/HTTP test                                                                                                                  |
 | Integration     | `test/app/integration/*.test.js`                                                                   | Full business flow across models (signup → login → protected route); factory helpers from `test/helpers/`; clear every touched collection in dependency order                                                               |
 | Script          | `test/<script>.test.js`                                                                            | Plain unit tests, no boot/DB — still gated by `TEST_MONGO_URI` (shared `setupFiles`)                                                                                                                                        |
-| Frontend store  | `test/frontend/store/*.test.js` (or `test/frontend/<entrypoint>/store/*.test.js` once multi-entry) | No app boot/DB; `createPinia()` + `setActivePinia()` in `beforeEach`; inject a mock `$api` — never hit real network; shim browser globals or mark `// @vitest-environment jsdom` if a real DOM is needed                    |
+| Frontend store  | `test/frontend/<entrypoint>?/store/*.test.js` | No app boot/DB; `createPinia()` + `setActivePinia()` in `beforeEach`; inject a mock `$api` — never hit real network; shim browser globals or mark `// @vitest-environment jsdom` if a real DOM is needed                    |
 
 Mock outbound external calls (`ApiClient`, third-party APIs) with `vi.spyOn(...).mockResolvedValue(...)`, restored in `afterEach` — never hit a real third-party endpoint from a test.
 

@@ -7,11 +7,11 @@ description: Use when creating, editing, or reviewing a Vue component or view in
 
 ## Overview
 
-`frontend/` is a Vue 3 SPA (Composition API) bundled by Vite. Every component/view splits template, logic, and styles into sibling files — never a single-file `<script setup>` block with inline everything.
+`frontend/<entrypoint>?/` (flat `frontend/` with 1 entrypoint, one subfolder per app once 2+ — see vulkano-frontend-entrypoint) is a Vue 3 SPA (Composition API) bundled by Vite. Every component/view splits template, logic, and styles into sibling files — never a single-file `<script setup>` block with inline everything.
 
 ## When to use
 
-- New view/component needed under `frontend/views/` or `frontend/components/`
+- New view/component needed under `frontend/<entrypoint>?/views/` or `frontend/<entrypoint>?/components/`
 - Adding/editing a Pinia store
 - Wiring a new route
 - Styling a component/view (BEM, grid)
@@ -26,7 +26,7 @@ Not for form validation UI — see vulkano-frontend-form. Not for route/auth-gua
 
 ## File & naming
 
-**Component** (`frontend/components/<Name>/`):
+**Component** (`frontend/<entrypoint>?/components/<Name>/`):
 
 ```
 components/
@@ -37,7 +37,7 @@ components/
     _index.scss             # styles (BEM)
 ```
 
-**View** (`frontend/views/<Path>/`) — leaf file always `Index.vue`/`Index.js`, folder name identifies the view:
+**View** (`frontend/<entrypoint>?/views/<Path>/`) — leaf file always `Index.vue`/`Index.js`, folder name identifies the view:
 
 ```
 views/
@@ -116,7 +116,7 @@ Exception: app-shell-wide singleton state (loading spinner, socket status, sideb
 
 ## Layout — CSS Grid only
 
-`display: grid` everywhere in `_index.scss`, never Flexbox. Use the responsive grid system (`frontend/scss/_grid.scss`): `.row` (`grid-template-columns: repeat(12, 1fr)`) + `.column.small-N.medium-N.large-N`.
+`display: grid` everywhere in `_index.scss`, never Flexbox. Use the responsive grid system (`frontend/<entrypoint>?/scss/_grid.scss`): `.row` (`grid-template-columns: repeat(12, 1fr)`) + `.column.small-N.medium-N.large-N`.
 
 ## Styling — BEM
 

@@ -103,6 +103,7 @@ Every new entrypoint is a new "area" per AGENTS.md § Project requirements. Befo
 
 ## After writing
 
+- Confirm `vite.config.mjs` `resolve.alias` has an entry for the new entrypoint (`@<name>` → `frontend/<name>/`) — missing this doesn't break the build, it just leaves the new app without its own alias.
 - Run `pnpm run build` (or `vp build`) and confirm the new entry appears in `public/.vite/manifest.<env>.json`.
 - Hit the new area's path in a browser; confirm a hard refresh doesn't 404 (catch-all working, not just in-app navigation).
 - Run `vp check` and `vp test`.
