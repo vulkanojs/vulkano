@@ -10,8 +10,8 @@ const CLEANUP_TARGETS = [
   'app/controllers/api',
   'app/models/Example.js',
   'app/models/ExampleWithScaffold.js',
-  'client/components/HelloWorld',
-  'client/views/Demo',
+  'frontend/website/components/HelloWorld',
+  'frontend/website/views/Demo',
   'app/views/demo'
 ];
 
@@ -21,7 +21,7 @@ function stripHelloWorldTemplate(source) {
 
 function stripHelloWorldScript(source) {
   return source
-    .replace("import HelloWorld from '@client/components/HelloWorld/HelloWorld.vue';\n\n", '')
+    .replace("import HelloWorld from '../../components/HelloWorld/HelloWorld.vue';\n\n", '')
     .replace('\n\n    HelloWorld\n\n  },', '\n\n  },');
 }
 
@@ -52,13 +52,13 @@ async function run() {
     console.log(`Removed ${target}`);
   }
 
-  const homeVuePath = path.join(ROOT, 'client/views/Home/Index.vue');
-  const homeJsPath = path.join(ROOT, 'client/views/Home/Index.js');
+  const homeVuePath = path.join(ROOT, 'frontend/website/views/Home/Index.vue');
+  const homeJsPath = path.join(ROOT, 'frontend/website/views/Home/Index.js');
 
   fs.writeFileSync(homeVuePath, stripHelloWorldTemplate(fs.readFileSync(homeVuePath, 'utf8')));
   fs.writeFileSync(homeJsPath, stripHelloWorldScript(fs.readFileSync(homeJsPath, 'utf8')));
 
-  console.log('Cleanup complete. client/views/Home no longer references HelloWorld.');
+  console.log('Cleanup complete. frontend/website/views/Home no longer references HelloWorld.');
 }
 
 if (require.main === module) {

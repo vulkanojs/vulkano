@@ -16,7 +16,7 @@ Vulkano resolves routes by convention: URL segments map to `/:resource/:method?/
 - New or edited socket event handler
 - Editing an existing controller's method or route
 
-Not for pure `client/` frontend work — see FRONTEND.md instead.
+Not for pure `frontend/` frontend work — see FRONTEND.md instead.
 
 ## Before implementing
 
@@ -107,13 +107,13 @@ module.exports = {
   get(req, res) {
     const types = DIRECTION_TYPES[req.query.direction] || ['reception', 'supply'];
     res.vsr(Movement.getKardexPage({ ...req.query, types }));
-  },
+  }
   // ...
 };
 
 // Example: RIGHT — app/models/Movement.js
 module.exports = {
-  DIRECTION_TYPES: { incoming: ['reception'], outcoming: ['supply'] },
+  DIRECTION_TYPES: { incoming: ['reception'], outcoming: ['supply'] }
   // ...
 };
 // app/controllers/api/MovementsController.js
@@ -121,10 +121,11 @@ module.exports = {
   get(req, res) {
     const types = Movement.DIRECTION_TYPES[req.query.direction] || ['reception', 'supply'];
     res.vsr(Movement.getKardexPage({ ...req.query, types }));
-  },
+  }
   // ...
 };
 ```
+
 - Full CRUD API shortcut — scaffold:
 
 ```js

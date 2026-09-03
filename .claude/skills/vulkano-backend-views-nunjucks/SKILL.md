@@ -7,7 +7,7 @@ description: Use when creating or editing a server-rendered backend view, layout
 
 ## Overview
 
-Backend views (`app/views/*.html`) are server-rendered templates — the crawlable surface for public pages (see SEO.md). A controller renders one via `res.render('folder/file.html', { ...locals })`. This is separate from the Vue SPA (`client/`), which is client-rendered and not SEO-covered.
+Backend views (`app/views/*.html`) are server-rendered templates — the crawlable surface for public pages (see SEO.md). A controller renders one via `res.render('folder/file.html', { ...locals })`. This is separate from the Vue SPA (`frontend/`), which is client-rendered and not SEO-covered.
 
 **Engine: check `app/config/views.js` first.** No file present, or `engine: 'nunjucks'`, means Nunjucks — this skill applies. If it sets `engine: 'handlebars'`, use the vulkano-backend-views-handlebars skill instead.
 
@@ -19,7 +19,7 @@ Backend views (`app/views/*.html`) are server-rendered templates — the crawlab
 - Passing a translated string into a view
 - Formatting a date, number, or currency value for display
 
-Not for Vue components/views (`client/views/`) — see FRONTEND.md. Not for the controller that renders it — see vulkano-backend-controller skill.
+Not for Vue components/views (`frontend/<entrypoint>?/views/` — flat `frontend/views/` with 1 entrypoint, `frontend/website/views/` etc. once 2+) — see FRONTEND.md. Not for the controller that renders it — see vulkano-backend-controller skill.
 
 ## Before implementing
 

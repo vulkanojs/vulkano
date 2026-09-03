@@ -11,7 +11,7 @@ Runner is Vitest via `vp test`. Every new/changed controller, model, service, or
 
 ## When to use
 
-Any task that creates/edits `app/controllers/`, `app/models/`, `app/services/`, `app/config/middlewares/`, `app/config/sockets/`, or `client/store/` code — after writing the code, write/update its test before considering the task done.
+Any task that creates/edits `app/controllers/`, `app/models/`, `app/services/`, `app/config/middlewares/`, `app/config/sockets/`, or `frontend/store/` code — after writing the code, write/update its test before considering the task done.
 
 ## Before running anything — `TEST_MONGO_URI`
 
@@ -31,24 +31,37 @@ test/
     middlewares/<Name>.test.js
     integration/<Flow>.test.js
   <script>.test.js            standalone scripts/*.js not under app/
-  client/
-    store/<name>.test.js
+  frontend/
+    store/<name>.test.js       # only while frontend/ is flat (1 entrypoint)
     integration/<Flow>.test.js
 ```
 
-Add `test/cms/` (mirroring a `cms/` entry point) only once that entry point exists.
+Mirrors `frontend/`'s own threshold rule (see vulkano-frontend-entrypoint). Once a 2nd entrypoint exists and `frontend/` becomes a container, tests move under it the same way:
+
+```
+test/
+  frontend/
+    website/
+      store/<name>.test.js
+      integration/<Flow>.test.js
+    cms/
+      store/<name>.test.js
+      integration/<Flow>.test.js
+```
+
+Never `test/cms/` as a root-level sibling — that only made sense before the container convention existed.
 
 ## Patterns by test type
 
-| Type            | Path                                  | Pattern                                                                                                                                                                                                                     |
-| --------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Model           | `test/app/models/*.test.js`           | `beforeAll(() => waitForReady())`, `afterEach(() => dbCleanup.clearCollections('Name'))`, assert business rules directly (`.rejects.toThrow(...)` for invalid input)                                                        |
-| Controller/HTTP | `test/app/controllers/*.http.test.js` | Same setup; hit the real running app with native `fetch` against `http://localhost:${process.env.PORT}` — no `supertest`. API: assert `res.vsr()` envelope `{ success, statusCode, data }`. View: assert rendered HTML body |
-| Service         | `test/app/services/*.test.js`         | Same boot/mock pattern, call the function directly (no HTTP)                                                                                                                                                                |
-| Middleware      | `test/app/middlewares/*.test.js`      | Unit-test with mock `req`/`res`/`next` for pure logic, OR verify end-to-end through a controller/HTTP test                                                                                                                  |
-| Integration     | `test/app/integration/*.test.js`      | Full business flow across models (signup → login → protected route); factory helpers from `test/helpers/`; clear every touched collection in dependency order                                                               |
-| Script          | `test/<script>.test.js`               | Plain unit tests, no boot/DB — still gated by `TEST_MONGO_URI` (shared `setupFiles`)                                                                                                                                        |
-| Frontend store  | `test/client/store/*.test.js`         | No app boot/DB; `createPinia()` + `setActivePinia()` in `beforeEach`; inject a mock `$api` — never hit real network; shim browser globals or mark `// @vitest-environment jsdom` if a real DOM is needed                    |
+| Type            | Path                                                                                               | Pattern                                                                                                                                                                                                                     |
+| --------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Model           | `test/app/models/*.test.js`                                                                        | `beforeAll(() => waitForReady())`, `afterEach(() => dbCleanup.clearCollections('Name'))`, assert business rules directly (`.rejects.toThrow(...)` for invalid input)                                                        |
+| Controller/HTTP | `test/app/controllers/*.http.test.js`                                                              | Same setup; hit the real running app with native `fetch` against `http://localhost:${process.env.PORT}` — no `supertest`. API: assert `res.vsr()` envelope `{ success, statusCode, data }`. View: assert rendered HTML body |
+| Service         | `test/app/services/*.test.js`                                                                      | Same boot/mock pattern, call the function directly (no HTTP)                                                                                                                                                                |
+| Middleware      | `test/app/middlewares/*.test.js`                                                                   | Unit-test with mock `req`/`res`/`next` for pure logic, OR verify end-to-end through a controller/HTTP test                                                                                                                  |
+| Integration     | `test/app/integration/*.test.js`                                                                   | Full business flow across models (signup → login → protected route); factory helpers from `test/helpers/`; clear every touched collection in dependency order                                                               |
+| Script          | `test/<script>.test.js`                                                                            | Plain unit tests, no boot/DB — still gated by `TEST_MONGO_URI` (shared `setupFiles`)                                                                                                                                        |
+| Frontend store  | `test/frontend/store/*.test.js` (or `test/frontend/<entrypoint>/store/*.test.js` once multi-entry) | No app boot/DB; `createPinia()` + `setActivePinia()` in `beforeEach`; inject a mock `$api` — never hit real network; shim browser globals or mark `// @vitest-environment jsdom` if a real DOM is needed                    |
 
 Mock outbound external calls (`ApiClient`, third-party APIs) with `vi.spyOn(...).mockResolvedValue(...)`, restored in `afterEach` — never hit a real third-party endpoint from a test.
 

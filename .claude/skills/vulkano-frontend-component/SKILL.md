@@ -1,17 +1,17 @@
 ---
 name: vulkano-frontend-component
-description: Use when creating, editing, or reviewing a Vue component or view in this Vulkano framework project's client/ folder — .vue/.js/.scss file splitting, Composition API, views/ vs components/ placement, route↔view naming, Pinia store per concern, BEM styling, and CSS Grid layout.
+description: Use when creating, editing, or reviewing a Vue component or view in this Vulkano framework project's frontend/ folder — .vue/.js/.scss file splitting, Composition API, views/ vs components/ placement, route↔view naming, Pinia store per concern, BEM styling, and CSS Grid layout.
 ---
 
 # Frontend Component
 
 ## Overview
 
-`client/` is a Vue 3 SPA (Composition API) bundled by Vite. Every component/view splits template, logic, and styles into sibling files — never a single-file `<script setup>` block with inline everything.
+`frontend/` is a Vue 3 SPA (Composition API) bundled by Vite. Every component/view splits template, logic, and styles into sibling files — never a single-file `<script setup>` block with inline everything.
 
 ## When to use
 
-- New view/component needed under `client/views/` or `client/components/`
+- New view/component needed under `frontend/views/` or `frontend/components/`
 - Adding/editing a Pinia store
 - Wiring a new route
 - Styling a component/view (BEM, grid)
@@ -26,7 +26,7 @@ Not for form validation UI — see vulkano-frontend-form. Not for route/auth-gua
 
 ## File & naming
 
-**Component** (`client/components/<Name>/`):
+**Component** (`frontend/components/<Name>/`):
 
 ```
 components/
@@ -37,7 +37,7 @@ components/
     _index.scss             # styles (BEM)
 ```
 
-**View** (`client/views/<Path>/`) — leaf file always `Index.vue`/`Index.js`, folder name identifies the view:
+**View** (`frontend/views/<Path>/`) — leaf file always `Index.vue`/`Index.js`, folder name identifies the view:
 
 ```
 views/
@@ -83,6 +83,16 @@ export default {
 
 `$api` is a global property (`app.config.globalProperties.$api`), not an importable module — always pull it off `getCurrentInstance().proxy`.
 
+## Images / static assets
+
+Never `src="@website/..."`/`src="@cms/..."`, a relative `import`, or any other Vite-bundled reference for an image, font, or downloadable file — those live in `public/` and are served as-is by Express, not bundled. Reference them by absolute path from the app root:
+
+```html
+<img src="/img/logo.png" alt="Vulkano logo" />
+```
+
+`/img/`, `/fonts/`, `/files/` — never `public/` in the path, never through an entrypoint alias (`@website`, `@cms`). See AGENTS.md § Frontend assets for namespacing and `.webp` optimization.
+
 ## Routing
 
 See vulkano-frontend-router for route wiring and the backend catch-all requirement.
@@ -106,7 +116,7 @@ Exception: app-shell-wide singleton state (loading spinner, socket status, sideb
 
 ## Layout — CSS Grid only
 
-`display: grid` everywhere in `_index.scss`, never Flexbox. Use the responsive grid system (`client/scss/_grid.scss`): `.row` (`grid-template-columns: repeat(12, 1fr)`) + `.column.small-N.medium-N.large-N`.
+`display: grid` everywhere in `_index.scss`, never Flexbox. Use the responsive grid system (`frontend/scss/_grid.scss`): `.row` (`grid-template-columns: repeat(12, 1fr)`) + `.column.small-N.medium-N.large-N`.
 
 ## Styling — BEM
 

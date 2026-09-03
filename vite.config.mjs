@@ -47,7 +47,8 @@ export default defineConfig({
     rollupOptions: {
       // overwrite default .html entry
       input: {
-        app: 'client/app.js'
+        app: 'frontend/website/app.js',
+        cms: 'frontend/cms/app.js'
       },
       output: {
         chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
@@ -95,7 +96,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@client': path.resolve(__dirname, 'client') + '/'
+      '@frontend': path.resolve(__dirname, 'frontend') + '/',
+      '@website': path.resolve(__dirname, 'frontend') + '/website/',
+      '@cms': path.resolve(__dirname, 'frontend') + '/cms/'
     }
   }
 });

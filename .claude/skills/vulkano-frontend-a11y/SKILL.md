@@ -1,6 +1,6 @@
 ---
 name: vulkano-frontend-a11y
-description: Use when adding or reviewing images, navigation, forms, or other interactive elements in this Vulkano framework project's client/ — alt text, aria-label/aria-expanded/aria-current, form label/aria-invalid/aria-describedby wiring, focus-visible, and contrast rules.
+description: Use when adding or reviewing images, navigation, forms, or other interactive elements in this Vulkano framework project's frontend/ — alt text, aria-label/aria-expanded/aria-current, form label/aria-invalid/aria-describedby wiring, focus-visible, and contrast rules.
 ---
 
 # Frontend Accessibility
@@ -11,13 +11,14 @@ Every project meets these minimums unless the user explicitly opted out for that
 
 ## When to use
 
-Any `client/` change involving `<img>`, `<nav>`, dropdowns/togglers, `<form>` inputs, or custom interactive elements.
+Any `frontend/` change involving `<img>`, `<nav>`, dropdowns/togglers, `<form>` inputs, or custom interactive elements.
 
 Not for the form's validation-error JS pattern itself — see vulkano-frontend-form, apply both together.
 
 ## Images
 
 - Every `<img>` needs a descriptive `alt`. Purely decorative → `alt=""` (empty, never omitted).
+- `src` is an absolute path from `public/` (`/img/...`), never `@website/...`/`@cms/...` or a bundled import — see vulkano-frontend-component § Images / static assets.
 - Icon-only buttons/links need `aria-label` describing the action, not the icon: `aria-label="Close"`, not `aria-label="X icon"`.
 
 ## Navigation

@@ -1,6 +1,6 @@
 # Frontend
 
-Frontend conventions for the Vulkano Framework (`client/`, Vue 3 + Vite). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules.
+Frontend conventions for the Vulkano Framework (`frontend/`, Vue 3 + Vite). See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../AGENTS.md) for workflow/safety rules.
 
 **Component/view layout, routing, forms, analytics, and accessibility are now covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
 
@@ -12,21 +12,21 @@ Frontend conventions for the Vulkano Framework (`client/`, Vue 3 + Vite). See [A
 
 This file keeps only what those skills don't cover: the entry point, `$api` usage, state (Pinia), and Vite config.
 
-The `client/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
+The `frontend/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`.
 
 Prefer the **Composition API** (`setup()`, `ref`/`reactive`, composables) over the Options API for new and edited components — do not add new `data()`/`methods`/`created()`-style options blocks.
 
-## Entry point — `client/app.js`
+## Entry point — `frontend/website/app.js`
 
 ```js
 import { createApp } from 'vue';
 import { createWebHistory } from 'vue-router';
 
-import '@client/style.scss';
+import '@website/style.scss';
 
-import createRouter from '@client/routes';
-import App from '@client/App.vue';
-import Api from '@client/Api';
+import createRouter from '@website/routes';
+import App from '@website/App.vue';
+import Api from '@website/Api';
 
 const router = createRouter(createWebHistory());
 
@@ -38,7 +38,7 @@ app.use(router).mount('#app');
 
 ## Routing — adding routes, view naming, SPA catch-all
 
-Covered by `.claude/skills/vulkano-frontend-router/SKILL.md`: `client/routes.js` wiring, route↔view naming (`Index.vue` for plain/nested routes, `Form.vue` for resource create+edit), and the `app/config/routes.js` catch-all(s) (including multi-entry-point `/admin*` setups). Example kept below for the catch-all's HTML5-history rationale:
+Covered by `.claude/skills/vulkano-frontend-router/SKILL.md`: `frontend/website/routes.js` wiring, route↔view naming (`Index.vue` for plain/nested routes, `Form.vue` for resource create+edit), and the `app/config/routes.js` catch-all(s) (including multi-entry-point `/admin*` setups). Example kept below for the catch-all's HTML5-history rationale:
 
 Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
 
@@ -53,7 +53,7 @@ Safe because `@vulkano/core` registers convention routes (`app/controllers/api/*
 
 ## Calling the API from a component
 
-`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from '@client/Api'` directly in components:
+`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from './Api'` directly in components:
 
 ```js
 // MyComponent.js
@@ -81,13 +81,13 @@ export default {
 };
 ```
 
-`client/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
+`frontend/website/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
 ## Component/view file layout, CSS Grid, BEM
 
-Covered by `.claude/skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `client/components/` vs `client/views/` aggregator convention, CSS Grid layout (no Flexbox), BEM naming.
+Covered by `.claude/skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `frontend/website/components/` vs `frontend/website/views/` aggregator convention, CSS Grid layout (no Flexbox), BEM naming.
 
-## State — `client/store/`
+## State — `frontend/website/store/`
 
 Split state into one [Pinia](https://pinia.vuejs.org/) store per concern — not one global store. If a payload carries data for multiple entities (e.g. an event, its attendee, and a campaign), split it into independent stores rather than one combined store:
 
@@ -121,7 +121,7 @@ export const useEventStore = defineStore('event', () => {
 
 Naming: `use<Entity>Store` (singular, matching the model naming convention), file per store, no aggregator/barrel file — import each store directly where it's used.
 
-Pinia is installed by default (`app.use(createPinia())` already registered in `client/app.js`) — just create the store file.
+Pinia is installed by default (`app.use(createPinia())` already registered in `frontend/app.js`) — just create the store file.
 
 ### Global app-shell state — `useAppStore`
 
@@ -150,11 +150,11 @@ export const useAppStore = defineStore('app', () => {
 
 **Testing** — each store gets its own test file (e.g. `test/store/useEventStore.test.js`), independent of other stores' tests. Because stores are split by concern, tests can exercise one store's actions/getters in isolation, with `createPinia()` + `setActivePinia()` in `beforeEach`, without needing to set up unrelated entity state. Mock `$api` calls at the store boundary rather than hitting the real API.
 
-## Responsive grid system — `client/scss/_grid.scss`
+## Responsive grid system — `frontend/website/scss/_grid.scss`
 
 Extends the CSS Grid rule in `.claude/skills/vulkano-frontend-component/SKILL.md` with the project's Foundation-style column system:
 
-Foundation-style responsive grid, built on CSS Grid, imported once in `client/style.scss`:
+Foundation-style responsive grid, built on CSS Grid, imported once in `frontend/website/style.scss`:
 
 ```html
 <div class="row">
@@ -189,11 +189,11 @@ Foundation-style responsive grid, built on CSS Grid, imported once in `client/st
 
 ## Vite (`vite.config.mjs`)
 
-- **Entry points**: `rollupOptions.input` (an object) currently maps a single key, `app: 'client/app.js'`. Vite supports multiple entries — each additional key builds its own bundle (e.g. a future CMS app in its own top-level folder, mirroring `client/`'s structure). The Nunjucks `vite()` helper already takes an `entry` param (`vite({ entry: 'app', type: 'script' })`), so wiring a new bundle into a template only needs the matching `entry:` value — no other config changes. Not in use yet — there's currently only one entry (`app`)
+- **Entry points**: `rollupOptions.input` (an object) currently maps a single key, `app: 'frontend/website/app.js'` — one entrypoint, `frontend/` kept flat (no subfolder). Adding a second entrypoint (CMS, a custom landing, etc.) is the trigger to restructure `frontend/` into a container: the existing app moves to `frontend/website/`, each new one gets its own `frontend/<name>/` (e.g. `frontend/cms/`), and `rollupOptions.input` gains one key per app (`{ app: 'frontend/website/app.js', cms: 'frontend/cms/app.js' }`) — see docs/ARCHITECTURE.md § Multiple entry points and `.claude/skills/vulkano-frontend-router/SKILL.md`. The Nunjucks `vite()` helper already takes an `entry` param (`vite({ entry: 'app', type: 'script' })`), so wiring a new bundle into a template only needs the matching `entry:` value — no other config changes.
 - **Output**: assets land in `public/js/`, `public/css/`, `public/img/` — served directly by Express (`outDir: public/`, `emptyOutDir: false` so backend-served files aren't wiped)
 - **Dev server**: runs alongside Express (`vp dev` + `nodemon`, via `concurrently`) with HMR (Hot Module Replacement) — edited modules are swapped in the running app over the existing socket connection, so a full page reload isn't needed; CORS is open (`origin: '*'`) so the two servers talk freely; `host: process.env.VITE_HOST || true` binds all interfaces by default so it prints a LAN URL too (`Network: http://<your-ip>:5173/`) — useful for testing from a phone on the same network. Set `VITE_HOST` in `.env` only if you need to force a specific host (e.g. a fixed IP/hostname); leave it unset for the auto-detected default
-- **Alias**: `@client` → `client/`
+- **Alias**: `@website` → `frontend/website/`
 - **Manifest**: `vite-plugin-dev-manifest` writes `public/.vite/manifest.<NODE_ENV>.json`, which the Nunjucks templates read to inject the correct `<script>`/`<link>` tags in dev and production
 - **Cache hashing**: controlled by `VITE_CHUNK_NAMES` — `true` adds `-[hash]` to output filenames, `false` (default) keeps plain names for simpler debugging
 
-For complex apps, keep state in [Pinia](https://pinia.vuejs.org/) (see [State — `client/store/`](#state--clientstore)) rather than local component `ref`/`reactive`. Component-local state resets whenever HMR can't hot-swap a module in place and falls back to a full reload; state that lives in a store is less likely to be lost across that reload.
+For complex apps, keep state in [Pinia](https://pinia.vuejs.org/) (see [State — `frontend/website/store/`](#state--frontendwebsitesore)) rather than local component `ref`/`reactive`. Component-local state resets whenever HMR can't hot-swap a module in place and falls back to a full reload; state that lives in a store is less likely to be lost across that reload.

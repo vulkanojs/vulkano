@@ -1,14 +1,14 @@
 # Architecture
 
-Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.md) for backend (`app/`) conventions, [FRONTEND.md](FRONTEND.md) for frontend (`client/`) conventions, and [SEO.md](SEO.md) for the SEO convention referenced in [Multiple entry points](#multiple-entry-points--front--cms-or-any-other-split-app) below. See [../AGENTS.md](../AGENTS.md) for workflow, safety, and security rules. See [ANALYTICS.md](ANALYTICS.md) for the tracking convention and [ACCESSIBILITY.md](ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work.
+Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.md) for backend (`app/`) conventions, [FRONTEND.md](FRONTEND.md) for frontend (`frontend/`) conventions, and [SEO.md](SEO.md) for the SEO convention referenced in [Multiple entry points](#multiple-entry-points--front--cms-or-any-other-split-app) below. See [../AGENTS.md](../AGENTS.md) for workflow, safety, and security rules. See [ANALYTICS.md](ANALYTICS.md) for the tracking convention and [ACCESSIBILITY.md](ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work.
 
 ## Project structure
 
 ```
 framework/
 ├── app.js                  # Entry point — calls vulkano()
-├── vite.config.mjs         # Vite config (entry points: client/ — add more per § Multiple entry points below)
-├── nodemon.json            # Nodemon watches app/ only (ignores public/, client/, docs/, test, scripts, inbox)
+├── vite.config.mjs         # Vite config (2 entry points by default: frontend/website/, frontend/cms/ — see § Multiple entry points)
+├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, docs/, test, scripts, inbox)
 │
 ├── app/                    # Backend
 │   ├── config/
@@ -23,33 +23,38 @@ framework/
 │   ├── services/           # Shared libs (auto-loaded as globals)
 │   └── views/              # Nunjucks/Handlebars layouts
 │
-├── client/                 # Vue 3 main app
-│   ├── app.js              # Vue entry — mounts App.vue, registers $api global
-│   ├── App.vue
-│   ├── routes.js           # Vue Router routes
-│   ├── Api.js              # Native fetch wrapper (replaces axios)
-│   ├── style.scss          # Single style entry point — chains components/views/layouts index
-│   ├── components/
-│   │   ├── _index.scss     # Aggregator — imports every component's own _index.scss
-│   │   └── MyComponent/
-│   │       ├── MyComponent.vue
-│   │       ├── MyComponent.js
-│   │       └── _index.scss
-│   ├── layouts/
-│   │   ├── _index.scss     # Aggregator — imports every layout's own _index.scss
-│   │   └── Layout.vue / Layout.js
-│   └── views/
-│       ├── _index.scss     # Aggregator — imports every view's own _index.scss (or module's)
-│       ├── MyView/          # /my-view → views/MyView/Index.*
-│       │   ├── Index.vue
-│       │   ├── Index.js
-│       │   └── _index.scss
-│       └── MyModule/        # /my-module/my-view → views/MyModule/MyView/Index.*
-│           ├── _index.scss  # Aggregator — imports every child view's _index.scss
-│           └── MyView/
-│               ├── Index.vue
-│               ├── Index.js
-│               └── _index.scss
+├── frontend/                # Vue 3 apps — ships with 2 entrypoints by default (below); collapse to 1
+│   │                        # flat app with `pnpm run cleanup:entrypoints` if multi-entry isn't needed
+│   ├── website/             # Public front — see § Multiple entry points
+│   │   ├── app.js           # Vue entry — mounts App.vue, registers $api global
+│   │   ├── App.vue
+│   │   ├── routes.js        # Vue Router routes
+│   │   ├── Api.js           # Native fetch wrapper (replaces axios)
+│   │   ├── style.scss       # Single style entry point — chains components/views/layouts index
+│   │   ├── components/
+│   │   │   ├── _index.scss  # Aggregator — imports every component's own _index.scss
+│   │   │   └── MyComponent/
+│   │   │       ├── MyComponent.vue
+│   │   │       ├── MyComponent.js
+│   │   │       └── _index.scss
+│   │   ├── layouts/
+│   │   │   ├── _index.scss  # Aggregator — imports every layout's own _index.scss
+│   │   │   └── Layout.vue / Layout.js
+│   │   └── views/
+│   │       ├── _index.scss  # Aggregator — imports every view's own _index.scss (or module's)
+│   │       ├── MyView/       # /my-view → views/MyView/Index.*
+│   │       │   ├── Index.vue
+│   │       │   ├── Index.js
+│   │       │   └── _index.scss
+│   │       └── MyModule/     # /my-module/my-view → views/MyModule/MyView/Index.*
+│   │           ├── _index.scss # Aggregator — imports every child view's _index.scss
+│   │           └── MyView/
+│   │               ├── Index.vue
+│   │               ├── Index.js
+│   │               └── _index.scss
+│   │
+│   └── cms/                 # Admin panel — same shape as website/, minimal by default
+│       └── ...
 │
 └── public/                 # Built assets (output of vite build)
     ├── js/
@@ -62,26 +67,40 @@ framework/
 
 ## Multiple entry points — front + CMS (or any other split app)
 
-A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form) and a CMS/admin panel — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project.
+A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form), a CMS/admin panel, a one-off landing — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project. `.claude/skills/vulkano-frontend-entrypoint/SKILL.md` covers the full scaffold checklist for creating a new one — the summary below is the rationale/reference, that skill is the actionable one.
+
+**This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/cms/` minimal admin panel) so both shapes are demonstrated out of the box. If a project only needs 1, run `pnpm run cleanup:entrypoints` and choose which to keep — it removes the other's frontend folder, backend template/controller/route, and its row in the AGENTS.md table, then flattens `frontend/website/` back to a flat `frontend/`.
+
+**Threshold rule — flat vs container:**
+
+- **1 entrypoint** — `frontend/` stays flat, exactly like a single-app project: `frontend/app.js`, `frontend/App.vue`, `frontend/routes.js`, etc.
+- **2+ entrypoints** — `frontend/` becomes a container, one subfolder per app. Adding the 2nd entry is what triggers the migration: the existing flat app moves to `frontend/website/` (the public front keeps this fixed name), the new one(s) get `frontend/<name>/` (e.g. `frontend/cms/`, `frontend/landingx/`).
 
 ```
-client/                   # Front — public, SEO area
-├── app.js
-├── App.vue
-├── routes.js
-└── ...
-
-cms/                       # CMS — internal, logged-in area
-├── app.js
-├── App.vue
-├── routes.js
-└── ...
+frontend/
+├── website/                 # Front — public, SEO area
+│   ├── app.js
+│   ├── App.vue
+│   ├── routes.js
+│   └── ...
+│
+├── cms/                     # CMS — internal, logged-in area
+│   ├── app.js
+│   ├── App.vue
+│   ├── routes.js
+│   └── ...
+│
+└── landingx/                # One-off landing — its own area
+    ├── app.js
+    ├── App.vue
+    ├── routes.js
+    └── ...
 ```
 
-Wire the second entry:
+Wire a new entry:
 
-- **`vite.config.mjs`** — add a second key to `build.rollupOptions.input` (e.g. `{ app: 'client/app.js', cms: 'cms/app.js' }`). Each key becomes a separate bundle, addressable from a template by that name.
-- **`nodemon.json`** — add the new client folder to `ignore` alongside `client/`, same reason: it's frontend source, not backend, and doesn't need an app restart on change.
+- **`vite.config.mjs`** — add a key to `build.rollupOptions.input` (e.g. `{ app: 'frontend/website/app.js', cms: 'frontend/cms/app.js' }`). Each key becomes a separate bundle, addressable from a template by that name.
+- **`nodemon.json`** — no per-app entry needed: `ignore` already covers the whole tree with `frontend/`, since every app lives under that one folder.
 - **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `cms.html` for CMS), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the CMS layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
 - **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/cms/*` → `CmsController.get`, rendering the CMS layout) instead of one global `/*` for everything.
 

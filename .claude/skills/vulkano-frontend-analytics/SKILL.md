@@ -11,7 +11,7 @@ Every project tracks analytics unless the user explicitly opted out for that are
 
 ## When to use
 
-Any new/changed user interaction in `client/` — form submit, button click, file download, video play, page view. Not for backend event logging. Not for SEO — see docs/SEO.md.
+Any new/changed user interaction in `frontend/` — form submit, button click, file download, video play, page view. Not for backend event logging. Not for SEO — see docs/SEO.md.
 
 ## Provider wiring
 

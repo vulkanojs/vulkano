@@ -55,7 +55,7 @@ describe('stripHelloWorldTemplate', () => {
 describe('stripHelloWorldScript', () => {
   it('removes the import and the components entry', () => {
     const source = [
-      "import HelloWorld from '@client/components/HelloWorld/HelloWorld.vue';",
+      "import HelloWorld from '../../components/HelloWorld/HelloWorld.vue';",
       '',
       'export default {',
       '',
@@ -109,8 +109,8 @@ describe('CLEANUP_TARGETS', () => {
       'app/controllers/api',
       'app/models/Example.js',
       'app/models/ExampleWithScaffold.js',
-      'client/components/HelloWorld',
-      'client/views/Demo',
+      'frontend/website/components/HelloWorld',
+      'frontend/website/views/Demo',
       'app/views/demo'
     ]);
   });

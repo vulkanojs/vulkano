@@ -1,13 +1,13 @@
 ---
 name: vulkano-frontend-router
-description: Use when adding a Vue Router route, an auth/login guard, a route-based redirect, or a multi-entry-point (e.g. public front + CMS/admin) setup in this Vulkano framework project's client/ — route↔view naming, resource/action file naming, the SPA catch-all(s) on the backend, and fetching the current user (never caching it client-side).
+description: Use when adding a Vue Router route, an auth/login guard, or a route-based redirect inside an existing entrypoint in this Vulkano framework project's frontend/ — route↔view naming, resource/action file naming, the SPA catch-all on the backend, and fetching the current user (never caching it client-side). For creating a brand-new entrypoint (CMS/admin, a custom landing, etc.), see vulkano-frontend-entrypoint instead.
 ---
 
 # Frontend Router
 
 ## Overview
 
-`client/routes.js` is a hand-written route array (Vue Router, HTML5 history mode). No auto-discovery of `views/`. Auth state is never cached client-side — every route change re-fetches the current user from the backend.
+`frontend/<entrypoint>?/routes.js` is a hand-written route array (Vue Router, HTML5 history mode) — flat `frontend/routes.js` with 1 entrypoint, one per subfolder once 2+ (`frontend/website/routes.js`, `frontend/cms/routes.js`), each with its own routes. No auto-discovery of `views/`. Auth state is never cached client-side — every route change re-fetches the current user from the backend.
 
 ## When to use
 
@@ -15,17 +15,17 @@ description: Use when adding a Vue Router route, an auth/login guard, a route-ba
 - Adding a login/auth guard
 - Any redirect-based access control (redirect to `/login` if unauthenticated, redirect away from `/login` if already authenticated)
 
-Not for the view's own file layout — see vulkano-frontend-component. Not for the backend `AuthController`/JWT cookie setup — see vulkano-backend-auth.
+Not for the view's own file layout — see vulkano-frontend-component. Not for the backend `AuthController`/JWT cookie setup — see vulkano-backend-auth. Not for creating a brand-new entrypoint — see vulkano-frontend-entrypoint.
 
 ## Adding a route
 
 ```js
-// client/routes.js
+// frontend/<entrypoint>?/routes.js
 import { createRouter } from 'vue-router';
 
-import Layout from '@client/layouts/Layout.vue';
-import Homepage from '@client/views/Home/Index.vue';
-import Users from '@client/views/System/Users/Index.vue';
+import Layout from './layouts/Layout.vue';
+import Homepage from './views/Home/Index.vue';
+import Users from './views/System/Users/Index.vue';
 
 const routes = [
   {
@@ -59,9 +59,9 @@ views/
 ```
 
 ```js
-{ path: '/product/list', component: () => import('@client/views/Product/List.vue') },
-{ path: '/product/create', component: () => import('@client/views/Product/Form.vue') },
-{ path: '/product/edit/:id', component: () => import('@client/views/Product/Form.vue') }
+{ path: '/product/list', component: () => import('./views/Product/List.vue') },
+{ path: '/product/create', component: () => import('./views/Product/Form.vue') },
+{ path: '/product/edit/:id', component: () => import('./views/Product/Form.vue') }
 ```
 
 This only replaces the leaf filename — it does not apply to plain single-segment or nested-section routes (`/users`, `/system/users`), which keep the existing `Index.vue`/`Index.js` leaf convention (see vulkano-frontend-component). Use resource+action naming specifically when a folder holds more than one action for the same resource — it's what makes `domain.com/product/edit` map straight to `views/Product/Form.vue` without grepping.
@@ -118,21 +118,9 @@ Without it, every non-`/` client route 404s on hard refresh/direct URL while sti
 
 ### Multiple entry points (e.g. a separate `/admin` CMS)
 
-Documented here for when a second Vite entry (a CMS/admin app, OAuth UI, or any other split app, separate from the public front) is added (see docs/FRONTEND.md § Vite entry points, docs/ARCHITECTURE.md § Multiple entry points).
+Creating a brand-new entrypoint (a CMS/admin app, a custom landing, or any other split app separate from the public front) — the flat-vs-container folder migration, Vite/nodemon wiring, and the backend template/controller/catch-all scaffold — is covered by vulkano-frontend-entrypoint. Use it whenever the task is adding the entrypoint itself, not just a route inside one that already exists.
 
-**Folder placement — root-level, never nested under `client/`.** `client/` is the public front's own app only. Each new entry point gets its own top-level folder (e.g. `cms/`, `another/`), a sibling of `client/`, not `client/entries/<name>/`. Wire it into `vite.config.mjs`'s `build.rollupOptions.input` by that folder:
-
-```js
-input: {
-  app: 'client/app.js',
-  cms: 'cms/app.js',
-  another: 'another/app.js'
-}
-```
-
-Also add the new folder to `nodemon.json`'s `ignore` list, same as `client/` — it's frontend source, no backend restart needed on change.
-
-Then each entry point is its own SPA and needs its **own** backend catch-all, scoped to its path prefix, registered **before** the generic `/*` so the more specific pattern isn't shadowed by it:
+Once that entrypoint exists, each one still needs its **own** backend catch-all, scoped to its path prefix, registered **before** the generic `/*` so the more specific pattern isn't shadowed by it:
 
 ```js
 module.exports = {
@@ -151,7 +139,7 @@ No `localStorage`/`sessionStorage` for the token or the user object — both are
 Re-fetch the current user on every route change instead of caching it in a store across navigations:
 
 ```js
-// client/routes.js (or a separate router/guards.js imported here)
+// frontend/<entrypoint>?/routes.js (or a separate router/guards.js imported here)
 router.beforeEach(async (to) => {
   const isAuthRoute = to.path === '/login';
   let user = null;

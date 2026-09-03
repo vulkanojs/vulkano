@@ -27,7 +27,10 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 ## Project structure
 
 - `app/` is the Express backend
-- `client/` is the Vue 3 SPA.
+- `frontend/website/` is the public Vue 3 SPA
+- `frontend/cms/` is the admin one with Vue 3 SPA and separate entry point (optional, remove if you don't need it)
+
+See docs/ARCHITECTURE.md § Multiple entry points.
 
 Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `docs/BACKEND.md` and `docs/FRONTEND.md` are thin pointers into them.
 
@@ -108,10 +111,10 @@ Say: _"add a contact form with name, email, and message fields, a
 `ContactController` that validates them and saves a `Contact` model, and a success message on the frontend"_
 
 Instead of: _"add authentication"_
-Say: _"add JWT login using the existing `@vulkano/core` auth conventions, with a `User` model and a login view under `client/views/Login`"_
+Say: _"add JWT login using the existing `@vulkano/core` auth conventions, with a `User` model and a login view under `frontend/website/views/Login`"_
 
 Instead of: _"show a list of users"_
-Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `client/views/Users/Index.vue` that renders them in a table"_
+Say: _"add a `/users` route backed by `UserController#index` that returns paginated `User` documents, and a `frontend/website/views/Users/Index.vue` that renders them in a table"_
 
 Claude Code picks up the controller/model/view/auth/testing conventions
 automatically from `.claude/skills/` — no need to paste them into your
@@ -136,18 +139,18 @@ checklist.
 
 Say which one you want, they're not the same:
 
-- **Frontend view** (Vue SPA, client-rendered): _"create a view to show `[table]` records"_ → `client/views/[Table]/Index.vue`, fetches data via `client/Api.js`
+- **Frontend view** (Vue SPA, client-rendered): _"create a view to show `[table]` records"_ → `frontend/website/views/[Table]/Index.vue`, fetches data via `frontend/website/Api.js`
 - **Backend view** (Nunjucks, server-rendered): _"create a backend view to show `[table]` records"_ → `app/views/[table]/index.html`, rendered by the controller via `res.vsr`/`res.render`
 
 #### Add a form
 
 1. Tell your AI agent: _"create a route to create a form"_ (e.g. _"add a `/posts/new` route with a form to create a `Post`"_)
-2. The agent adds the route in `client/routes.js` and a view under `client/views/`, wired to the API route that saves the model
+2. The agent adds the route in `frontend/website/routes.js` and a view under `frontend/website/views/`, wired to the API route that saves the model
 
-| Task          | What to tell your agent                                        |
-| ------------- | -------------------------------------------------------------- |
-| New component | _"add a `PostCard` component"_ → `client/components/PostCard/` |
-| Run checks    | `vp check` (format/lint/typecheck) and `vp test` (tests)       |
+| Task          | What to tell your agent                                                  |
+| ------------- | ------------------------------------------------------------------------ |
+| New component | _"add a `PostCard` component"_ → `frontend/website/components/PostCard/` |
+| Run checks    | `vp check` (format/lint/typecheck) and `vp test` (tests)                 |
 
 ### The `inbox/` folder
 

@@ -7,7 +7,7 @@ description: Use when adding or editing a public/crawlable backend view in this 
 
 ## Overview
 
-No Vue SSR/prerendering in this framework — the SPA (`client/`) is never a SEO target. Backend views (`app/views/*.html`, `res.render`) are the only crawlable surface, and only for areas marked SEO-on.
+No Vue SSR/prerendering in this framework — the SPA (`frontend/`) is never a SEO target. Backend views (`app/views/*.html`, `res.render`) are the only crawlable surface, and only for areas marked SEO-on.
 
 ## When to use
 

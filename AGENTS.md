@@ -14,11 +14,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Framework skills inside a superpowers plan (writing-plans / subagent-driven-development)
 
-When writing a plan (`superpowers:writing-plans`) whose tasks touch `app/controllers/*.js`, `app/models/*.js`, `app/views/*.html`, an auth flow, or `client/**` frontend code, load the matching project skill (`vulkano-backend-controller`, `vulkano-backend-model`, `vulkano-backend-views-nunjucks`/`-handlebars`, `vulkano-backend-auth`, `vulkano-frontend-*`) **before finalizing that task's code in the plan** — not later, not by hoping the implementer subagent will discover it.
+When writing a plan (`superpowers:writing-plans`) whose tasks touch `app/controllers/*.js`, `app/models/*.js`, `app/views/*.html`, an auth flow, or `frontend/**` frontend code, load the matching project skill (`vulkano-backend-controller`, `vulkano-backend-model`, `vulkano-backend-views-nunjucks`/`-handlebars`, `vulkano-backend-auth`, `vulkano-frontend-*`) **before finalizing that task's code in the plan** — not later, not by hoping the implementer subagent will discover it.
 
 Why this order matters: under `superpowers:subagent-driven-development`, implementer subagents are dispatched fresh with zero session context — they only see the task brief. If the plan-author (you) didn't consult the relevant skill before writing that task's exact code into the plan/brief, a convention violation ships silently, because the implementer has no reason to go looking for a skill it was never told about.
 
 Checklist per task, at plan-authoring time:
+
 1. Identify the file type(s) the task creates/modifies.
 2. Load every project skill whose "When to use" matches.
 3. Bake that skill's binding conventions directly into the task's code before it goes in the plan.
@@ -60,9 +61,10 @@ On the first task touching a new area (no row for it yet in the table below), as
 
 Show the user the resulting row so they can correct it before proceeding. From then on, treat this table as the answer and don't ask again for that area:
 
-| Area (path/entry point) | SEO | Analytics | Accessibility |
-| ----------------------- | --- | --------- | ------------- |
-| _(none recorded yet)_   |     |           |               |
+| Area (path/entry point)                 | SEO | Analytics | Accessibility |
+| --------------------------------------- | --- | --------- | ------------- |
+| `/` (`frontend/website/`) — public site | on  | on        | on            |
+| `/cms` (`frontend/cms/`) — admin panel  | off | off       | on            |
 
 A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
 
@@ -78,7 +80,7 @@ Never run `git commit` without user's explicit authorization for that specific c
 
 ## Quick workflow
 
-1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `client/` (frontend), or both.
+1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `frontend/` (frontend), or both.
 2. Record existing worktree changes (`git status`) and leave unrelated files untouched.
 3. Make the smallest change that satisfies the task while following the conventions in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
 4. Run `vp check` and `vp test` for the affected boundary before considering the task done.
@@ -121,14 +123,14 @@ VITE_CHUNK_NAMES=false
 
 ## Form fields (frontend)
 
-- Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view. **Neither exists in a fresh scaffold** — the first form in a project defines both once (e.g. `client/scss/_tokens.scss`, imported from `style.scss`), every form after reuses them.
-- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (`novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border — see `vulkano-frontend-form` skill's Skeleton for the full pattern; there's no pre-existing `client/views/Login/` to copy from in a fresh scaffold, that's an example shape, not a file in the project).
+- Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view. **Neither exists in a fresh scaffold** — the first form in a project defines both once (e.g. `frontend/website/scss/_tokens.scss`, imported from `style.scss`), every form after reuses them.
+- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (`novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border — see `vulkano-frontend-form` skill's Skeleton for the full pattern; there's no pre-existing `frontend/website/views/Login/` to copy from in a fresh scaffold, that's an example shape, not a file in the project).
 - Still set the correct `type` on every `<input>` (`email`, `number`, `date`, `range`, `tel`, …) — this is about semantics/mobile keyboard/a11y, not the validation-UI point above, and stays required even though native validation bubbles are suppressed.
-- `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `client/components/ui/`) instead, for visual consistency with the rest of the design system.
+- `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `frontend/website/components/ui/`) instead, for visual consistency with the rest of the design system.
 
 ## Frontend assets (images, fonts, files)
 
-- Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `client/`, and not pulled through the Vite bundler via `@client`/relative `import`/`src="@client/..."`.
+- Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `frontend/`, and not pulled through the Vite bundler via `@frontend`/relative `import`/`src="@frontend/..."`.
 - Reference them by absolute path from the app root: `/img/<name>.webp`, `/fonts/<name>.woff2`, `/files/<name>`. Same in CSS `url(...)`.
 - Namespace per feature when a design drops multiple files at once (e.g. `public/img/<section>/background.webp`) to avoid collisions in the flat `public/img/` root.
 - Optimize photographic images to `.webp` first via `scripts/inbox-webp.js` (drop source in `inbox/`, run the script, move the `.webp` output into `public/`).
@@ -144,17 +146,17 @@ VITE_CHUNK_NAMES=false
 
 ## Visual verification (frontend)
 
-For `client/` changes, don't just read the diff — look at it running. The `chrome-devtools` MCP is the recommended tool for this — prefer it over other browser MCPs (e.g. `claude-in-chrome`) when both are available: its screenshots and page snapshots surface in the conversation, so the user sees the actual work being verified, not just a text confirmation. If it's available, use it: check first whether the port (`8000`/`$PORT`) is already in use — if it's this project already running (the user may have started it themselves), navigate straight to it, don't restart it, and ask the user first if you're unsure whether it's safe to touch. If it's a different, unrelated project holding that port, don't kill it — start this one with `PORT=<alt> pnpm run dev` for the check instead. Navigate, take a screenshot, and check the console/network tab for new errors. Stop only the dev server you started yourself once you're done — never a server you didn't start. This is how you catch layout, styling, and runtime issues that a type-check or `vp check` can't — treat it as part of verifying the change, not an optional extra.
+For `frontend/` changes, don't just read the diff — look at it running. The `chrome-devtools` MCP is the recommended tool for this — prefer it over other browser MCPs (e.g. `claude-in-chrome`) when both are available: its screenshots and page snapshots surface in the conversation, so the user sees the actual work being verified, not just a text confirmation. If it's available, use it: check first whether the port (`8000`/`$PORT`) is already in use — if it's this project already running (the user may have started it themselves), navigate straight to it, don't restart it, and ask the user first if you're unsure whether it's safe to touch. If it's a different, unrelated project holding that port, don't kill it — start this one with `PORT=<alt> pnpm run dev` for the check instead. Navigate, take a screenshot, and check the console/network tab for new errors. Stop only the dev server you started yourself once you're done — never a server you didn't start. This is how you catch layout, styling, and runtime issues that a type-check or `vp check` can't — treat it as part of verifying the change, not an optional extra.
 
-**Testing from a phone/other LAN device (`http://<VITE_HOST>:8000`)** — if the page loads but assets/HMR fail with connection errors pointing at `localhost` instead of the LAN IP: `@vulkano/core` reads the Vite dev manifest (`public/.vite/manifest.development.json`, written by `vite-plugin-dev-manifest`) into `app.vite` **once, at Express boot** (`Vite.init()`), then caches it in memory for the life of the process. If the backend started before `VITE_HOST` was set or before Vite wrote the manifest with the correct LAN URL, `app.vite.url` stays stale — and stays stale even after the manifest file on disk is fixed, since `nodemon.json` ignores `client/` and never restarts Express for it. Fix: `touch app.js` (or otherwise trigger nodemon) to force a backend restart and re-read the manifest — don't chase this as a frontend/network bug first.
+**Testing from a phone/other LAN device (`http://<VITE_HOST>:8000`)** — if the page loads but assets/HMR fail with connection errors pointing at `localhost` instead of the LAN IP: `@vulkano/core` reads the Vite dev manifest (`public/.vite/manifest.development.json`, written by `vite-plugin-dev-manifest`) into `app.vite` **once, at Express boot** (`Vite.init()`), then caches it in memory for the life of the process. If the backend started before `VITE_HOST` was set or before Vite wrote the manifest with the correct LAN URL, `app.vite.url` stays stale — and stays stale even after the manifest file on disk is fixed, since `nodemon.json` ignores `frontend/` and never restarts Express for it. Fix: `touch app.js` (or otherwise trigger nodemon) to force a backend restart and re-read the manifest — don't chase this as a frontend/network bug first.
 
 **On WSL**: `VITE_HOST` must be the Windows host's LAN IP, not the WSL/Ubuntu internal IP (`ip addr show eth0` inside WSL gives an address only reachable from the Windows host itself, not from other LAN devices). Get the right one from Windows (`ipconfig`, the adapter actually on the LAN/Wi-Fi) — a phone or other device connecting to the WSL-internal IP will fail the same way regardless of the manifest/restart fix above.
 
 ## Safety boundaries
 
 - CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
-- Widget `rem` values (`client/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
-- Frontend layout (`client/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
+- Widget `rem` values (`frontend/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
+- Frontend layout (`frontend/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
@@ -167,7 +169,7 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 - [ ] Existing unrelated changes in the worktree remain untouched.
 - [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `docs/ARCHITECTURE.md`).
 - [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
-- [ ] For `client/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
+- [ ] For `frontend/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
 - [ ] Public behavior, routes, and compatibility risks are called out explicitly.
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
 - [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
@@ -184,10 +186,10 @@ For `client/` changes, don't just read the diff — look at it running. The `chr
 
 When that need comes up:
 
-- Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `client/components/ui/`.
-- Keep Tailwind + shadcn-vue isolated in `client/components/ui/`, separate from the project's `.scss`/BEM convention (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
-- Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `client/app.js` — not chained through `client/style.scss`.
-- Add the shadcn `cn()` helper (clsx + tailwind-merge) under `client/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
+- Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `frontend/components/ui/`.
+- Keep Tailwind + shadcn-vue isolated in `frontend/components/ui/`, separate from the project's `.scss`/BEM convention (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
+- Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `frontend/app.js` — not chained through `frontend/style.scss`.
+- Add the shadcn `cn()` helper (clsx + tailwind-merge) under `frontend/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
 
 The isolation is about styling method only (Tailwind utilities vs. SCSS/BEM) — it does **not** exempt `ui/` from the project's logic/template/style separation (`.claude/skills/vulkano-frontend-component/SKILL.md`). This applies to any external component library vendored into the codebase, not just shadcn-vue — whatever CLI or copy-paste source generates it, split it before committing: `Component.vue` (template only) and `Component.js` (logic, imported via `<script src="./Component.js">`); styling stays inline as the library's own classes in the `.vue` file (no `_index.scss` needed where there's no BEM to aggregate). The shadcn-vue CLI in particular scaffolds a single `.vue` file with an inline `<script setup>` block — after running `pnpm dlx shadcn-vue add <component>`, manually extract that block into a sibling `Component.js` and point the `.vue` file at it before committing.
 
@@ -197,15 +199,15 @@ To add a component once shadcn-vue is set up:
 pnpm dlx shadcn-vue@latest add <component>
 ```
 
-The CLI reads `components.json` and drops the component into `client/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
+The CLI reads `components.json` and drops the component into `frontend/website/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
 
 ### Element Plus
 
 When that need comes up instead:
 
 - Install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
-- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `client/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
-- Override its SCSS theme variables in one dedicated file (e.g. `client/components/ui/element-theme.scss`), imported once in `client/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
+- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `frontend/website/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
+- Override its SCSS theme variables in one dedicated file (e.g. `frontend/website/components/ui/element-theme.scss`), imported once in `frontend/website/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
 
 <!--VITE PLUS START-->
 

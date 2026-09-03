@@ -1,4 +1,4 @@
-import HelloWorld from '@client/components/HelloWorld/HelloWorld.vue';
+import HelloWorld from '../../components/HelloWorld/HelloWorld.vue';
 
 export default {
   components: {

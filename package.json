@@ -12,6 +12,7 @@
     "lint": "vp lint",
     "test": "vp test",
     "cleanup": "node scripts/cleanup.js",
+    "cleanup:entrypoints": "node scripts/cleanup-entrypoints.js",
     "inbox:webp": "node scripts/inbox-webp.js"
   },
   "dependencies": {
