@@ -37,6 +37,20 @@ Check `app/config/views.js`:
 
 Both engine skills cover the same ground (file placement/naming, layout, `res.render` wiring, SEO meta, i18n, custom formatting helpers, Vite injection) for their own syntax — pick one, don't read both for a single view.
 
+## Rendering HTML outside the request/response cycle (PDF, email)
+
+A third case, alongside `res.vsr`/`res.render`: rendering a view to an HTML string with no HTTP response involved — for a PDF report or an email body.
+
+```js
+const html = await View.render('reports/invoice.html', { invoice });
+// PDF: feed html to a PDF renderer (e.g. Puppeteer)
+// Email: pass html as the message body
+```
+
+`View.render(view, data)` — global (auto-loaded, same as `Product`/`Upload`; no `require`) → `Promise<string>`. `view` is a path under `app/views/` (same as `res.render`'s first arg), `data` are the template locals. Works with either engine (Nunjucks/Handlebars) — same templates, layouts, and helpers as normal views apply, since it renders through the same engine as `res.render`.
+
+Not a response method — it produces markup, nothing more. The caller decides what happens with the html (write it to a PDF library, embed as an email body, etc.) — that generation/sending logic belongs in a service (`app/services/`) or the model, not the controller (see vulkano-backend-controller § Controller rules).
+
 ## Reference
 
-vulkano-backend-controller (res.vsr/res.render split, routing, scaffold), vulkano-backend-views-nunjucks, vulkano-backend-views-handlebars, `app/config/views.js`.
+vulkano-backend-controller (res.vsr/res.render split, routing, scaffold), vulkano-backend-views-nunjucks, vulkano-backend-views-handlebars, `app/config/views.js`, `node_modules/@vulkano/core/libs/View.js` (`View.render` source).
