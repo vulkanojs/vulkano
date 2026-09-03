@@ -13,8 +13,8 @@ catalogs:
       specifier: ^6.0.8
       version: 6.0.8
     '@vulkano/core':
-      specifier: ^1.24.2
-      version: 1.24.2
+      specifier: ^1.25.0
+      version: 1.25.0
     concurrently:
       specifier: ^10.0.4
       version: 10.0.4
@@ -55,7 +55,7 @@ importers:
         version: 1.31.0(vue@3.5.40)
       '@vulkano/core':
         specifier: 'catalog:'
-        version: 1.24.2(chokidar@3.6.0)
+        version: 1.25.0(chokidar@3.6.0)
       concurrently:
         specifier: 'catalog:'
         version: 10.0.4
@@ -1130,8 +1130,8 @@ packages:
   '@vue/shared@3.5.40':
     resolution: {integrity: sha512-WxnBtruIqOoV3rA4jeKDWzrYI5h7Cp4+pjwDi8kWGHz+IslhiN+wguLVVhtv2l8VoU02rzDCVfDjgCl1lNpZVg==}
 
-  '@vulkano/core@1.24.2':
-    resolution: {integrity: sha512-ogj4Tnv2gKNPk8U4QhXA7ELYzm3LZEFOrrgumY6Q16IvNBmhQiE7iJ7h3AZCofK8Yu5P/0oO1rsjBxfNITytkw==}
+  '@vulkano/core@1.25.0':
+    resolution: {integrity: sha512-yLQ5FiiFRMsZmFZ7NkV8Tg8zLmqNwJnmvv10GaT2STHNv5LXG7OFgaIGHTa/Bu8/e+FCxBQkEMUKvlzsMl5a1w==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -3501,7 +3501,7 @@ snapshots:
 
   '@vue/shared@3.5.40': {}
 
-  '@vulkano/core@1.24.2(chokidar@3.6.0)':
+  '@vulkano/core@1.25.0(chokidar@3.6.0)':
     dependencies:
       '@socket.io/mongo-adapter': 0.4.0(socket.io-adapter@2.5.8)
       '@socket.io/redis-adapter': 8.3.0(socket.io-adapter@2.5.8)

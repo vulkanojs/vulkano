@@ -43,6 +43,10 @@ export default (history) => createRouter({ history, routes });
 
 Route path and view folder mirror each other (kebab-case URL → PascalCase folder) — see vulkano-frontend-component for the full naming convention.
 
+**Kebab-case means hyphen at every word boundary, not just lowercasing.** Split the PascalCase folder name at each word: `VatTypes` → `/vat-types`, not `/vattypes`. Same for multi-word resource/action segments (`ProductCategory` → `/product-category`). Applies to every route segment, including nested sections (`/config/vat-types`, not `/config/vattypes`).
+
+Since `@vulkano/core` 1.25.0 the backend's convention-based API routing applies the same hyphenation (`toKebabCase()` in `controllers/controllers.js`), so `VatTypesController` auto-resolves to `/api/vat-types/…`, matching the frontend path one-to-one — see vulkano-backend-controller. (Before 1.25.0 the backend only lowercased the controller name with no hyphen insertion, so `/api/vat-types/` 404'd under the convention — that gap is closed as of this version.)
+
 ### Resource + action routes — `domain.com/<resource>/<action>`
 
 When a route is a resource with multiple actions (`/product/list`, `/product/edit`), don't nest a new folder+`Index.vue` per action — that's a needless single-file subfolder per action. Instead the resource is the folder, and each action is its own named file inside it:

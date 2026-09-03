@@ -32,7 +32,7 @@ Not for pure `client/` frontend work — see FRONTEND.md instead.
 | API controller    | `app/controllers/api/<Name>Controller.js`     | `ProductsController.js` |
 | Socket controller | `app/controllers/sockets/<Name>Controller.js` | `EchoController.js`     |
 
-Controller name: plural PascalCase + `Controller` suffix. Resource segment in the URL = controller's own filename, lowercased — no automatic singularization/pluralization happens, so the filename must already be plural. Example: `TasksController.js` → resource `tasks` → view `/tasks`, API `/api/tasks`.
+Controller name: plural PascalCase + `Controller` suffix. Resource segment in the URL = controller's own filename, kebab-cased (`@vulkano/core` >= 1.25.0's `toKebabCase()` splits at every word boundary — `MyAccount` → `my-account`) — no automatic singularization/pluralization happens, so the filename must already be plural. Examples: `TasksController.js` → resource `tasks` → view `/tasks`, API `/api/tasks`; `VatTypesController.js` → resource `vat-types` → API `/api/vat-types`. (Before 1.25.0 the resource segment was plain lowercase with no hyphen insertion — `VatTypesController` resolved to `/api/vattypes`.)
 
 ## Method key → route
 
