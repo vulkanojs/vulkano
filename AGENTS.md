@@ -123,10 +123,10 @@ VITE_CHUNK_NAMES=false
 
 ## Form fields (frontend)
 
-- Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view. **Neither exists in a fresh scaffold** — the first form in a project defines both once (e.g. `frontend/website/scss/_tokens.scss`, imported from `style.scss`), every form after reuses them.
-- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (`novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border — see `vulkano-frontend-form` skill's Skeleton for the full pattern; there's no pre-existing `frontend/website/views/Login/` to copy from in a fresh scaffold, that's an example shape, not a file in the project).
+- Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view. **Neither exists in a fresh scaffold** — the first form in a project defines both once (e.g. `frontend/<entrypoint>?/scss/_tokens.scss`, imported from `style.scss`), every form after reuses them.
+- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead: `novalidate` on the `<form>`, a per-field error string in component state, error message rendered inline below the field (`novalidate`, `fieldErrors` reactive object, `<span class="*__field-error">` under the input, `*__input--invalid` class for the red border — see `vulkano-frontend-form` skill's Skeleton for the full pattern; there's no pre-existing `frontend/<entrypoint>?/views/Login/` to copy from in a fresh scaffold, that's an example shape, not a file in the project).
 - Still set the correct `type` on every `<input>` (`email`, `number`, `date`, `range`, `tel`, …) — this is about semantics/mobile keyboard/a11y, not the validation-UI point above, and stays required even though native validation bubbles are suppressed.
-- `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `frontend/website/components/ui/`) instead, for visual consistency with the rest of the design system.
+- `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `frontend/<entrypoint>?/components/ui/`) instead, for visual consistency with the rest of the design system.
 
 ## Frontend assets (images, fonts, files)
 
@@ -155,7 +155,7 @@ For `frontend/` changes, don't just read the diff — look at it running. The `c
 ## Safety boundaries
 
 - CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
-- Widget `rem` values (`frontend/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
+- CSS `rem` values (`frontend/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
 - Frontend layout (`frontend/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
@@ -199,15 +199,15 @@ To add a component once shadcn-vue is set up:
 pnpm dlx shadcn-vue@latest add <component>
 ```
 
-The CLI reads `components.json` and drops the component into `frontend/website/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
+The CLI reads `components.json` and drops the component into `frontend/<entrypoint>?/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
 
 ### Element Plus
 
 When that need comes up instead:
 
 - Install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
-- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `frontend/website/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
-- Override its SCSS theme variables in one dedicated file (e.g. `frontend/website/components/ui/element-theme.scss`), imported once in `frontend/website/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
+- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `frontend/<entrypoint>?/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
+- Override its SCSS theme variables in one dedicated file (e.g. `frontend/<entrypoint>?/components/ui/element-theme.scss`), imported once in `frontend/<entrypoint>?/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
 
 <!--VITE PLUS START-->
 
