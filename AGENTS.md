@@ -44,13 +44,13 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 - **Package manager**: `pnpm`
 - **Node**: `>=22`
 
-`docs/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](docs/COVERAGE.md#maintenance).
+`reference/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](reference/COVERAGE.md#maintenance).
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [docs/TESTING.md](docs/TESTING.md) for the test convention — every new/changed controller, model, service, or middleware gets a test, and `TEST_MONGO_URI` must be set before running `vp test` at all. See [docs/ANALYTICS.md](docs/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [docs/SEO.md](docs/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
+See [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [reference/TESTING.md](reference/TESTING.md) for the test convention — every new/changed controller, model, service, or middleware gets a test, and `TEST_MONGO_URI` must be set before running `vp test` at all. See [reference/ANALYTICS.md](reference/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [reference/SEO.md](reference/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
 
 ### Project requirements — SEO / Analytics / Accessibility
 
-A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [docs/ARCHITECTURE.md § Multiple entry points](docs/ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
+A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [reference/ARCHITECTURE.md § Multiple entry points](reference/ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
 
 On the first task touching a new area (no row for it yet in the table below), ask the user what that area is — landing page, landing + form, multi-page website, blog, embeddable widget, or CMS/admin panel — then set that row from the mapping instead of asking about SEO/Analytics/Accessibility one by one:
 
@@ -66,9 +66,9 @@ Show the user the resulting row so they can correct it before proceeding. From t
 | `/` (`frontend/website/`) — public site    | on  | on        | on            |
 | `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |
 
-A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
+A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [reference/SEO.md](reference/SEO.md), [reference/ANALYTICS.md](reference/ANALYTICS.md), [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md).
 
-**Read every `.md` file referenced from this one** (`docs/ARCHITECTURE.md`, `docs/TESTING.md`, `docs/ANALYTICS.md`, `docs/ACCESSIBILITY.md`, `docs/SEO.md`, `README.md`, and any other linked doc), except any unchecked above, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [docs/BACKEND.md § Backend conventions](docs/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+**Read every `.md` file referenced from this one** (`reference/ARCHITECTURE.md`, `reference/TESTING.md`, `reference/ANALYTICS.md`, `reference/ACCESSIBILITY.md`, `reference/SEO.md`, `README.md`, and any other linked doc), except any unchecked above, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [reference/BACKEND.md § Backend conventions](reference/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
 
 ---
 
@@ -82,7 +82,7 @@ Never run `git commit` without user's explicit authorization for that specific c
 
 1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `frontend/` (frontend), or both.
 2. Record existing worktree changes (`git status`) and leave unrelated files untouched.
-3. Make the smallest change that satisfies the task while following the conventions in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
+3. Make the smallest change that satisfies the task while following the conventions in [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
 4. Run `vp check` and `vp test` for the affected boundary before considering the task done.
 5. Review changed paths and diff quality before handing off the work.
 
@@ -133,7 +133,7 @@ VITE_CHUNK_NAMES=false
 - Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `frontend/`, and not pulled through the Vite bundler via `@frontend`/relative `import`/`src="@frontend/..."`.
 - Reference them by absolute path from the app root: `/img/<name>.webp`, `/fonts/<name>.woff2`, `/files/<name>`. Same in CSS `url(...)`.
 - Namespace per feature when a design drops multiple files at once (e.g. `public/img/<section>/background.webp`) to avoid collisions in the flat `public/img/` root.
-- Optimize photographic images to `.webp` first via `scripts/inbox-webp.js` (drop source in `inbox/`, run the script, move the `.webp` output into `public/`).
+- Optimize photographic images to `.webp` first via `scripts/webp.js` (drop source in `inbox/`, run the script, move the `.webp` output into `public/`).
 
 ## Microinteractions (frontend)
 
@@ -161,33 +161,33 @@ For `frontend/` changes, don't just read the diff — look at it running. The `c
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
-- Do not duplicate large manuals here — link to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
+- Do not duplicate large manuals here — link to [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
 
 ## Before handoff checklist
 
 - [ ] The changed paths match the requested scope.
 - [ ] Existing unrelated changes in the worktree remain untouched.
-- [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `docs/ARCHITECTURE.md`).
+- [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `reference/ARCHITECTURE.md`).
 - [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
 - [ ] For `frontend/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
 - [ ] Public behavior, routes, and compatibility risks are called out explicitly.
 - [ ] The final diff contains no accidental whitespace or generated artifacts.
 - [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
-- [ ] For frontend changes involving user interaction (form, button, download, video, page), analytics tracking was added per [docs/ANALYTICS.md](docs/ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
-- [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
-- [ ] For new public/crawlable pages, SEO essentials per [docs/SEO.md](docs/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
-- [ ] When a task is about deploying/launching to production, run through [docs/LAUNCH.md](docs/LAUNCH.md) (indexing enabled, `robots.txt` regenerated, sitemap present, GA/GTM enabled, meta tags reviewed) before considering the task done.
+- [ ] For frontend changes involving user interaction (form, button, download, video, page), analytics tracking was added per [reference/ANALYTICS.md](reference/ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
+- [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
+- [ ] For new public/crawlable pages, SEO essentials per [reference/SEO.md](reference/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
+- [ ] When a task is about deploying/launching to production, run through [reference/LAUNCH.md](reference/LAUNCH.md) (indexing enabled, `robots.txt` regenerated, sitemap present, GA/GTM enabled, meta tags reviewed) before considering the task done.
 
 ## UI components — shadcn-vue or Element Plus (not installed yet)
 
-**Neither is currently a dependency of this project** — see [docs/FRONTEND.md § Component library](docs/FRONTEND.md#component-library--not-installed-note-for-future). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project.
+**Neither is currently a dependency of this project** — see [reference/FRONTEND.md § Component library](reference/FRONTEND.md#component-library--not-installed-note-for-future). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project.
 
 ### shadcn-vue
 
 When that need comes up:
 
 - Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `frontend/components/ui/`.
-- Keep Tailwind + shadcn-vue isolated in `frontend/components/ui/`, separate from the project's `.scss`/BEM convention (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
+- Keep Tailwind + shadcn-vue isolated in `frontend/components/ui/`, separate from the project's `.scss`/BEM convention (see [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
 - Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `frontend/app.js` — not chained through `frontend/style.scss`.
 - Add the shadcn `cn()` helper (clsx + tailwind-merge) under `frontend/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
 

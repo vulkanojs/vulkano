@@ -8,4 +8,4 @@ Analytics/tracking convention for Vulkano Framework projects.
 
 Every project tracks analytics unless the user explicitly says tracking is not required for this project (see the SEO/Analytics/Accessibility area table in the root `CLAUDE.md`). If a task touches a form, button, download, video, or page and no tracking exists yet, ask the user which provider(s) to wire up before considering the task done — don't skip silently.
 
-Full pre-production launch checklist (indexing, robots.txt, sitemap, GA/GTM, meta tags together): [docs/LAUNCH.md](LAUNCH.md).
+Full pre-production launch checklist (indexing, robots.txt, sitemap, GA/GTM, meta tags together): [reference/LAUNCH.md](LAUNCH.md).

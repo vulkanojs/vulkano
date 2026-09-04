@@ -34,7 +34,7 @@ frontend/
     └── ...              # same shape
 ```
 
-See docs/ARCHITECTURE.md § Multiple entry points for the full rationale.
+See reference/ARCHITECTURE.md § Multiple entry points for the full rationale.
 
 ## Scaffolding a new entrypoint
 
@@ -112,4 +112,4 @@ Every new entrypoint is a new "area" per AGENTS.md § Project requirements. Befo
 
 ## Reference
 
-docs/ARCHITECTURE.md § Multiple entry points, vulkano-frontend-router § Multiple entry points / Backend catch-all, vulkano-backend-controller, vulkano-seo, AGENTS.md § Project requirements.
+reference/ARCHITECTURE.md § Multiple entry points, vulkano-frontend-router § Multiple entry points / Backend catch-all, vulkano-backend-controller, vulkano-seo, AGENTS.md § Project requirements.

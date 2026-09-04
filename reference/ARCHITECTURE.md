@@ -8,7 +8,7 @@ Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.m
 framework/
 ├── app.js                  # Entry point — calls vulkano()
 ├── vite.config.mjs         # Vite config (2 entry points by default: frontend/website/, frontend/admin/ — see § Multiple entry points)
-├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, docs/, test, scripts, inbox)
+├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, reference/, test, scripts, inbox)
 │
 ├── app/                    # Backend
 │   ├── config/
@@ -101,7 +101,7 @@ Wire a new entry:
 
 - **`vite.config.mjs`** — add a key to `build.rollupOptions.input` (e.g. `{ app: 'frontend/website/app.js', admin: 'frontend/admin/app.js' }`), plus its own alias in `resolve.alias` (e.g. `@admin` → `frontend/admin/`). Each key becomes a separate bundle, addressable from a template by that name.
 - **`nodemon.json`** — no per-app entry needed: `ignore` already covers the whole tree with `frontend/`, since every app lives under that one folder.
-- **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `admin.html` for the admin area), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the admin layout has no SEO meta block (see [docs/SEO.md](SEO.md)), the front layout does.
+- **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `admin.html` for the admin area), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the admin layout has no SEO meta block (see [reference/SEO.md](SEO.md)), the front layout does.
 - **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/admin/*` → `AdminController.get`, rendering the admin layout) instead of one global `/*` for everything.
 
 ---

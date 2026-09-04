@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import inboxWebpModule from '../scripts/inbox-webp.js';
+import webpModule from '../scripts/webp.js';
 
-const { filterConvertibleImages } = inboxWebpModule;
+const { filterConvertibleImages } = webpModule;
 
 describe('filterConvertibleImages', () => {
   it('keeps only jpg/jpeg/png files, case-insensitively', () => {

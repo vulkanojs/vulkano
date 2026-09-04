@@ -146,4 +146,4 @@ Report: model file created/changed, scaffold vs custom CRUD, hooks added, popula
 
 ## Reference
 
-`node_modules/@vulkano/core/README.md` (§ Models, § Key conventions), `docs/BACKEND.md`. Worked examples: `node_modules/@vulkano/core/examples/models/Example.js` (custom CRUD + hooks + autopopulate), `ExampleWithScaffold.js` (scaffold). Populate internals: `node_modules/@vulkano/core/database/scaffold.js` (`_buildPopulate`/`_parsePopulateEntries`).
+`node_modules/@vulkano/core/README.md` (§ Models, § Key conventions), `reference/BACKEND.md`. Worked examples: `node_modules/@vulkano/core/examples/models/Example.js` (custom CRUD + hooks + autopopulate), `ExampleWithScaffold.js` (scaffold). Populate internals: `node_modules/@vulkano/core/database/scaffold.js` (`_buildPopulate`/`_parsePopulateEntries`).

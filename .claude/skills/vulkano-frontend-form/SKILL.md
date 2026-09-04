@@ -102,4 +102,4 @@ Setting the correct `type` (`email`, `number`, `date`, `range`, `tel`, ...) is a
 
 ## Reference
 
-The Skeleton above (canonical pattern — no pre-existing `frontend/<entrypoint>?/views/Login/` to copy from in a fresh scaffold), AGENTS.md § Form fields, docs/ACCESSIBILITY.md § Forms.
+The Skeleton above (canonical pattern — no pre-existing `frontend/<entrypoint>?/views/Login/` to copy from in a fresh scaffold), AGENTS.md § Form fields, reference/ACCESSIBILITY.md § Forms.

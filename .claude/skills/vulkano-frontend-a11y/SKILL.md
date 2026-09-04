@@ -74,4 +74,4 @@ Not for the form's validation-error JS pattern itself — see vulkano-frontend-f
 
 ## Reference
 
-`docs/ACCESSIBILITY.md` (full detail).
+`reference/ACCESSIBILITY.md` (full detail).

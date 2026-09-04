@@ -144,4 +144,4 @@ Block name = component/view folder in kebab-case. No reaching into a child block
 
 ## Reference
 
-`docs/FRONTEND.md` (full detail), `docs/ARCHITECTURE.md`.
+`reference/FRONTEND.md` (full detail), `reference/ARCHITECTURE.md`.

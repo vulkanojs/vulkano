@@ -67,7 +67,7 @@ New projects start **not indexable** by default:
 - `seo.js` middleware copies it to `res.locals.seo.noindex`; the default template prints `<meta name="robots" content="noindex, nofollow" />` when true.
 - `public/robots.txt` ships `Disallow: /` by default.
 
-Whenever a task adds analytics/tracking while the project is still in this default private state, surface the vulkano-frontend-analytics private-mode warning — easy to forget flipping both together at launch. Full pre-production checklist: `docs/LAUNCH.md`.
+Whenever a task adds analytics/tracking while the project is still in this default private state, surface the vulkano-frontend-analytics private-mode warning — easy to forget flipping both together at launch. Full pre-production checklist: `reference/LAUNCH.md`.
 
 ## Sitemap and robots
 
@@ -90,4 +90,4 @@ Don't skip silently — ask the user whether the shared default is acceptable or
 
 ## Reference
 
-`docs/SEO.md` (full detail incl. multi-area setups), `docs/LAUNCH.md`, vulkano-backend-controller, vulkano-backend-views, vulkano-frontend-a11y, vulkano-frontend-analytics.
+`reference/SEO.md` (full detail incl. multi-area setups), `reference/LAUNCH.md`, vulkano-backend-controller, vulkano-backend-views, vulkano-frontend-a11y, vulkano-frontend-analytics.

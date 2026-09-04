@@ -104,7 +104,7 @@ Base layout prints `res.locals.seo.*`, set by `app/config/middlewares/seo.js` an
 {% if seo.noindex %}<meta name="robots" content="noindex, nofollow" />{% endif %}
 ```
 
-Full convention (defaults, private-mode noindex, handoff checklist): [docs/SEO.md](../../../docs/SEO.md). A CMS/admin layout skips this block entirely — hardcode its `<title>` instead of interpolating `seo.*`.
+Full convention (defaults, private-mode noindex, handoff checklist): [reference/SEO.md](../../../reference/SEO.md). A CMS/admin layout skips this block entirely — hardcode its `<title>` instead of interpolating `seo.*`.
 
 ## i18n
 
@@ -178,4 +178,4 @@ Report: view file(s) created/changed, controller-action it's rendered from, layo
 
 ## Reference
 
-`docs/SEO.md`, `docs/ARCHITECTURE.md` (§ Multiple entry points), `docs/ACCESSIBILITY.md`, `app/views/_shared/templates/default.html` (reference layout), `app/config/views.js` (engine override, if present), `node_modules/@vulkano/core/bootstrap/engines/nunjucks.js` (globals/filters/helpers wiring), `node_modules/@vulkano/core/views/helpers/vite.js` and `views/helpers/t.js` (built-in helper implementations), `node_modules/@vulkano/core/examples/config/views/config.js` (engine override template), `node_modules/@vulkano/core/examples/config/views/helpers/strpad.js` and `examples/config/views/filters/example.js` (custom helper/filter templates).
+`reference/SEO.md`, `reference/ARCHITECTURE.md` (§ Multiple entry points), `reference/ACCESSIBILITY.md`, `app/views/_shared/templates/default.html` (reference layout), `app/config/views.js` (engine override, if present), `node_modules/@vulkano/core/bootstrap/engines/nunjucks.js` (globals/filters/helpers wiring), `node_modules/@vulkano/core/views/helpers/vite.js` and `views/helpers/t.js` (built-in helper implementations), `node_modules/@vulkano/core/examples/config/views/config.js` (engine override template), `node_modules/@vulkano/core/examples/config/views/helpers/strpad.js` and `examples/config/views/filters/example.js` (custom helper/filter templates).

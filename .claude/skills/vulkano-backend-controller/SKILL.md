@@ -173,4 +173,4 @@ Report: which file(s) were created/changed, which convention applied (view/API/s
 
 ## Reference
 
-Full detail: `node_modules/@vulkano/core/README.md` (§ Routing, § Scaffold, § Socket.io, § Models) and `docs/BACKEND.md`. Worked examples: `node_modules/@vulkano/core/examples/controllers/` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`). Related skills: vulkano-backend-model (CRUD signatures, `_buildPopulate`, `active`/soft-delete — required for anything a controller calls on a model), vulkano-backend-views (res.render → HTML template skill routing).
+Full detail: `node_modules/@vulkano/core/README.md` (§ Routing, § Scaffold, § Socket.io, § Models) and `reference/BACKEND.md`. Worked examples: `node_modules/@vulkano/core/examples/controllers/` (`ExampleController.js`, `RestExampleController.js`, `RestScaffoldController.js`). Related skills: vulkano-backend-model (CRUD signatures, `_buildPopulate`, `active`/soft-delete — required for anything a controller calls on a model), vulkano-backend-views (res.render → HTML template skill routing).

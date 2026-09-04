@@ -167,4 +167,4 @@ router.beforeEach(async (to) => {
 
 ## Reference
 
-`docs/FRONTEND.md` § Adding a route / SPA catch-all, vulkano-backend-auth (backend session-check convention), AGENTS.md § Security considerations (session storage rules).
+`reference/FRONTEND.md` § Adding a route / SPA catch-all, vulkano-backend-auth (backend session-check convention), AGENTS.md § Security considerations (session storage rules).

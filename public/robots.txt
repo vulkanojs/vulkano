@@ -1,4 +1,4 @@
-# Private mode default (see docs/SEO.md § Private mode / noindex default).
+# Private mode default (see reference/SEO.md § Private mode / noindex default).
 # Disallow all crawl until the site is ready to launch, then replace with
 # real allow rules and set SEO_NOINDEX=false in .env.
 User-agent: *
