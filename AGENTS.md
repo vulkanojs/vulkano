@@ -61,9 +61,9 @@ On the first task touching a new area (no row for it yet in the table below), as
 
 Show the user the resulting row so they can correct it before proceeding. From then on, treat this table as the answer and don't ask again for that area:
 
-| Area (path/entry point)                 | SEO | Analytics | Accessibility |
-| --------------------------------------- | --- | --------- | ------------- |
-| `/` (`frontend/website/`) — public site | on  | on        | on            |
+| Area (path/entry point)                    | SEO | Analytics | Accessibility |
+| ------------------------------------------ | --- | --------- | ------------- |
+| `/` (`frontend/website/`) — public site    | on  | on        | on            |
 | `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |
 
 A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [docs/SEO.md](docs/SEO.md), [docs/ANALYTICS.md](docs/ANALYTICS.md), [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).

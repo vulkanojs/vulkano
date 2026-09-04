@@ -29,14 +29,28 @@ function writeFile(root, relPath, content) {
   fs.writeFileSync(path.join(root, relPath), content);
 }
 
+function mergeInto(from, to) {
+  fs.mkdirSync(to, { recursive: true });
+
+  for (const entry of fs.readdirSync(from)) {
+    const fromPath = path.join(from, entry);
+    const toPath = path.join(to, entry);
+
+    if (fs.statSync(fromPath).isDirectory() && fs.existsSync(toPath)) {
+      mergeInto(fromPath, toPath);
+      fs.rmdirSync(fromPath);
+    } else {
+      fs.rmSync(toPath, { recursive: true, force: true });
+      fs.renameSync(fromPath, toPath);
+    }
+  }
+}
+
 function flatten(root, name) {
   const from = path.join(root, 'frontend', name);
   const to = path.join(root, 'frontend');
 
-  for (const entry of fs.readdirSync(from)) {
-    fs.renameSync(path.join(from, entry), path.join(to, entry));
-  }
-
+  mergeInto(from, to);
   fs.rmdirSync(from);
 }
 
@@ -69,7 +83,10 @@ function keepWebsiteOnly(root) {
     root,
     'app/config/routes.js',
     readFile(root, 'app/config/routes.js')
-      .replace("  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'", "  '/': 'HomeController.get'")
+      .replace(
+        "  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'",
+        "  '/': 'HomeController.get'"
+      )
       .replace("  // '/admin/*': 'AdminController.get',\n", '')
   );
 
@@ -85,54 +102,9 @@ function keepWebsiteOnly(root) {
   flatten(root, 'website');
 }
 
-function keepAdminOnly(root) {
-  rm(root, 'frontend/website');
-  rm(root, 'app/views/_shared/templates/default.html');
-  rm(root, 'app/views/home');
-  rm(root, 'app/controllers/HomeController.js');
-  rm(root, 'test/app/controllers/Home.http.test.js');
-
-  collapseViteConfig(root);
-
-  writeFile(
-    root,
-    'app/config/routes.js',
-    readFile(root, 'app/config/routes.js')
-      .replace("  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'", "  '/': 'AdminController.get'")
-      .replace("  // '/admin/*': 'AdminController.get',\n", '')
-      .replace("  // '/*': 'HomeController.get',", "  // '/*': 'AdminController.get',")
-  );
-
-  writeFile(
-    root,
-    'AGENTS.md',
-    readFile(root, 'AGENTS.md')
-      .replace('| `/` (`frontend/website/`) — public site | on  | on        | on            |\n', '')
-      .replace(
-        '| `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |',
-        '| `/` (`frontend/`) — admin panel | off | off       | on            |'
-      )
-  );
-
-  writeFile(
-    root,
-    'test/app/controllers/Admin.http.test.js',
-    readFile(root, 'test/app/controllers/Admin.http.test.js')
-      .replace("GET /admin'", "GET /'")
-      .replace('${process.env.PORT}/admin`', '${process.env.PORT}/`')
-  );
-
-  flatten(root, 'admin');
-
-  writeFile(
-    root,
-    'app/views/_shared/templates/admin.html',
-    readFile(root, 'app/views/_shared/templates/admin.html').replace(/entry: 'admin'/g, "entry: 'app'")
-  );
-}
-
 function findWebsiteBase(root) {
-  if (fs.existsSync(path.join(root, 'frontend/website/components/HelloWorld'))) return 'frontend/website';
+  if (fs.existsSync(path.join(root, 'frontend/website/components/HelloWorld')))
+    return 'frontend/website';
   if (fs.existsSync(path.join(root, 'frontend/components/HelloWorld'))) return 'frontend';
 
   return null;
@@ -150,7 +122,12 @@ function stripHelloWorldScript(source) {
 
 function cleanupDemo(root) {
   const websiteBase = findWebsiteBase(root);
-  const targets = ['app/controllers/api', 'app/models/Example.js', 'app/models/ExampleWithScaffold.js', 'app/views/demo'];
+  const targets = [
+    'app/controllers/api',
+    'app/models/Example.js',
+    'app/models/ExampleWithScaffold.js',
+    'app/views/demo'
+  ];
 
   if (websiteBase) {
     targets.push(`${websiteBase}/components/HelloWorld`, `${websiteBase}/views/Demo`);
@@ -172,26 +149,19 @@ function cleanupDemo(root) {
 }
 
 async function run() {
-  const countAnswer = await ask(
+  let countAnswer = await ask(
     'How many frontend entrypoints do you want — "1" or "2"? (2 keeps both website+admin as shipped): '
   );
 
+  while (countAnswer !== '1' && countAnswer !== '2' && countAnswer !== 'both') {
+    countAnswer = await ask('Only "1" or "2" are supported here. Try again — "1" or "2"? ');
+  }
+
   if (countAnswer === '2' || countAnswer === 'both') {
     console.log('Keeping both entrypoints — no changes made.');
-  } else if (countAnswer === '1') {
-    const keep = await ask('Which one do you want to keep — "website" or "admin"? ');
-
-    if (keep === 'website') {
-      keepWebsiteOnly(ROOT);
-      console.log('Admin entrypoint removed. frontend/ collapsed back to a single flat app.');
-    } else if (keep === 'admin') {
-      keepAdminOnly(ROOT);
-      console.log('Website entrypoint removed. frontend/ collapsed back to a single flat app (admin).');
-    } else {
-      console.log('Only "website" or "admin" are supported here. No changes made.');
-    }
   } else {
-    console.log('Only "1" or "2" are supported here. No changes made.');
+    keepWebsiteOnly(ROOT);
+    console.log('Admin entrypoint removed. frontend/ collapsed back to a single flat app.');
   }
 
   const cleanConfirmed = await ask(
@@ -209,4 +179,10 @@ if (require.main === module) {
   void run();
 }
 
-module.exports = { keepWebsiteOnly, keepAdminOnly, findWebsiteBase, cleanupDemo, stripHelloWorldTemplate, stripHelloWorldScript };
+module.exports = {
+  keepWebsiteOnly,
+  findWebsiteBase,
+  cleanupDemo,
+  stripHelloWorldTemplate,
+  stripHelloWorldScript
+};

@@ -62,10 +62,10 @@ Full folder layout: see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**. Detail
 pnpm install       # or npm install
 ```
 
-**New project?** Run the interactive setup — choose how many frontend entrypoints you want (1 or 2, and which one to keep if 1) and optionally strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view):
+**New project?** Run the interactive cleanup — choose how many frontend entrypoints you want (1 keeps only `website`, 2 keeps both as shipped) and optionally strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view):
 
 ```bash
-pnpm run setup
+pnpm run clean
 ```
 
 Asks for confirmation before deleting anything. Skip this if you want to keep both entrypoints and the demo as a reference.
@@ -74,14 +74,14 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 
 ## Dev workflow
 
-| Command            | Description                              |
-| ------------------ | ---------------------------------------- |
-| `pnpm run dev`     | Start Express + Vite dev server with HMR |
-| `pnpm run setup`   | Choose entrypoint count + remove demo boilerplate (new projects) |
-| `pnpm run build`   | Build frontend assets into `public/`     |
-| `pnpm run start`   | Start Express in production mode         |
-| `pnpm run lint`    | Lint via `vp lint`                       |
-| `pnpm run test`    | Run tests via `vp test`                  |
+| Command          | Description                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| `pnpm run dev`   | Start Express + Vite dev server with HMR                         |
+| `pnpm run clean` | Choose entrypoint count + remove demo boilerplate (new projects) |
+| `pnpm run build` | Build frontend assets into `public/`                             |
+| `pnpm run start` | Start Express in production mode                                 |
+| `pnpm run lint`  | Lint via `vp lint`                                               |
+| `pnpm run test`  | Run tests via `vp test`                                          |
 
 `pnpm run dev` starts Express and the Vite dev server together, but **only one port matters**: open `http://localhost:$PORT` (`8000` by default, set in `.env`). Express serves the page and injects the Vite-bundled frontend automatically — no need to also open `localhost:5173` in a second tab, that's Vite's internal dev server, not a second app.
 

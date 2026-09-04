@@ -2,10 +2,15 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import setup from '../scripts/setup.js';
+import clean from '../scripts/clean.js';
 
-const { keepWebsiteOnly, keepAdminOnly, findWebsiteBase, cleanupDemo, stripHelloWorldTemplate, stripHelloWorldScript } =
-  setup;
+const {
+  keepWebsiteOnly,
+  findWebsiteBase,
+  cleanupDemo,
+  stripHelloWorldTemplate,
+  stripHelloWorldScript
+} = clean;
 
 let root;
 
@@ -19,8 +24,14 @@ function write(relPath, content) {
 function writeEntrypointsFixture() {
   write('frontend/website/app.js', "import './style.scss';\n");
   write('frontend/admin/app.js', "import './style.scss';\n");
-  write('app/views/_shared/templates/default.html', "{{ vite({ entry: 'app', type: 'script' }) | safe }}\n");
-  write('app/views/_shared/templates/admin.html', "{{ vite({ entry: 'admin', type: 'script' }) | safe }}\n");
+  write(
+    'app/views/_shared/templates/default.html',
+    "{{ vite({ entry: 'app', type: 'script' }) | safe }}\n"
+  );
+  write(
+    'app/views/_shared/templates/admin.html',
+    "{{ vite({ entry: 'admin', type: 'script' }) | safe }}\n"
+  );
   write('app/views/home/index.html', '{% extends "_shared/templates/default.html" %}\n');
   write('app/views/admin/index.html', '{% extends "_shared/templates/admin.html" %}\n');
   write('app/controllers/HomeController.js', 'module.exports = { get() {} };\n');
@@ -43,7 +54,7 @@ function writeEntrypointsFixture() {
   );
   write(
     'vite.config.mjs',
-    "export default {\n" +
+    'export default {\n' +
       '  build: {\n' +
       '    rollupOptions: {\n' +
       "      input: {\n        app: 'frontend/website/app.js',\n        admin: 'frontend/admin/app.js'\n      }\n" +
@@ -68,7 +79,7 @@ function writeEntrypointsFixture() {
 }
 
 beforeEach(() => {
-  root = fs.mkdtempSync(path.join(os.tmpdir(), 'setup-'));
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'clean-'));
 });
 
 afterEach(() => {
@@ -82,6 +93,7 @@ describe('keepWebsiteOnly', () => {
     keepWebsiteOnly(root);
 
     expect(fs.existsSync(path.join(root, 'frontend/admin'))).toBe(false);
+    expect(fs.existsSync(path.join(root, 'frontend/website'))).toBe(false);
     expect(fs.existsSync(path.join(root, 'frontend/app.js'))).toBe(true);
     expect(fs.existsSync(path.join(root, 'app/views/_shared/templates/admin.html'))).toBe(false);
     expect(fs.existsSync(path.join(root, 'app/views/admin'))).toBe(false);
@@ -100,40 +112,17 @@ describe('keepWebsiteOnly', () => {
     expect(agents).not.toContain('/admin');
     expect(agents).toContain('/` (`frontend/website/`)');
   });
-});
 
-describe('keepAdminOnly', () => {
-  it('removes the website entrypoint and flattens admin back to frontend/, promoted to /', () => {
+  it('merges instead of crashing when frontend/ already has leftover entries from a previous run', () => {
     writeEntrypointsFixture();
+    write('frontend/app.js', 'stale leftover from a crashed previous run\n');
 
-    keepAdminOnly(root);
+    expect(() => keepWebsiteOnly(root)).not.toThrow();
 
     expect(fs.existsSync(path.join(root, 'frontend/website'))).toBe(false);
-    expect(fs.existsSync(path.join(root, 'frontend/app.js'))).toBe(true);
-    expect(fs.existsSync(path.join(root, 'app/views/_shared/templates/default.html'))).toBe(false);
-    expect(fs.existsSync(path.join(root, 'app/views/home'))).toBe(false);
-    expect(fs.existsSync(path.join(root, 'app/controllers/HomeController.js'))).toBe(false);
-    expect(fs.existsSync(path.join(root, 'test/app/controllers/Home.http.test.js'))).toBe(false);
-
-    const vite = fs.readFileSync(path.join(root, 'vite.config.mjs'), 'utf8');
-    expect(vite).toContain("app: 'frontend/app.js'");
-    expect(vite).not.toContain('website');
-
-    const routes = fs.readFileSync(path.join(root, 'app/config/routes.js'), 'utf8');
-    expect(routes).toContain("'/': 'AdminController.get'");
-    expect(routes).not.toContain('HomeController');
-
-    const adminTemplate = fs.readFileSync(path.join(root, 'app/views/_shared/templates/admin.html'), 'utf8');
-    expect(adminTemplate).toContain("entry: 'app'");
-    expect(adminTemplate).not.toContain("entry: 'admin'");
-
-    const adminTest = fs.readFileSync(path.join(root, 'test/app/controllers/Admin.http.test.js'), 'utf8');
-    expect(adminTest).toContain("GET /'");
-    expect(adminTest).toContain('process.env.PORT}/`');
-
-    const agents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
-    expect(agents).not.toContain('frontend/website/');
-    expect(agents).toContain('/` (`frontend/`) — admin panel');
+    expect(fs.readFileSync(path.join(root, 'frontend/app.js'), 'utf8')).toBe(
+      "import './style.scss';\n"
+    );
   });
 });
 
@@ -150,7 +139,7 @@ describe('findWebsiteBase / cleanupDemo', () => {
     expect(findWebsiteBase(root)).toBe('frontend');
   });
 
-  it('returns null when there is no website demo (admin-only project)', () => {
+  it('returns null when there is no website demo', () => {
     write('frontend/app.js', "import './style.scss';\n");
 
     expect(findWebsiteBase(root)).toBe(null);
@@ -188,7 +177,7 @@ describe('findWebsiteBase / cleanupDemo', () => {
     expect(js).not.toContain('HelloWorld');
   });
 
-  it('only removes backend demo targets when there is no website (admin-only project)', () => {
+  it('only removes backend demo targets when there is no website demo', () => {
     write('app/controllers/api/Example.js', 'module.exports = {};\n');
     write('frontend/app.js', "import './style.scss';\n");
 

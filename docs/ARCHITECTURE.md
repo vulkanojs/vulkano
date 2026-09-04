@@ -24,7 +24,7 @@ framework/
 │   └── views/              # Nunjucks/Handlebars layouts
 │
 ├── frontend/                # Vue 3 apps — ships with 2 entrypoints by default (below); collapse to 1
-│   │                        # flat app with `pnpm run setup` if multi-entry isn't needed
+│   │                        # flat app with `pnpm run clean` if multi-entry isn't needed
 │   ├── website/             # Public front — see § Multiple entry points
 │   │   ├── app.js           # Vue entry — mounts App.vue, registers $api global
 │   │   ├── App.vue
@@ -69,7 +69,7 @@ framework/
 
 A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form), a CMS/admin panel, a one-off landing — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project. `.claude/skills/vulkano-frontend-entrypoint/SKILL.md` covers the full scaffold checklist for creating a new one — the summary below is the rationale/reference, that skill is the actionable one.
 
-**This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/admin/` minimal admin panel) so both shapes are demonstrated out of the box. If a project only needs 1, run `pnpm run setup` and choose which to keep — it removes the other's frontend folder, backend template/controller/route, and its row in the AGENTS.md table, then flattens the surviving entrypoint back to a flat `frontend/`.
+**This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/admin/` minimal admin panel) so both shapes are demonstrated out of the box. `frontend/admin/` only exists to demonstrate the 2-entrypoint shape — it carries no content worth keeping on its own. If a project only needs 1, run `pnpm run clean` and choose "1" — it removes `frontend/admin/`, its backend template/controller/route, and its row in the AGENTS.md table, then flattens `frontend/website/` back to a flat `frontend/`.
 
 **Threshold rule — flat vs container:**
 

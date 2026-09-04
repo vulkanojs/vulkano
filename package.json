@@ -11,7 +11,7 @@
     "preview": "vp preview",
     "lint": "vp lint",
     "test": "vp test",
-    "setup": "node scripts/setup.js",
+    "clean": "node scripts/clean.js",
     "inbox:webp": "node scripts/inbox-webp.js"
   },
   "dependencies": {
