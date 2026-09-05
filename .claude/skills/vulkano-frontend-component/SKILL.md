@@ -22,7 +22,9 @@ Not for form validation UI — see vulkano-frontend-form. Not for route/auth-gua
 
 - Composition API only (`setup()`, `ref`/`reactive`, composables) — never add `data()`/`methods`/`created()` options blocks.
 - Decide `views/` (top-level route-driven state) vs `components/` (reusable, imported by views/other components).
+- Check the UI reference page (see below) first — it's the reuse source of truth, faster and more reliable than grepping `frontend/<entrypoint>?/components/`.
 - Check for an existing similar view/component — mirror its file layout instead of inventing a new one.
+- Form fields especially: check if a reusable input component already exists project-wide (Datepicker, Textarea, Select, etc.) before adding a raw `<input>`/`<textarea>`. If site/CMS already uses one (e.g. Datepicker instead of `<input type="date">`), reuse it — copy its exact component/placement pattern, don't invent a new one.
 
 ## File & naming
 
@@ -93,6 +95,15 @@ Never `src="@website/..."`/`src="@admin/..."`, a relative `import`, or any other
 
 `/img/`, `/fonts/`, `/files/` — never `public/` in the path, never through an entrypoint alias (`@website`, `@admin`). See AGENTS.md § Frontend assets for namespacing and `.webp` optimization.
 
+## UI reference page
+
+Every entrypoint keeps a dev-only UI reference view — `frontend/<entrypoint>?/views/ui/Index.vue`, route `/ui` — listing every reusable component (Datepicker, Textarea, Select, Modal, Button, etc.) with a live usage example and its props/slots. This page is the reuse source of truth: check it before writing a new component or raw form field, so nothing gets reinvented that already exists.
+
+- Not built yet in a fresh scaffold — the first reusable component in an entrypoint creates the page; every reusable component after adds itself to it.
+- Guard the route (dev/local only, or behind admin auth) — it's a build tool, never a public/indexed page. No SEO, no analytics.
+- One section per component: name, short description, a rendered live instance, and the exact `<template>` snippet to copy-paste (props included) — mirror that snippet verbatim when reusing, don't improvise a variant.
+- Keep entries flat, one per component — no nested taxonomy needed for this.
+
 ## Routing
 
 See vulkano-frontend-router for route wiring and the backend catch-all requirement.
@@ -137,6 +148,7 @@ Block name = component/view folder in kebab-case. No reaching into a child block
 ## After writing
 
 - Add the component's `@import './X/_index.scss';` line to the parent `_index.scss` aggregator.
+- New reusable component → add its section to the UI reference page (`frontend/<entrypoint>?/views/UI/Index.vue`).
 - New store → test at `test/store/use<Entity>Store.test.js` (`createPinia()` + `setActivePinia()` in `beforeEach`, mock `$api` at the store boundary).
 - Check analytics (vulkano-frontend-analytics) and accessibility (vulkano-frontend-a11y) requirements for the area before considering done.
 - Visually verify in a browser per AGENTS.md § Visual verification.
