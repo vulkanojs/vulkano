@@ -1,0 +1,3 @@
+[submodule ".claude/skills/vulkano-skills"]
+	path = .claude/skills/vulkano-skills
+	url = https://github.com/vulkanojs/vulkano-skills.git

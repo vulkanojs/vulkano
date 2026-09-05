@@ -4,10 +4,10 @@ Backend conventions for the Vulkano Framework (`app/`). See [ARCHITECTURE.md](AR
 
 **Controller/route, model, view, and auth work is now covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
 
-- `.claude/skills/vulkano-backend-controller/SKILL.md` — controller placement, routing convention, `res.vsr`/`res.render`, scaffold, sockets
-- `.claude/skills/vulkano-backend-model/SKILL.md` — model naming, schema, standard CRUD methods, hooks, `active`/soft-delete, `autopopulate`/`_buildPopulate`
-- `.claude/skills/vulkano-backend-views/SKILL.md` — `res.render` vs `res.vsr` decision; routes to the Nunjucks or Handlebars skill for actual template syntax (layouts, SEO locals, i18n, formatting helpers, Vite injection)
-- `.claude/skills/vulkano-backend-auth/SKILL.md` — Auth/User model, `AuthController` convention, JWT via `httpOnly` cookie
+- `.claude/skills/vulkano-skills/vulkano-backend-controller/SKILL.md` — controller placement, routing convention, `res.vsr`/`res.render`, scaffold, sockets
+- `.claude/skills/vulkano-skills/vulkano-backend-model/SKILL.md` — model naming, schema, standard CRUD methods, hooks, `active`/soft-delete, `autopopulate`/`_buildPopulate`
+- `.claude/skills/vulkano-skills/vulkano-backend-views/SKILL.md` — `res.render` vs `res.vsr` decision; routes to the Nunjucks or Handlebars skill for actual template syntax (layouts, SEO locals, i18n, formatting helpers, Vite injection)
+- `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md` — Auth/User model, `AuthController` convention, JWT via `httpOnly` cookie
 
 This file keeps only what those skills don't cover: global constants and the pointer to the core's own docs. (Unused-variable naming is a repo-wide rule, not backend-specific — see [AGENTS.md § Code principles](../AGENTS.md#code-principles--dry-kiss-divide-and-conquer).)
 

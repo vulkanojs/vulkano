@@ -67,7 +67,7 @@ framework/
 
 ## Multiple entry points — front + CMS (or any other split app)
 
-A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form), a CMS/admin panel, a one-off landing — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project. `.claude/skills/vulkano-frontend-entrypoint/SKILL.md` covers the full scaffold checklist for creating a new one — the summary below is the rationale/reference, that skill is the actionable one.
+A project isn't limited to one Vue app. When it has genuinely separate areas — e.g. a public front (landing + form), a CMS/admin panel, a one-off landing — each area gets **its own Vue app, its own Vite build entry, and its own backend layout**, not one shared entry with route-based conditionals. This is what makes [AGENTS.md § Project requirements](../AGENTS.md#project-requirements--seo--analytics--accessibility) work per area: SEO/Analytics/Accessibility toggle per entry point, not per whole project. `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` covers the full scaffold checklist for creating a new one — the summary below is the rationale/reference, that skill is the actionable one.
 
 **This template ships with 2 entrypoints by default** (`frontend/website/` public front + `frontend/admin/` minimal admin panel) so both shapes are demonstrated out of the box. `frontend/admin/` only exists to demonstrate the 2-entrypoint shape — it carries no content worth keeping on its own. If a project only needs 1, run `pnpm run clean` and choose "1" — it removes `frontend/admin/`, its backend template/controller/route, and its row in the AGENTS.md table, then flattens `frontend/website/` back to a flat `frontend/`.
 
@@ -102,7 +102,7 @@ Wire a new entry:
 - **`vite.config.mjs`** — add a key to `build.rollupOptions.input` (e.g. `{ app: 'frontend/website/app.js', admin: 'frontend/admin/app.js' }`), plus its own alias in `resolve.alias` (e.g. `@admin` → `frontend/admin/`). Each key becomes a separate bundle, addressable from a template by that name.
 - **`nodemon.json`** — no per-app entry needed: `ignore` already covers the whole tree with `frontend/`, since every app lives under that one folder.
 - **Backend layout** — each entry needs its own base template under `app/views/_shared/templates/` (e.g. `default.html` for front, `admin.html` for the admin area), each calling `vite({ entry: '<name>', type: '...' })` with its own entry name. Don't reuse one layout for both — the admin layout has no SEO meta block (see [reference/SEO.md](SEO.md)), the front layout does.
-- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/admin/*` → `AdminController.get`, rendering the admin layout) instead of one global `/*` for everything.
+- **Routing** — each area keeps its own SPA catch-all in `app/config/routes.js` per `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` § Multiple entry points, scoped to that area's path prefix (e.g. `/admin/*` → `AdminController.get`, rendering the admin layout) instead of one global `/*` for everything.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Accessibility convention for Vulkano Framework projects.
 
-**Fully covered by `.claude/skills/vulkano-frontend-a11y/SKILL.md`** — images, navigation, forms, focus, color/contrast, structure. Invoke it instead of this file for implementation detail.
+**Fully covered by `.claude/skills/vulkano-skills/vulkano-frontend-a11y/SKILL.md`** — images, navigation, forms, focus, color/contrast, structure. Invoke it instead of this file for implementation detail.
 
 ## Default rule
 

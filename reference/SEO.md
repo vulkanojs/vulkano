@@ -2,7 +2,7 @@
 
 SEO convention for Vulkano Framework projects. No Vue SSR/prerendering in this framework.
 
-**Fully covered by `.claude/skills/vulkano-seo/SKILL.md`** — `res.locals.seo` wiring, meta tags, noindex/private-mode default, robots.txt/sitemap.xml, structured data. Invoke it instead of this file for implementation detail.
+**Fully covered by `.claude/skills/vulkano-skills/vulkano-seo/SKILL.md`** — `res.locals.seo` wiring, meta tags, noindex/private-mode default, robots.txt/sitemap.xml, structured data. Invoke it instead of this file for implementation detail.
 
 ## Default rule
 

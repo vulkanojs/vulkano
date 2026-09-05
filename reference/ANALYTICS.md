@@ -2,7 +2,7 @@
 
 Analytics/tracking convention for Vulkano Framework projects.
 
-**Fully covered by `.claude/skills/vulkano-frontend-analytics/SKILL.md`** — provider wiring (vue-gtag/gtag.js), GA4 event naming, GTM element ids, custom-dimension and private-mode warnings. Invoke it instead of this file for implementation detail.
+**Fully covered by `.claude/skills/vulkano-skills/vulkano-frontend-analytics/SKILL.md`** — provider wiring (vue-gtag/gtag.js), GA4 event naming, GTM element ids, custom-dimension and private-mode warnings. Invoke it instead of this file for implementation detail.
 
 ## Default rule
 
