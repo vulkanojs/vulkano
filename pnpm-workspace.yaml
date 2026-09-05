@@ -1,4 +1,4 @@
-minimumReleaseAge: 40
+minimumReleaseAge: 7
 minimumReleaseAgeExclude:
   - '@vulkano/core'
 
@@ -7,20 +7,20 @@ catalogMode: prefer
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: ^0.2.6
+  vite-plus: ^0.3.0
   vite-plugin-dev-manifest: ^1.5.0
-  sharp: ^0.35.3
+  sharp: ^0.35.4
   '@vitejs/plugin-vue': ^6.0.8
   nodemon: ^3.1.14
-  sass: ^1.102.0
-  concurrently: ^10.0.4
-  vue: ^3.5.40
-  vue-router: ^5.2.0
+  sass: 1.103.1
+  concurrently: ^10.0.5
+  vue: ^3.5.42
+  vue-router: 5.3.0
   pinia: ^4.0.3
   '@vulkano/core': ^1.31.0
-  '@lucide/vue': ^1.31.0
+  '@lucide/vue': 1.35.0
 overrides:
-  vite: 'catalog:'
+  qs: '>=6.16.0'
 peerDependencyRules:
   allowAny:
     - vite
