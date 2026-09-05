@@ -63,6 +63,23 @@ framework/
     └── files/              # Uploaded files
 ```
 
+(`.claude/`, `.github/`, `reference/`, `scripts/`, and `test/` sit alongside the above at the repo root — omitted from the tree since it's dotfiles/tooling, not app structure.)
+
+---
+
+## Skills submodule (`.claude/skills/vulkano-skills/`)
+
+The `vulkano-*` Claude Code skills referenced throughout this doc and [AGENTS.md](../AGENTS.md) don't live in this repo directly — they're a separate repo, [github.com/vulkanojs/vulkano-skills](https://github.com/vulkanojs/vulkano-skills), mounted here as a git submodule at `.claude/skills/vulkano-skills/`. This keeps the skills versioned and shareable across every Vulkano-based project instead of copy-pasted per project.
+
+**This isn't limited to Vulkano projects.** Any project — Vulkano-based or not — can pull in the same skills (or use `vulkano-skills` as a template for its own shared-skills repo) by adding it as a submodule:
+
+```bash
+git submodule add https://github.com/vulkanojs/vulkano-skills.git .claude/skills/vulkano-skills
+git submodule update --init --recursive
+```
+
+Claude Code discovers skills recursively under `.claude/skills/`, so the extra nesting doesn't break discovery. To pull updates later: `git submodule update --remote --merge .claude/skills/vulkano-skills`. Full details (adding/editing a skill, license) are in that repo's own README.
+
 ---
 
 ## Multiple entry points — front + CMS (or any other split app)
