@@ -29,7 +29,10 @@ export default defineConfig({
     cors: {
       origin: '*'
     },
-    host: process.env.VITE_HOST || true
+    host: process.env.VITE_HOST || true,
+    watch: {
+      ignored: ['**/.claude/**']
+    }
   },
   css: {
     preprocessorOptions: {
