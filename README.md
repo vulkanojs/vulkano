@@ -152,29 +152,28 @@ Say which one you want, they're not the same:
 | New component | _"add a `PostCard` component"_ → `frontend/website/components/PostCard/` |
 | Run checks    | `vp check` (format/lint/typecheck) and `vp test` (tests)                 |
 
-### The `inbox/` folder
+### Image optimization
 
-Drop any files here that you want your AI agent to work with — logos,
-images, fonts, PDFs — then tell your agent to use them, e.g. _"use the
-logo in inbox/ for the header"_. Files dropped in `inbox/` are not
-committed by default (see `inbox/.gitignore`).
-
-For images, run the following to convert `.jpg`/`.jpeg`/`.png` files in
-`inbox/` to `.webp` in place (smaller file size, originals are kept):
+Drop photographic images (`.jpg`/`.jpeg`/`.png`) directly under
+`public/img/` (namespaced per feature if needed, e.g.
+`public/img/landing/hero.jpg`), then run:
 
 ```bash
-pnpm run inbox:webp
+pnpm run webp
 ```
 
-Then use `<picture>` with the `.webp` as the primary source and the
-original as fallback, plus explicit `width`/`height` (prevents layout
+The script scans `public/img/` recursively, converts each image to
+`.webp` in place (skipping any that already have a sibling `.webp`),
+rewrites every reference to the old path (`/img/landing/hero.jpg`) it
+finds across `.vue`/`.scss`/`.css`/`.njk`/`.hbs`/`.html`/`.js` files to
+the new `.webp` path, and — once, at the end of the run — asks whether
+to delete the now-unused originals.
+
+Still set explicit `width`/`height` on the `<img>` (prevents layout
 shift) and `loading="lazy"` for below-the-fold images:
 
 ```html
-<picture>
-  <source srcset="/img/hero.webp" type="image/webp" />
-  <img src="/img/hero.jpg" alt="..." width="1200" height="600" loading="lazy" />
-</picture>
+<img src="/img/hero.webp" alt="..." width="1200" height="600" loading="lazy" />
 ```
 
 ---

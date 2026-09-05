@@ -12,7 +12,7 @@
     "lint": "vp lint",
     "test": "vp test",
     "clean": "node scripts/clean.js",
-    "inbox:webp": "node scripts/webp.js"
+    "webp": "node scripts/webp.js"
   },
   "dependencies": {
     "@lucide/vue": "catalog:",

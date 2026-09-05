@@ -8,7 +8,7 @@ Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.m
 framework/
 ├── app.js                  # Entry point — calls vulkano()
 ├── vite.config.mjs         # Vite config (2 entry points by default: frontend/website/, frontend/admin/ — see § Multiple entry points)
-├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, reference/, test, scripts, inbox)
+├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, reference/, test, scripts)
 │
 ├── app/                    # Backend
 │   ├── config/
