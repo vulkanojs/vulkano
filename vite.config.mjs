@@ -31,7 +31,7 @@ export default defineConfig({
     },
     host: process.env.VITE_HOST || true,
     watch: {
-      ignored: ['**/.claude/**']
+      ignored: ['**/.claude/**', '**/.superpowers/**', '**/.github/**']
     }
   },
   css: {
