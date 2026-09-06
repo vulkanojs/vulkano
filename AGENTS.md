@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - No explanations unless explicitly asked for.
 - Zero pleasantries, greetings, sign-offs, or filler.
 - Ultra-short, direct sentences.
-- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — output goes under `.claude/superpowers/plans/` and `.claude/superpowers/specs/`.
+- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — output goes under `.superpowers/plans/` and `.superpowers/specs/` (same root as `.superpowers/sdd/`, which the plugin hardcodes and cannot be relocated).
 - Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
 
