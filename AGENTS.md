@@ -42,7 +42,7 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 - **Backend**: `@vulkano/core` (Express, Mongoose, Socket.io, JWT, i18n)
 - **Frontend**: Vue 3 + Vue Router, bundled by Vite Plus
 - **Package manager**: `pnpm`
-- **Node**: `>=22`
+- **Node**: `>=24`
 
 `reference/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](reference/COVERAGE.md#maintenance).
 
@@ -116,7 +116,7 @@ VITE_CHUNK_NAMES=false
 - Enforce authentication and authorization for every protected action or resource. Do not rely on routes, navigation, or client-side controls as the access boundary; verify the relevant source and tests when changing it.
 - Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
 - No endpoint response (`res.vsr`/`res.render` payload, error body, list/detail serialization) may expose passwords, hashes, tokens, or API keys — strip/select fields explicitly rather than returning a full model document. Only exception: the user explicitly asks, for that specific case.
-- Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=22`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
+- Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=24`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
 - If credentials for Amazon S3, DigitalOcean Spaces, or any other S3-compatible storage are present (env vars, config), never use them to delete objects from the bucket — no `DeleteObjectCommand`/`DeleteObjectsCommand` or equivalent, in app code, scripts, or ad-hoc commands run during a task. Uploads/reads are fine; deletion is off-limits regardless of what the task asks for.
 - When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`current` action convention — see `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md`). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
 - Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` either — same XSS exposure as the token. After login, fetch the current user via `GET /api/auth/me` (or `/api/auth/current`), and re-fetch it on every route change (router guard) instead of caching it client-side.
