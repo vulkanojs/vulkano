@@ -54,20 +54,86 @@ function flatten(root, name) {
   fs.rmdirSync(from);
 }
 
+function findMatchingBrace(source, openBraceIndex) {
+  let depth = 1;
+  let i = openBraceIndex + 1;
+
+  while (depth > 0) {
+    if (source[i] === '{') depth++;
+    else if (source[i] === '}') depth--;
+    i++;
+  }
+
+  return i - 1;
+}
+
+function splitTopLevelEntries(body) {
+  const entries = [];
+  let depth = 0;
+  let current = '';
+
+  for (const char of body) {
+    if ('([{'.includes(char)) depth++;
+    if (')]}'.includes(char)) depth--;
+
+    if (char === ',' && depth === 0) {
+      entries.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+
+  if (current.trim()) entries.push(current);
+
+  return entries;
+}
+
+// Removes a single `key: value` entry from an `<blockName>: { ... }` object
+// literal, no matter how many sibling entries surround it — used instead of a
+// literal whole-block string match so extra entries (e.g. a 3rd frontend
+// entrypoint) don't cause a silent no-op.
+function removeObjectEntry(source, blockName, keyToRemove) {
+  const labelMatch = source.match(new RegExp(`${blockName}\\s*[:=]\\s*\\{`));
+
+  if (!labelMatch) return source;
+
+  const openBraceIndex = labelMatch.index + labelMatch[0].length - 1;
+  const closeBraceIndex = findMatchingBrace(source, openBraceIndex);
+  const body = source.slice(openBraceIndex + 1, closeBraceIndex);
+
+  const entries = splitTopLevelEntries(body).filter((entry) => {
+    const keyMatch = entry.match(/^\s*(['"]?)([\w@-]+)\1\s*:/);
+
+    return !(keyMatch && keyMatch[2] === keyToRemove);
+  });
+
+  const trimmed = entries.map((entry) => entry.trim()).filter(Boolean);
+
+  let newBody = '';
+
+  if (trimmed.length) {
+    const indentMatch = body.match(/\n(\s+)\S/);
+    const indent = indentMatch ? indentMatch[1] : '  ';
+    const closingIndentMatch = body.match(/\n(\s*)$/);
+    const closingIndent = closingIndentMatch ? closingIndentMatch[1] : '';
+
+    newBody = `\n${trimmed.map((entry) => indent + entry).join(',\n')}\n${closingIndent}`;
+  }
+
+  return source.slice(0, openBraceIndex + 1) + newBody + source.slice(closeBraceIndex);
+}
+
 function collapseViteConfig(root) {
-  writeFile(
-    root,
-    'vite.config.mjs',
-    readFile(root, 'vite.config.mjs')
-      .replace(
-        "input: {\n        app: 'frontend/website/app.js',\n        admin: 'frontend/admin/app.js'\n      }",
-        "input: {\n        app: 'frontend/app.js'\n      }"
-      )
-      .replace(
-        "alias: {\n      '@website': path.resolve(__dirname, 'frontend') + '/website/',\n      '@admin': path.resolve(__dirname, 'frontend') + '/admin/'\n    }",
-        'alias: {}'
-      )
-  );
+  // Entries (and their derived @<dir> aliases) live in vite.entries.mjs, not
+  // inline in vite.config.mjs — collapsing to 1 entrypoint only ever needs
+  // that one file edited.
+  let content = readFile(root, 'vite.entries.mjs');
+
+  content = removeObjectEntry(content, 'entries', 'admin');
+  content = content.replace("'frontend/website/app.js'", "'frontend/app.js'");
+
+  writeFile(root, 'vite.entries.mjs', content);
 }
 
 function keepWebsiteOnly(root) {
