@@ -58,6 +58,14 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 
 ## Installation
 
+`.claude/skills/vulkano-skills` is a git submodule — plain `git clone` leaves it empty. `pnpm install`'s `postinstall` hook runs `git submodule update --init --recursive` automatically, so a normal clone + install is enough. If it's still empty (e.g. installed from a tarball with no `.git`, or `.gitmodules` missing/broken):
+
+```bash
+git submodule update --init --recursive
+# still empty?
+git clone https://github.com/vulkanojs/vulkano-skills.git .claude/skills/vulkano-skills
+```
+
 ```bash
 pnpm install       # or npm install
 ```

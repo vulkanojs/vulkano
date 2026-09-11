@@ -162,6 +162,7 @@ For `frontend/` changes, don't just read the diff — look at it running. The `c
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
 - Do not duplicate large manuals here — link to [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
+- Local search commands (`find`, `grep`, `rg`, `ag`, etc.): always scope to relative/project path (`find ./ ...`, `grep -r ... ./`), never absolute root (`find / ...`, `grep -r ... /`) — scanning from root is slow and unnecessary when target is inside project/cwd.
 
 ## Before handoff checklist
 
