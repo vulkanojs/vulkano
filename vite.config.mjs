@@ -160,6 +160,8 @@ export default defineConfig(({ command, mode }) => {
           outDir,
           emptyOutDir: false,
           manifest: `manifest-${name}.json`,
+          chunkSizeWarningLimit: 5000,
+          copyPublicDir: false,
           rollupOptions: {
             input: { [name]: entry },
             output: outputOptions(true)

@@ -3,5 +3,5 @@
 // builds each one in its own isolated Rolldown pass, see that file for why).
 export const entries = {
   app: 'frontend/website/app.js',
-  admin: 'frontend/admin/main.js'
+  admin: 'frontend/admin/app.js'
 };
