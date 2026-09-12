@@ -20,9 +20,15 @@ const manifestPath = path.join(manifestDir, 'manifest.json');
 // vite.entries.mjs gets its alias for free instead of a manual edit here.
 const alias = Object.fromEntries(
   Object.values(entries).map((entryPath) => {
-    const dir = entryPath.split('/')[1];
+    const parts = entryPath.split('/');
+    // 'frontend/website/app.js' -> subfolder entry, alias '@website'.
+    // 'frontend/app.js' -> single root entry (no subfolder), alias '@frontend'.
+    const dir = parts.length > 2 ? parts[1] : parts[0];
 
-    return [`@${dir}`, `${path.resolve(__dirname, 'frontend')}/${dir}/`];
+    return [
+      `@${dir}`,
+      `${path.resolve(__dirname, 'frontend')}/${dir === 'frontend' ? '' : `${dir}/`}`
+    ];
   })
 );
 
