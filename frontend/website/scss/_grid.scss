@@ -1,6 +1,8 @@
 // Foundation-style responsive grid, built on CSS Grid (no Flexbox — see reference/FRONTEND.md § Layout).
 // Usage: <div class="row"><div class="column small-12 medium-6 large-4">...</div></div>
 
+@use 'sass:map';
+
 $grid-columns: 12;
 
 $breakpoints: (
@@ -16,10 +18,10 @@ $grid-gutter-small: 0.875rem; // 14px
 $grid-gutter-medium: 0.9375rem; // 15px
 
 @mixin breakpoint($name) {
-  @if map-get($breakpoints, $name) == 0 {
+  @if map.get($breakpoints, $name) == 0 {
     @content;
   } @else {
-    @media (min-width: map-get($breakpoints, $name)) {
+    @media (min-width: map.get($breakpoints, $name)) {
       @content;
     }
   }
