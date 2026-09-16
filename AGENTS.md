@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+@PROJECT.md
+
 # Default communication
 
 - Use Caveman mode (if the skill is available): use the fewest tokens possible.
@@ -25,50 +27,24 @@ Checklist per task, at plan-authoring time:
 3. Bake that skill's binding conventions directly into the task's code before it goes in the plan.
 4. Copy the same binding conventions into that task's future task-reviewer dispatch (the "global constraints" block) — the reviewer is also a fresh subagent with no memory of which skills applied.
 
-## /clear prompt backup hook
-
-`UserPromptSubmit` hook in `.claude/settings.local.json` (gitignored, personal):
-
-- Every prompt overwrites `.claude/last-prompt.txt` (rolling "last prompt" scratch file).
-- When the submitted prompt is exactly `/clear`, the current `.claude/last-prompt.txt` content is appended (with timestamp) to `.claude/prompt-history.log` before the context clears.
-- Backup only — history isn't restored automatically, just kept on disk for manual recovery.
-
 ---
 
 ## What this project is
 
-This is the **Vulkano Framework** — the full-stack app template built on top of `@vulkano/core`. It combines an Express MVC backend with a Vue 3 frontend, bundled by Vite. It is the starting point for new Vulkano-based applications.
+Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 frontend, bundled by Vite.
 
 - **Backend**: `@vulkano/core` (Express, Mongoose, Socket.io, JWT, i18n)
 - **Frontend**: Vue 3 + Vue Router, bundled by Vite Plus
 - **Package manager**: `pnpm`
 - **Node**: `>=24`
 
+See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SEO/Analytics/Accessibility settings — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or per-area decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
+
 `reference/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](reference/COVERAGE.md#maintenance).
 
 See [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [reference/TESTING.md](reference/TESTING.md) for the test convention — every new/changed controller, model, service, or middleware gets a test, and `TEST_MONGO_URI` must be set before running `vp test` at all. See [reference/ANALYTICS.md](reference/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [reference/SEO.md](reference/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
 
-### Project requirements — SEO / Analytics / Accessibility
-
-A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [reference/ARCHITECTURE.md § Multiple entry points](reference/ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
-
-On the first task touching a new area (no row for it yet in the table below), ask the user what that area is — landing page, landing + form, multi-page website, blog, embeddable widget, or CMS/admin panel — then set that row from the mapping instead of asking about SEO/Analytics/Accessibility one by one:
-
-- **Landing / landing + form / website / blog** (public, crawlable pages) → SEO on, Analytics on, Accessibility on.
-- **Embeddable widget** (mounts inside someone else's page, no page of its own to index) → SEO off, Accessibility on; Analytics — ask the user whether they want usage tracking (clicks, conversions) on the widget itself, don't assume off.
-- **CMS / admin panel** (internal, logged-in tool) → SEO off, Analytics off, Accessibility on.
-- Anything that doesn't fit cleanly: ask directly which of the three apply.
-
-Show the user the resulting row so they can correct it before proceeding. From then on, treat this table as the answer and don't ask again for that area:
-
-| Area (path/entry point)                    | SEO | Analytics | Accessibility |
-| ------------------------------------------ | --- | --------- | ------------- |
-| `/` (`frontend/website/`) — public site    | on  | on        | on            |
-| `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |
-
-A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [reference/SEO.md](reference/SEO.md), [reference/ANALYTICS.md](reference/ANALYTICS.md), [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md).
-
-**Read every `.md` file referenced from this one** (`reference/ARCHITECTURE.md`, `reference/TESTING.md`, `reference/ANALYTICS.md`, `reference/ACCESSIBILITY.md`, `reference/SEO.md`, `README.md`, and any other linked doc), except any unchecked above, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [reference/BACKEND.md § Backend conventions](reference/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+**Read every `.md` file referenced from this one** (`PROJECT.md`, `reference/ARCHITECTURE.md`, `reference/TESTING.md`, `reference/ANALYTICS.md`, `reference/ACCESSIBILITY.md`, `reference/SEO.md`, `README.md`, and any other linked doc), except any unchecked in PROJECT.md's SEO/Analytics/Accessibility table, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [reference/BACKEND.md § Backend conventions](reference/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
 
 ---
 
@@ -93,7 +69,7 @@ Never run `git commit` without user's explicit authorization for that specific c
 ```
 PORT=8000
 HOST=localhost
-MONGO_URI=mongodb://localhost:27017/myapp
+# MONGO_URI=mongodb://localhost:27017/myapp   # optional — only needed if this project uses a database
 SALT_KEY=random-string
 JWT_SECRET_KEY=supersecret
 # COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vulkano-backend-auth skill
@@ -123,10 +99,7 @@ VITE_CHUNK_NAMES=false
 
 ## Form fields (frontend)
 
-- Every required field must show a red asterisk (`*`) next to its label — visual cue, not just native `required`. Reuse a shared `.field-required` (or equivalent BEM element) style with `color: var(--color-danger-500)` instead of hardcoding red per view. **Neither exists in a fresh scaffold** — the first form in a project defines both once (e.g. `frontend/<entrypoint>?/scss/_tokens.scss`, imported from `style.scss`), every form after reuses them.
-- Never rely on native HTML5 form _validation UI_ (`required`/`:invalid` browser styling, error bubbles) — it can't be styled consistently across browsers/OSes and breaks the design system. Always validate in JS instead, through the shared `useFormValidator` composable: `const { fieldErrors, validate } = useFormValidator(form, formRules)`, a `formRules` object of validator functions from `utils/validators.js` (`V.required(message)`, `V.email(message)`, ...), error message rendered inline below the field (`<span class="*__field-error">` under the input, `*__input--invalid` class for the red border), submit gated by `validate(callback)` — see `vulkano-frontend-form` skill's Skeleton for the full pattern. `composables/useFormValidator.js`/`utils/validators.js` don't pre-exist in a fresh scaffold — the first form in a project creates them once, shared, every form after reuses them.
-- Still set the correct `type` on every `<input>` (`email`, `number`, `date`, `range`, `tel`, …) — this is about semantics/mobile keyboard/a11y, not the validation-UI point above, and stays required even though native validation bubbles are suppressed.
-- `type="date"`'s native picker UI can't be restyled and varies across browsers/OSes — acceptable for low-stakes internal forms, but views already carrying the redesign should use a shadcn-vue date-picker (`pnpm dlx shadcn-vue add calendar` + `popover`, not yet installed in `frontend/<entrypoint>?/components/ui/`) instead, for visual consistency with the rest of the design system.
+Any `<form>` add/edit in `frontend/` — always load the `vulkano-frontend-form` skill first (`.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md`): required-field asterisks, JS-only validation via `useFormValidator`, `fieldErrors` pattern, input types, date-picker choice. Don't hand-roll form validation from memory of this note — the skill is the source of truth, load it every time, not just when it "seems needed".
 
 ## Frontend assets (images, fonts, files)
 
@@ -139,6 +112,7 @@ VITE_CHUNK_NAMES=false
 
 - Every async action (fetch, submit, delete) needs a `loading` state: spinner/skeleton, disabled or `--loading` button state, visual feedback while waiting for the response.
 - Interactive elements (buttons, table rows, cards, links) need hover/rollover: subtle color/shadow/scale transition, never an abrupt change.
+- Every `<button>` (and any clickable non-native element, e.g. a `div`/`span` acting as one) gets `cursor: pointer`, disabled state excepted (`cursor: not-allowed` or default). Reuse a shared base button style/mixin instead of setting it per view.
 - State transitions (modal/toast/dropdown/error appearing or disappearing) use a short `transition`/`animation` (~150-250ms), no instant jump.
 - Reuse shared utilities (`.is-loading`, transition mixins in `_index.scss` or design tokens) instead of repeating the animation per view — see [Code principles](#code-principles--dry-kiss-divide-and-conquer).
 - For polished/complex animations (staggered lists, timeline sequences, scroll-triggered effects) CSS transitions can't cleanly express, GSAP is allowed — not yet a dependency, install with `pnpm add gsap` before first use and call this out explicitly in the diff.
@@ -179,15 +153,15 @@ For `frontend/` changes, don't just read the diff — look at it running. The `c
 - [ ] For new public/crawlable pages, SEO essentials per [reference/SEO.md](reference/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
 - [ ] When a task is about deploying/launching to production, run through [reference/LAUNCH.md](reference/LAUNCH.md) (indexing enabled, `robots.txt` regenerated, sitemap present, GA/GTM enabled, meta tags reviewed) before considering the task done.
 
-## UI components — shadcn-vue or Element Plus (not installed yet)
+## UI components — shadcn-vue or Element Plus
 
-**Neither is currently a dependency of this project** — see [reference/FRONTEND.md § Component library](reference/FRONTEND.md#component-library--not-installed-note-for-future). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project.
+Check `package.json` before assuming either is installed — see [reference/FRONTEND.md § Component library](reference/FRONTEND.md#component-library). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project — if `package.json` already has one, use it; don't add the other.
 
 ### shadcn-vue
 
 When that need comes up:
 
-- Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) first, then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `frontend/<entrypoint>?/components/ui/`.
+- First-time setup only (skip if `components.json` already exists at repo root — the canonical marker, not a specific peer-dep name which drifts across versions): install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`), then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `frontend/<entrypoint>?/components/ui/`.
 - Keep Tailwind + shadcn-vue isolated in `frontend/<entrypoint>?/components/ui/`, separate from the project's `.scss`/BEM convention (see [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
 - Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `frontend/<entrypoint>?/app.js` — not chained through `frontend/<entrypoint>?/style.scss`.
 - Add the shadcn `cn()` helper (clsx + tailwind-merge) under `frontend/<entrypoint>?/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
@@ -206,7 +180,7 @@ The CLI reads `components.json` and drops the component into `frontend/<entrypoi
 
 When that need comes up instead:
 
-- Install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
+- First-time setup only (skip if `package.json` already has `element-plus`): install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
 - Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `frontend/<entrypoint>?/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
 - Override its SCSS theme variables in one dedicated file (e.g. `frontend/<entrypoint>?/components/ui/element-theme.scss`), imported once in `frontend/<entrypoint>?/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
 

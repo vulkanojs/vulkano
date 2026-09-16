@@ -169,13 +169,13 @@ Foundation-style responsive grid, built on CSS Grid, imported once per entrypoin
 - Nesting: any `.column` can also carry `.row` to nest a grid inside it — no special helper needed.
 - No offset/push-pull classes (not needed yet — add only when a task requires them).
 
-## Component library — not installed, note for future
+## Component library
 
-**Not currently a dependency of this project.** If a future need calls for pre-built accessible components (dialogs, dropdowns, etc.), pick one of these two, don't mix both in the same project:
+Check `package.json` before assuming either is installed. If a future need calls for pre-built accessible components (dialogs, dropdowns, etc.), pick one of these two, don't mix both in the same project — if `package.json` already has one, use it; don't add the other:
 
 ### Option A — Tailwind + shadcn-vue
 
-- Install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`) only when actually needed.
+- First-time setup only (skip if `components.json` already exists at repo root — the canonical marker, not a specific peer-dep name which drifts across versions): install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`).
 - Use the shadcn-vue CLI to pull in components one at a time, as needed — don't bulk-install the whole library.
 - Tailwind utility classes stay scoped to the new shadcn components only. The rest of the project keeps using the existing SCSS/BEM/CSS Grid convention above — no migration, no mixing utility classes into existing `_index.scss`-based components.
 - This lets Tailwind + shadcn-vue coexist with the current styling system rather than replacing it.
@@ -183,7 +183,7 @@ Foundation-style responsive grid, built on CSS Grid, imported once per entrypoin
 
 ### Option B — Element Plus
 
-- Install `element-plus` only when actually needed; register components on-demand via its own auto-import plugin (`unplugin-vue-components` + `unplugin-auto-import`) rather than importing the whole library globally.
+- First-time setup only (skip if `package.json` already has `element-plus`): install `element-plus`, registering components on-demand via its own auto-import plugin (`unplugin-vue-components` + `unplugin-auto-import`) rather than importing the whole library globally.
 - Element Plus ships its own themed CSS (SCSS variables for overriding) — scope any override to the components actually in use, same isolation principle as shadcn: don't let its classes leak into or get mixed with the project's BEM components.
 - Prefer this option when the app needs a large ready-made admin/CMS component set (tables, forms, date pickers, tree views) fast, and a fully custom look matters less than shadcn's blank-slate approach would give.
 
