@@ -53,16 +53,10 @@ function writeEntrypointsFixture() {
       '});\n'
   );
   write(
-    'vite.config.mjs',
-    'export default {\n' +
-      '  build: {\n' +
-      '    rollupOptions: {\n' +
-      "      input: {\n        app: 'frontend/website/app.js',\n        admin: 'frontend/admin/app.js'\n      }\n" +
-      '    }\n' +
-      '  },\n' +
-      '  resolve: {\n' +
-      "    alias: {\n      '@website': path.resolve(__dirname, 'frontend') + '/website/',\n      '@admin': path.resolve(__dirname, 'frontend') + '/admin/'\n    }\n" +
-      '  }\n' +
+    'vite.entries.mjs',
+    'export const entries = {\n' +
+      "  app: 'frontend/website/app.js',\n" +
+      "  admin: 'frontend/admin/app.js'\n" +
       '};\n'
   );
   write(
@@ -100,7 +94,7 @@ describe('keepWebsiteOnly', () => {
     expect(fs.existsSync(path.join(root, 'app/controllers/AdminController.js'))).toBe(false);
     expect(fs.existsSync(path.join(root, 'test/app/controllers/Admin.http.test.js'))).toBe(false);
 
-    const vite = fs.readFileSync(path.join(root, 'vite.config.mjs'), 'utf8');
+    const vite = fs.readFileSync(path.join(root, 'vite.entries.mjs'), 'utf8');
     expect(vite).toContain("app: 'frontend/app.js'");
     expect(vite).not.toContain('admin');
 
