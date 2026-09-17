@@ -40,7 +40,7 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 
 | Layer     | Technology                                     |
 | --------- | ---------------------------------------------- |
-| Backend   | Node.js 22, Express 4, Mongoose, @vulkano/core |
+| Backend   | Node.js 24, Express 5, Mongoose, @vulkano/core |
 | Frontend  | Vue 3, Vue Router, Vite                        |
 | Styling   | SCSS, Foundation Sites                         |
 | Dev tools | Nodemon, ESLint, PM2                           |
@@ -49,7 +49,7 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 
 ## Requirements
 
-- **Node.js** `^22`
+- **Node.js** `^24`
 - **Vite+ CLI** (`vp`) — installs Vite, Vitest, and the rest of the toolchain globally. See [viteplus.dev](https://viteplus.dev/guide/) for the install command, then verify with `vp help`.
 - **MongoDB** (optional — only needed if you use models)
 - **Redis** (optional — Socket.io adapter or sessions)
