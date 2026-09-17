@@ -96,6 +96,7 @@ COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vul
 - **Divide and conquer**: keep components small, each doing one task. Split large components into smaller pieces rather than growing one file.
 - **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
 - **Unused variables — prefix with `_`**: applies front and back, any language in this repo. When a function parameter or binding is intentionally unused (e.g. a `catch` block that doesn't need the error), prefix it with `_` so the linter's `no-unused-vars` rule doesn't flag it: `catch (_err) {`.
+- **DB field/data scripts — singular collection names**: before writing any script that reads/changes a DB field (one-off migration, ad-hoc fix, not just a new model), load `.claude/skills/vulkano-skills/vulkano-backend-model/SKILL.md` first. Collections are singular (`order`, `user`), never pluralized (`orders`, `users`) — don't write the script from memory of generic Mongo/Node conventions.
 
 ## Security considerations
 
