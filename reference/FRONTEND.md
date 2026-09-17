@@ -40,16 +40,24 @@ app.use(router).mount('#app');
 
 Covered by `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md`: `frontend/<entrypoint>?/routes.js` wiring, route↔view naming (`Index.vue` for plain/nested routes, `Form.vue` for resource create+edit), and the `app/config/routes.js` catch-all(s) (including multi-entry-point `/admin*` setups). Example kept below for the catch-all's HTML5-history rationale:
 
-Vue Router uses HTML5 history mode, so every client-side route (`/login`, `/forbidden`, etc.) needs the server to return the same `index.html` on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. `app/config/routes.js` must keep a catch-all as its **last** entry:
+Vue Router uses HTML5 history mode, so every client-side route inside a mounted SPA needs the server to return the same shell on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. A catch-all only makes sense for an area whose backend template actually mounts a Vue app (`id="app"` + `vite({ entry: '<name>' })`) — see [AGENTS.md § SPA catch-alls](../AGENTS.md#spa-catch-alls--always-pair-backend--frontend) for the full backend+frontend pairing rule:
 
 ```js
 module.exports = {
   '/': 'HomeController.get',
-  '/*': 'HomeController.get' // must stay last — see note below
+  '/admin': 'AdminController.get',
+
+  // Scoped catch-all for the admin entry only — it mounts a Vue app
+  // (app/views/_shared/templates/admin.html). No public '/*': the
+  // public front is fully server-rendered Nunjucks (static.html, no
+  // Vue mount point), so an invalid public URL should fall through to
+  // @vulkano/core's built-in 404 handler instead of soft-200ing into
+  // the homepage.
+  '/admin/*': 'AdminController.get'
 };
 ```
 
-Safe because `@vulkano/core` registers convention routes (`app/controllers/api/*` → `/api/*`) before `config/routes.js` entries (`bootstrap/server.js`), so `/*` never shadows an API route. If this catch-all goes missing again, every non-`/` client route will 404 on refresh while still working via in-app `<router-link>`/`router.push` navigation — that split symptom is the tell.
+Safe to keep scoped catch-alls anywhere in the map: `@vulkano/core` registers convention routes (`app/controllers/api/*` → `/api/*`) before `config/routes.js` entries (`bootstrap/server.js`), so `/admin/*` never shadows an API route. If a scoped catch-all goes missing once a mounted-SPA area's routes grow past one, every non-root client route in that area 404s on refresh while still working via in-app `<router-link>`/`router.push` navigation — that split symptom is the tell. Each such entrypoint's `routes.js` should also have its own Vue Router catch-all (`{ path: '/:pathMatch(.*)*', component: NotFound }`) so an invalid path renders an actual 404 view instead of falling through to the home route.
 
 ## Calling the API from a component
 

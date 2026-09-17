@@ -64,6 +64,19 @@ Never run `git commit` without user's explicit authorization for that specific c
 
 ---
 
+## SPA catch-alls — always pair backend + frontend
+
+Before touching `app/config/routes.js` or an entrypoint's `routes.js`, load `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` — don't wire catch-alls from memory.
+
+An entrypoint gets a scoped backend catch-all (`'/<area>/*': '<Area>Controller.get'` in `app/config/routes.js`, before the more specific patterns are shadowed) **only if that area's backend template actually mounts a Vue app** (`<div id="app">` + `{{ vite({ entry: '<name>' }) }}` in its `app/views/_shared/templates/*.html`). When it does, **always add both halves together, never one without the other**:
+
+1. **Backend**: the scoped catch-all, so a hard refresh on any client-side route re-renders the SPA shell instead of 404ing.
+2. **Frontend**: a Vue Router catch-all in that entrypoint's `routes.js` — `{ path: '/:pathMatch(.*)*', component: NotFound }` — rendering a `views/NotFound/Index.vue`, so an invalid path inside that area actually shows a 404 UI instead of silently re-rendering the home view.
+
+**Never add a `/*` catch-all for an area that doesn't mount a Vue app** (a fully server-rendered/Nunjucks area — e.g. views extending `_shared/templates/static.html`, which has no `id="app"` or `vite()` call). `@vulkano/core` already returns a real `404` status via its built-in handler (`app/views/_shared/errors/404.html`) for any unmatched route — a blanket `/*` there would intercept that and soft-200 every invalid URL into the homepage instead, which is wrong for SEO and for users.
+
+---
+
 ## Environment variables
 
 ```
