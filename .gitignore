@@ -57,8 +57,10 @@ dwsync.xml
 public/css/index*.css
 public/css/app*.css
 public/css/admin*.css
+public/css/website*.css
 
 # JS
 public/js/index*.js
 public/js/app*.js
 public/js/admin*.js
+public/js/website*.js

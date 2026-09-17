@@ -46,11 +46,6 @@
       </ul>
     </div>
 
-    <ul class="ai-cheatsheet__list">
-      <li class="ai-cheatsheet__item"
-        ><code>run pnpm run setup</code> — strip this demo homepage</li
-      >
-    </ul>
   </div>
 </template>
 

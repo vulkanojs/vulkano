@@ -68,12 +68,11 @@ Never run `git commit` without user's explicit authorization for that specific c
 
 ```
 PORT=8000
-HOST=localhost
-# MONGO_URI=mongodb://localhost:27017/myapp   # optional — only needed if this project uses a database
-SALT_KEY=random-string
-JWT_SECRET_KEY=supersecret
-# COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vulkano-backend-auth skill
-VITE_CHUNK_NAMES=false
+MONGO_URI=mongodb://localhost:27017/myapp   # optional, for database connection (ignore if you don't use a database)
+SALT_KEY=random-string   # optional, for hashing passwords
+JWT_SECRET_KEY=supersecret   # optional, for auth
+COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vulkano-backend-auth skill
+# VITE_CHUNK_NAMES=false   # optional, only to chunk files — not recommended: public/ isn't cleared on build, and Vulkano already busts cache via ?v={app.pkg.version}, so old chunks just pile up
 # VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
 ```
 

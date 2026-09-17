@@ -19,11 +19,11 @@
     <meta name="twitter:description" content="{{ seo.description }}" />
     <meta name="twitter:image" content="{{ seo.image }}" />
 
-    {{ vite({ entry: 'app', type: 'style' }) | safe }}
+    {{ vite({ entry: 'website', type: 'style' }) | safe }}
   </head>
   <body>
     <div id="app">{% block content %}{% endblock %}</div>
 
-    {{ vite({ entry: 'app', type: 'script' }) | safe }}
+    {{ vite({ entry: 'website', type: 'script' }) | safe }}
   </body>
 </html>

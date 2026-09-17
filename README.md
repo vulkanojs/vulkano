@@ -47,10 +47,38 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 
 ---
 
-## Requirements
+## Before you start
 
-- **Node.js** `^24`
-- **Vite+ CLI** (`vp`) — installs Vite, Vitest, and the rest of the toolchain globally. See [viteplus.dev](https://viteplus.dev/guide/) for the install command, then verify with `vp help`.
+Make sure you have these installed on your machine:
+
+- **nvm** (recommended, manages Node versions) — [github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm):
+
+  ```bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  source ~/.bashrc
+  nvm install 24
+  nvm use 24
+  ```
+
+- **pnpm** — run this once in your terminal:
+
+  ```bash
+  corepack enable
+  corepack prepare pnpm@latest --activate
+  ```
+
+- **Vite+** (`vp` CLI — installs Vite, Vitest, and the rest of the toolchain globally):
+
+  ```bash
+  # macOS / Linux
+  curl -fsSL https://vite.plus | bash
+
+  # Windows
+  irm https://vite.plus/ps1 | iex
+  ```
+
+  Then open a new terminal and verify it works: `vp help`
+
 - **MongoDB** (optional — only needed if you use models)
 - **Redis** (optional — Socket.io adapter or sessions)
 
@@ -58,7 +86,7 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 
 ## Installation
 
-`.claude/skills/vulkano-skills` is a git submodule — plain `git clone` leaves it empty. `pnpm install`'s `postinstall` hook runs `git submodule update --init --recursive` automatically, so a normal clone + install is enough. If it's still empty (e.g. installed from a tarball with no `.git`, or `.gitmodules` missing/broken):
+`.claude/skills/vulkano-skills` is a git submodule — plain `git clone` leaves it empty. `vp install`'s `postinstall` hook runs `git submodule update --init --recursive` automatically, so a normal clone + install is enough. If it's still empty (e.g. installed from a tarball with no `.git`, or `.gitmodules` missing/broken):
 
 ```bash
 git submodule update --init --recursive
@@ -67,13 +95,13 @@ git clone https://github.com/vulkanojs/vulkano-skills.git .claude/skills/vulkano
 ```
 
 ```bash
-pnpm install       # or npm install
+vp install
 ```
 
 **New project?** Run the interactive cleanup — choose how many frontend entrypoints you want (1 keeps only `website`, 2 keeps both as shipped) and optionally strip the demo boilerplate (example controller/model, `HelloWorld` component, demo view):
 
 ```bash
-pnpm run clean
+vp run clean
 ```
 
 Asks for confirmation before deleting anything. Skip this if you want to keep both entrypoints and the demo as a reference.
@@ -82,16 +110,16 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 
 ## Dev workflow
 
-| Command          | Description                                                      |
-| ---------------- | ---------------------------------------------------------------- |
-| `pnpm run dev`   | Start Express + Vite dev server with HMR                         |
-| `pnpm run clean` | Choose entrypoint count + remove demo boilerplate (new projects) |
-| `pnpm run build` | Build frontend assets into `public/`                             |
-| `pnpm run start` | Start Express in production mode                                 |
-| `pnpm run lint`  | Lint via `vp lint`                                               |
-| `pnpm run test`  | Run tests via `vp test`                                          |
+| Command        | Description                                                      |
+| -------------- | ----------------------------------------------------------------- |
+| `vp run dev`   | Start Express + Vite dev server with HMR                         |
+| `vp run clean` | Choose entrypoint count + remove demo boilerplate (new projects) |
+| `vp build`     | Build frontend assets into `public/`                             |
+| `vp run start` | Start Express in production mode                                 |
+| `vp lint`      | Format/lint/typecheck                                            |
+| `vp test`      | Run tests                                                        |
 
-`pnpm run dev` starts Express and the Vite dev server together, but **only one port matters**: open `http://localhost:$PORT` (`8000` by default, set in `.env`). Express serves the page and injects the Vite-bundled frontend automatically — no need to also open `localhost:5173` in a second tab, that's Vite's internal dev server, not a second app.
+`vp run dev` starts Express and the Vite dev server together, but **only one port matters**: open `http://localhost:$PORT` (`8000` by default, set in `.env`). Express serves the page and injects the Vite-bundled frontend automatically — no need to also open `localhost:5173` in a second tab, that's Vite's internal dev server, not a second app.
 
 ---
 
@@ -99,13 +127,12 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 
 ```
 PORT=8000
-HOST=localhost
-MONGO_URI=mongodb://localhost:27017/myapp
-SALT_KEY=random-string
-JWT_SECRET_KEY=supersecret
-# COOKIES_SECRET_KEY=another-secret   # optional, only for signed cookies
-VITE_CHUNK_NAMES=false
-# VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
+MONGO_URI=mongodb://localhost:27017/myapp   # optional, for database connection
+SALT_KEY=random-string   # optional, for hashing passwords
+JWT_SECRET_KEY=supersecret   # optional, for auth
+COOKIES_SECRET_KEY=another-secret   # optional, only for signed cookies
+VITE_CHUNK_NAMES=false   # optional, only to chunk files — not recommended: public/ isn't cleared on build, and Vulkano already busts cache via ?v={app.pkg.version}, so old chunks just pile up
+VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
 ```
 
 ---
@@ -167,7 +194,7 @@ Drop photographic images (`.jpg`/`.jpeg`/`.png`) directly under
 `public/img/landing/hero.jpg`), then run:
 
 ```bash
-pnpm run webp
+vp run webp
 ```
 
 The script scans `public/img/` recursively, converts each image to
