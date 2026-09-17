@@ -43,7 +43,7 @@ Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)
 | Backend   | Node.js 24, Express 5, Mongoose, @vulkano/core |
 | Frontend  | Vue 3, Vue Router, Vite                        |
 | Styling   | SCSS, Foundation Sites                         |
-| Dev tools | Nodemon, ESLint, PM2                           |
+| Dev tools | Nodemon, Vite Plus                             |
 
 ---
 
@@ -63,8 +63,11 @@ Make sure you have these installed on your machine:
 - **pnpm** — run this once in your terminal:
 
   ```bash
-  corepack enable
-  corepack prepare pnpm@latest --activate
+  # macOS / Linux
+  wget -qO- https://get.pnpm.io/install.sh | sh -
+
+  # Windows
+  iwr https://get.pnpm.io/install.ps1 -useb | iex
   ```
 
 - **Vite+** (`vp` CLI — installs Vite, Vitest, and the rest of the toolchain globally):
