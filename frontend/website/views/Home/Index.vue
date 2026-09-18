@@ -22,7 +22,7 @@
     <h2 class="ai-cheatsheet__title">Talking to your AI agent</h2>
     <p class="ai-cheatsheet__intro"
       >Try prompts like these — the agent follows the conventions in <code>AGENTS.md</code> /
-      <code>ARCHITECTURE.md</code>:</p
+      <code>references/AGENTS/</code>:</p
     >
     <div class="ai-cheatsheet__group">
       <h3 class="ai-cheatsheet__group-title">Frontend: Vue SPA</h3>
@@ -45,7 +45,6 @@
         >
       </ul>
     </div>
-
   </div>
 </template>
 
