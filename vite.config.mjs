@@ -128,6 +128,12 @@ export default defineConfig(({ command, mode }) => {
         manifest: true,
         emptyOutDir: false,
         outDir,
+        chunkSizeWarningLimit: 5000,
+        // outDir and publicDir are both 'public/' by design (static assets
+        // live there directly, no separate source folder) — skip the copy
+        // step, which is a redundant no-op here, instead of letting Vite
+        // warn every build that outDir/publicDir are the same folder.
+        copyPublicDir: false,
         rollupOptions: {
           input: entries,
           output: outputOptions(false)
