@@ -184,27 +184,13 @@ Say which one you want, they're not the same:
 
 ### Image optimization
 
-Drop photographic images (`.jpg`/`.jpeg`/`.png`) directly under
-`public/img/` (namespaced per feature if needed, e.g.
-`public/img/landing/hero.jpg`), then run:
+Drop photographic images (`.jpg`/`.jpeg`/`.png`) directly under `public/img/`, then run:
 
 ```bash
 vp run webp
 ```
 
-The script scans `public/img/` recursively, converts each image to
-`.webp` in place (skipping any that already have a sibling `.webp`),
-rewrites every reference to the old path (`/img/landing/hero.jpg`) it
-finds across `.vue`/`.scss`/`.css`/`.njk`/`.hbs`/`.html`/`.js` files to
-the new `.webp` path, and — once, at the end of the run — asks whether
-to delete the now-unused originals.
-
-Still set explicit `width`/`height` on the `<img>` (prevents layout
-shift) and `loading="lazy"` for below-the-fold images:
-
-```html
-<img src="/img/hero.webp" alt="..." width="1200" height="600" loading="lazy" />
-```
+Details (what the script rewrites, `loading="lazy"` on `<img>`): see **[references/AGENTS/ASSETS.md](references/AGENTS/ASSETS.md)**.
 
 ---
 
