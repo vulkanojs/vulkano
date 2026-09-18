@@ -196,7 +196,7 @@ Details (what the script rewrites, `loading="lazy"` on `<img>`): see **[referenc
 
 ## Deployment
 
-The framework supports several deploy options. Pick **one per environment** (e.g. staging, production) and record it in [PROJECT.md § Deployment](PROJECT.md#deployment), trimming the others.
+The framework supports several deploy options. Pick **one per environment** (e.g. staging, production) and record it in [PROJECT.md § Deployment](PROJECT.md#deployment).
 
 ### PM2 (SSH)
 
