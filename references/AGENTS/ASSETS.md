@@ -1,5 +1,7 @@
 # Assets (images, fonts, files)
 
+Only applies when the task adds/edits an image, font, or downloadable file. If it isn't an asset, skip the bullets below.
+
 - Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `frontend/`, and not pulled through the Vite bundler via `@frontend`/relative `import`/`src="@frontend/..."`.
 - Reference them by absolute path from the app root: `/img/<name>.webp`, `/fonts/<name>.woff2`, `/files/<name>`. Same in CSS `url(...)`.
 - Namespace per feature when a design drops multiple files at once (e.g. `public/img/<section>/background.webp`) to avoid collisions in the flat `public/img/` root.
