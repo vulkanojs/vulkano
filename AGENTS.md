@@ -4,12 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @PROJECT.md
 
+## What this framework is
+
+Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 frontend, bundled by Vite.
+
+- **Backend**: `@vulkano/core` (Express, Mongoose, Socket.io, JWT, i18n)
+- **Frontend**: Vue 3 + Vue Router, bundled by Vite Plus
+- **Package manager**: `pnpm`
+- **Node**: `>=24`
+
+See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SEO/Analytics/Accessibility settings — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or per-area decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
+
 # Default communication
 
-- Use Caveman mode (if the skill is available): use the fewest tokens possible.
 - No explanations unless explicitly asked for.
 - Zero pleasantries, greetings, sign-offs, or filler.
 - Ultra-short, direct sentences.
+- Use Caveman mode (if the skill is available): use the fewest tokens possible.
 - Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — output goes under `.superpowers/plans/` and `.superpowers/specs/` (same root as `.superpowers/sdd/`, which the plugin hardcodes and cannot be relocated). **This overrides the brainstorming skill's own default path (`docs/superpowers/specs/`)** — that default never applies in this repo; always write specs, plans and sdd to `.superpowers`, no exceptions.
 - Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
@@ -29,28 +40,38 @@ Checklist per task, at plan-authoring time:
 
 ---
 
-## What this project is
+## Git
 
-Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 frontend, bundled by Vite.
-
-- **Backend**: `@vulkano/core` (Express, Mongoose, Socket.io, JWT, i18n)
-- **Frontend**: Vue 3 + Vue Router, bundled by Vite Plus
-- **Package manager**: `pnpm`
-- **Node**: `>=24`
-
-See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SEO/Analytics/Accessibility settings — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or per-area decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
-
-`reference/COVERAGE.md` is a structural, management-level snapshot of core-level capabilities/configuration — it is **not** part of the list below, don't read it for routine controller/model/view/component work. Update it only when a task adds/changes/removes something at the core level (new entry point, new `app/config/express/*.js`/`middlewares/*.js` file, new deployment mechanism, testing convention change, etc.) — see [COVERAGE.md](reference/COVERAGE.md#maintenance).
-
-See [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) for the project structure, routing conventions, and controller/model/response conventions. See [reference/TESTING.md](reference/TESTING.md) for the test convention — every new/changed controller, model, service, or middleware gets a test, and `TEST_MONGO_URI` must be set before running `vp test` at all. See [reference/ANALYTICS.md](reference/ANALYTICS.md) for the tracking convention — every project tracks analytics unless the user explicitly opts out. See [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md) for the accessibility minimums — every project meets them unless the user explicitly opts out. See [reference/SEO.md](reference/SEO.md) for the SEO convention — backend server-rendered views are the crawlable surface, the Vue SPA is not (no SSR/prerendering) — every project follows it unless the user explicitly opts out.
-
-**Read every `.md` file referenced from this one** (`PROJECT.md`, `reference/ARCHITECTURE.md`, `reference/TESTING.md`, `reference/ANALYTICS.md`, `reference/ACCESSIBILITY.md`, `reference/SEO.md`, `README.md`, and any other linked doc), except any unchecked in PROJECT.md's SEO/Analytics/Accessibility table, before starting work — don't rely on filenames or prior memory of their contents, conventions in them change. This includes [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) — it's the source of truth for routing, controllers, models, and JWT auth (see [reference/BACKEND.md § Backend conventions](reference/BACKEND.md#backend-conventions--owned-by-vulkanocore)), not optional background reading.
+Before any `git` action (commit, push, branch, reset, etc.) — read `references/AGENTS/GIT.md` first.
 
 ---
 
-## Git commits
+## Area conventions
 
-Never run `git commit` without user's explicit authorization for that specific commit — holds even when skill's own instructions say to commit. Skill/workflow instructions to commit do NOT count as authorization. Always ask first, wait for clear yes.
+- Touching `app/` (backend) — read `references/AGENTS/ARCHITECTURE.md`, `references/AGENTS/BACKEND.md`, and [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) first (project structure, code principles, security, handoff checklist — core README is the source of truth for routing/controllers/models/JWT auth, not optional background reading).
+- Touching `frontend/` — read `references/AGENTS/ARCHITECTURE.md` and `references/AGENTS/FRONTEND.md` first (project structure, code principles, security, UI components, forms, microinteractions, safety boundaries, handoff checklist).
+- Adds/changes a controller, model, service, or middleware — also read `references/AGENTS/TESTING.md`.
+- Adds/changes a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — also read `references/AGENTS/TESTING.md`.
+
+## Assets
+
+Adding/editing an image, font, or downloadable file (lives in `public/`, referenced from `app/views/` or `frontend/`) — read `references/AGENTS/ASSETS.md` first. Applies to both `app/` and `frontend/` work.
+
+## Environment variables
+
+Adding/reading a new `.env` variable, or setting up a project's `.env` for the first time — read `references/AGENTS/ARCHITECTURE.md` first.
+
+## Vite / build
+
+Editing `vite.config.mjs`, `vite.entries.mjs`, or a backend template's `vite()` injection call — read `references/AGENTS/VITE.md` first. Applies to both `app/` and `frontend/` work.
+
+## Per-area requirements (SEO / Analytics / Accessibility)
+
+Touching a new entry point/area with no row yet in `PROJECT.md`'s table — read `references/AGENTS/AREAS.md` first.
+
+## Launch
+
+Deploying/launching a project to production — read `references/AGENTS/LAUNCH.md` first.
 
 ---
 
@@ -58,157 +79,39 @@ Never run `git commit` without user's explicit authorization for that specific c
 
 1. Inspect the affected files and nearby code before editing — check whether the change touches `app/` (backend), `frontend/` (frontend), or both.
 2. Record existing worktree changes (`git status`) and leave unrelated files untouched.
-3. Make the smallest change that satisfies the task while following the conventions in [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) (thin controllers, business logic in models, convention-based routing).
+3. Make the smallest change that satisfies the task following convention:
+   - for `app/` (backend): thin controllers, business logic in models, convention-based routing.
+   - for `frontend/`: component split (`.vue`/`.js`/`.scss`), business logic in composables/store, convention-based routing.
 4. Run `vp check` and `vp test` for the affected boundary before considering the task done.
 5. Review changed paths and diff quality before handing off the work.
 
 ---
-
-## SPA catch-alls — always pair backend + frontend
-
-Before touching `app/config/routes.js` or an entrypoint's `routes.js`, load `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` — don't wire catch-alls from memory.
-
-An entrypoint gets a scoped backend catch-all (`'/<area>/*': '<Area>Controller.get'` in `app/config/routes.js`, before the more specific patterns are shadowed) **only if that area's backend template actually mounts a Vue app** (`<div id="app">` + `{{ vite({ entry: '<name>' }) }}` in its `app/views/_shared/templates/*.html`). When it does, **always add both halves together, never one without the other**:
-
-1. **Backend**: the scoped catch-all, so a hard refresh on any client-side route re-renders the SPA shell instead of 404ing.
-2. **Frontend**: a Vue Router catch-all in that entrypoint's `routes.js` — `{ path: '/:pathMatch(.*)*', component: NotFound }` — rendering a `views/NotFound/Index.vue`, so an invalid path inside that area actually shows a 404 UI instead of silently re-rendering the home view.
-
-**Never add a `/*` catch-all for an area that doesn't mount a Vue app** (a fully server-rendered/Nunjucks area — e.g. views extending `_shared/templates/static.html`, which has no `id="app"` or `vite()` call). `@vulkano/core` already returns a real `404` status via its built-in handler (`app/views/_shared/errors/404.html`) for any unmatched route — a blanket `/*` there would intercept that and soft-200 every invalid URL into the homepage instead, which is wrong for SEO and for users.
-
----
-
-## Environment variables
-
-```
-PORT=8000
-MONGO_URI=mongodb://localhost:27017/myapp   # optional, for database connection (ignore if you don't use a database)
-SALT_KEY=random-string   # optional, for hashing passwords
-JWT_SECRET_KEY=supersecret   # optional, for auth
-COOKIES_SECRET_KEY=another-secret   # only needed for signed cookies — see vulkano-backend-auth skill
-# VITE_CHUNK_NAMES=false   # optional, only to chunk files — not recommended: public/ isn't cleared on build, and Vulkano already busts cache via ?v={app.pkg.version}, so old chunks just pile up
-# VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
-```
 
 ## Code principles — DRY, KISS, divide and conquer
 
 - **DRY**: don't repeat code blocks — extract reusable functions/components instead of copy-pasting.
 - **KISS**: write simple code a human understands fast. Avoid clever tricks and long functions. Use clear names for variables and functions.
 - **Divide and conquer**: keep components small, each doing one task. Split large components into smaller pieces rather than growing one file.
-- **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
 - **Unused variables — prefix with `_`**: applies front and back, any language in this repo. When a function parameter or binding is intentionally unused (e.g. a `catch` block that doesn't need the error), prefix it with `_` so the linter's `no-unused-vars` rule doesn't flag it: `catch (_err) {`.
-- **DB field/data scripts — singular collection names**: before writing any script that reads/changes a DB field (one-off migration, ad-hoc fix, not just a new model), load `.claude/skills/vulkano-skills/vulkano-backend-model/SKILL.md` first. Collections are singular (`order`, `user`), never pluralized (`orders`, `users`) — don't write the script from memory of generic Mongo/Node conventions.
 
 ## Security considerations
 
 - Never commit credentials, API keys, tokens, private keys, or production configuration values. Treat untracked local configuration as sensitive unless a tracked authority explicitly says otherwise.
 - Treat request data as untrusted. Validate the expected type, range, and business rules at the boundary; filtering alone is not authorization or a substitute for context-appropriate output escaping.
 - Enforce authentication and authorization for every protected action or resource. Do not rely on routes, navigation, or client-side controls as the access boundary; verify the relevant source and tests when changing it.
-- Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
-- No endpoint response (`res.vsr`/`res.render` payload, error body, list/detail serialization) may expose passwords, hashes, tokens, or API keys — strip/select fields explicitly rather than returning a full model document. Only exception: the user explicitly asks, for that specific case.
 - Treat changes to `package.json` and `pnpm-lock.yaml` as security sensitive. Keep versions compatible with the tracked Node requirement (`>=24`), review the dependency's purpose and maintenance status, and do not prescribe vulnerability-scanning commands without tracked support.
-- If credentials for Amazon S3, DigitalOcean Spaces, or any other S3-compatible storage are present (env vars, config), never use them to delete objects from the bucket — no `DeleteObjectCommand`/`DeleteObjectsCommand` or equivalent, in app code, scripts, or ad-hoc commands run during a task. Uploads/reads are fine; deletion is off-limits regardless of what the task asks for.
-- When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`current` action convention — see `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md`). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
-- Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` either — same XSS exposure as the token. After login, fetch the current user via `GET /api/auth/me` (or `/api/auth/current`), and re-fetch it on every route change (router guard) instead of caching it client-side.
-
-## Form fields (frontend)
-
-Any `<form>` add/edit in `frontend/` — always load the `vulkano-frontend-form` skill first (`.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md`): required-field asterisks, JS-only validation via `useFormValidator`, `fieldErrors` pattern, input types, date-picker choice. Don't hand-roll form validation from memory of this note — the skill is the source of truth, load it every time, not just when it "seems needed".
-
-## Frontend assets (images, fonts, files)
-
-- Static frontend assets (images, fonts, downloadable files) live directly in `public/` (`public/img/`, `public/fonts/`, `public/files/`) — not under `frontend/`, and not pulled through the Vite bundler via `@frontend`/relative `import`/`src="@frontend/..."`.
-- Reference them by absolute path from the app root: `/img/<name>.webp`, `/fonts/<name>.woff2`, `/files/<name>`. Same in CSS `url(...)`.
-- Namespace per feature when a design drops multiple files at once (e.g. `public/img/<section>/background.webp`) to avoid collisions in the flat `public/img/` root.
-- Optimize photographic images to `.webp` first via `scripts/webp.js` — drop the source directly under `public/img/` and run `pnpm run webp`; it converts in place, rewrites any `.vue`/`.scss`/`.css`/`.njk`/`.hbs`/`.html`/`.js` references from the old extension to `.webp`, then asks once whether to delete the now-unused originals.
-
-## Microinteractions (frontend)
-
-- Every async action (fetch, submit, delete) needs a `loading` state: spinner/skeleton, disabled or `--loading` button state, visual feedback while waiting for the response.
-- Interactive elements (buttons, table rows, cards, links) need hover/rollover: subtle color/shadow/scale transition, never an abrupt change.
-- Every `<button>` (and any clickable non-native element, e.g. a `div`/`span` acting as one) gets `cursor: pointer`, disabled state excepted (`cursor: not-allowed` or default). Reuse a shared base button style/mixin instead of setting it per view.
-- State transitions (modal/toast/dropdown/error appearing or disappearing) use a short `transition`/`animation` (~150-250ms), no instant jump.
-- Reuse shared utilities (`.is-loading`, transition mixins in `_index.scss` or design tokens) instead of repeating the animation per view — see [Code principles](#code-principles--dry-kiss-divide-and-conquer).
-- For polished/complex animations (staggered lists, timeline sequences, scroll-triggered effects) CSS transitions can't cleanly express, GSAP is allowed — not yet a dependency, install with `pnpm add gsap` before first use and call this out explicitly in the diff.
-- For scroll-reveal effects (fade/slide-in as elements enter viewport), AOS is allowed — not yet a dependency, install with `pnpm add aos` before first use and call this out explicitly in the diff.
-
-## Visual verification (frontend)
-
-For `frontend/` changes, don't just read the diff — look at it running. The `chrome-devtools` MCP is the recommended tool for this — prefer it over other browser MCPs (e.g. `claude-in-chrome`) when both are available: its screenshots and page snapshots surface in the conversation, so the user sees the actual work being verified, not just a text confirmation. If it's available, use it: check first whether the port (`8000`/`$PORT`) is already in use — if it's this project already running (the user may have started it themselves), navigate straight to it, don't restart it, and ask the user first if you're unsure whether it's safe to touch. If it's a different, unrelated project holding that port, don't kill it — start this one with `PORT=<alt> pnpm run dev` for the check instead. Navigate, take a screenshot, and check the console/network tab for new errors. Stop only the dev server you started yourself once you're done — never a server you didn't start. This is how you catch layout, styling, and runtime issues that a type-check or `vp check` can't — treat it as part of verifying the change, not an optional extra.
-
-**Testing from a phone/other LAN device (`http://<VITE_HOST>:8000`)** — if the page loads but assets/HMR fail with connection errors pointing at `localhost` instead of the LAN IP: `@vulkano/core` reads the Vite dev manifest (`public/.vite/manifest.development.json`, written by `vite-plugin-dev-manifest`) into `app.vite` **once, at Express boot** (`Vite.init()`), then caches it in memory for the life of the process. If the backend started before `VITE_HOST` was set or before Vite wrote the manifest with the correct LAN URL, `app.vite.url` stays stale — and stays stale even after the manifest file on disk is fixed, since `nodemon.json` ignores `frontend/` and never restarts Express for it. Fix: `touch app.js` (or otherwise trigger nodemon) to force a backend restart and re-read the manifest — don't chase this as a frontend/network bug first.
-
-**On WSL**: `VITE_HOST` must be the Windows host's LAN IP, not the WSL/Ubuntu internal IP (`ip addr show eth0` inside WSL gives an address only reachable from the Windows host itself, not from other LAN devices). Get the right one from Windows (`ipconfig`, the adapter actually on the LAN/Wi-Fi) — a phone or other device connecting to the WSL-internal IP will fail the same way regardless of the manifest/restart fix above.
 
 ## Safety boundaries
 
-- CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
-- CSS `rem` values (`frontend/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
-- Frontend layout (`frontend/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
-- Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.js`, or another tracked config file.
+- Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.mjs`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
-- Do not duplicate large manuals here — link to [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md) or `@vulkano/core/examples/` for reference implementations instead of copying them wholesale.
 - Local search commands (`find`, `grep`, `rg`, `ag`, etc.): always scope to relative/project path (`find ./ ...`, `grep -r ... ./`), never absolute root (`find / ...`, `grep -r ... /`) — scanning from root is slow and unnecessary when target is inside project/cwd.
 
 ## Before handoff checklist
 
-- [ ] The changed paths match the requested scope.
-- [ ] Existing unrelated changes in the worktree remain untouched.
-- [ ] Every documented command or convention claim has a tracked authority (`package.json`, `vite.config.js`, this file, `reference/ARCHITECTURE.md`).
-- [ ] For backend (`app/`) changes with no automated test coverage, the server was started (`pnpm dev` / `pnpm start`) and the affected endpoints/controllers were verified manually.
-- [ ] For `frontend/` changes, the frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [Visual verification](#visual-verification-frontend).
-- [ ] Public behavior, routes, and compatibility risks are called out explicitly.
-- [ ] The final diff contains no accidental whitespace or generated artifacts.
-- [ ] No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
-- [ ] For frontend changes involving user interaction (form, button, download, video, page), analytics tracking was added per [reference/ANALYTICS.md](reference/ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
-- [ ] For frontend changes involving images, navigation, or forms, accessibility minimums per [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
-- [ ] For new public/crawlable pages, SEO essentials per [reference/SEO.md](reference/SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
-- [ ] When a task is about deploying/launching to production, run through [reference/LAUNCH.md](reference/LAUNCH.md) (indexing enabled, `robots.txt` regenerated, sitemap present, GA/GTM enabled, meta tags reviewed) before considering the task done.
-
-## UI components — shadcn-vue or Element Plus
-
-Check `package.json` before assuming either is installed — see [reference/FRONTEND.md § Component library](reference/FRONTEND.md#component-library). Only bring one in when a task actually needs pre-built accessible components (dialogs, dropdowns, etc.); pick shadcn-vue for a blank-slate design-system fit, Element Plus for a fast admin/CMS component set. Don't install both in the same project — if `package.json` already has one, use it; don't add the other.
-
-### shadcn-vue
-
-When that need comes up:
-
-- First-time setup only (skip if `components.json` already exists at repo root — the canonical marker, not a specific peer-dep name which drifts across versions): install Tailwind (`tailwindcss` + `@tailwindcss/vite`) and shadcn-vue's CLI dependencies (`reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`), then run `pnpm dlx shadcn-vue@latest init` to scaffold `components.json` (repo root) and `frontend/<entrypoint>?/components/ui/`.
-- Keep Tailwind + shadcn-vue isolated in `frontend/<entrypoint>?/components/ui/`, separate from the project's `.scss`/BEM convention (see [reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)). Everything outside that folder stays plain `.scss` — do not introduce Tailwind utility classes elsewhere.
-- Scope the Tailwind entry to that folder only (`source(none)` + `@source './**/*.{vue,js}'`) and prefix every utility class (`prefix(tw)` → `tw-flex`, `tw-p-4`, ...) so nothing collides with existing BEM classes. Import it once, directly in `frontend/<entrypoint>?/app.js` — not chained through `frontend/<entrypoint>?/style.scss`.
-- Add the shadcn `cn()` helper (clsx + tailwind-merge) under `frontend/<entrypoint>?/components/ui/lib/utils.js`, the standard shadcn convention for merging class strings.
-
-The isolation is about styling method only (Tailwind utilities vs. SCSS/BEM) — it does **not** exempt `ui/` from the project's logic/template/style separation (`.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`). This applies to any external component library vendored into the codebase, not just shadcn-vue — whatever CLI or copy-paste source generates it, split it before committing: `Component.vue` (template only) and `Component.js` (logic, imported via `<script src="./Component.js">`); styling stays inline as the library's own classes in the `.vue` file (no `_index.scss` needed where there's no BEM to aggregate). The shadcn-vue CLI in particular scaffolds a single `.vue` file with an inline `<script setup>` block — after running `pnpm dlx shadcn-vue add <component>`, manually extract that block into a sibling `Component.js` and point the `.vue` file at it before committing.
-
-To add a component once shadcn-vue is set up:
-
-```
-pnpm dlx shadcn-vue@latest add <component>
-```
-
-The CLI reads `components.json` and drops the component into `frontend/<entrypoint>?/components/ui/<component>/`. After adding, import it with the `tw-` prefixed classes it ships with — don't strip the prefix. Run `vp build` once to confirm the new classes made it into the compiled CSS.
-
-### Element Plus
-
-When that need comes up instead:
-
-- First-time setup only (skip if `package.json` already has `element-plus`): install `element-plus` plus its auto-import plugins (`unplugin-vue-components`, `unplugin-auto-import`) and wire both into `vite.config.mjs` so components/styles resolve on demand — don't `app.use(ElementPlus)` globally with the full bundle.
-- Element Plus components are used directly in templates (`<el-button>`, `<el-table>`, ...) — no local `frontend/<entrypoint>?/components/ui/` copy needed since nothing is vendored into the repo, unlike shadcn-vue's copy-paste model.
-- Override its SCSS theme variables in one dedicated file (e.g. `frontend/<entrypoint>?/components/ui/element-theme.scss`), imported once in `frontend/<entrypoint>?/app.js` — keep it isolated from the project's own BEM `_index.scss` files, same isolation principle as the shadcn-vue case above.
-
-<!--VITE PLUS START-->
-
-# Using Vite+, the Unified Toolchain for the Web
-
-This project is using Vite+, a unified toolchain built on top of Vite, Rolldown, Vitest, tsdown, Oxlint, Oxfmt, and Vite Task. Vite+ wraps runtime management, package management, and frontend tooling in a single global CLI called `vp`. Vite+ is distinct from Vite, and it invokes Vite through `vp dev` and `vp build`. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command.
-
-Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.dev/guide/.
-
-## Review Checklist
-
-- [ ] Run `vp install` after pulling remote changes and before getting started.
-- [ ] Run `vp check` and `vp test` to format, lint, type check and test changes.
-- [ ] Check if there are `vite.config.ts` tasks or `package.json` scripts necessary for validation, run via `vp run <script>`.
-
-<!--VITE PLUS END-->
+- The changed paths match the requested scope.
+- Existing unrelated changes in the worktree remain untouched.
+- Public behavior, routes, and compatibility risks are called out explicitly.
+- The final diff contains no accidental whitespace or generated artifacts.

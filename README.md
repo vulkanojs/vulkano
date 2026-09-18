@@ -30,9 +30,9 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 - `frontend/website/` is the public Vue 3 SPA
 - `frontend/admin/` is the admin one with Vue 3 SPA and separate entry point (optional, remove if you don't need it)
 
-See reference/ARCHITECTURE.md § Multiple entry points.
+See references/AGENTS/ARCHITECTURE.md § Multiple entry points.
 
-Full folder layout: see **[reference/ARCHITECTURE.md](reference/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `reference/BACKEND.md` and `reference/FRONTEND.md` are thin pointers into them.
+Full folder layout: see **[references/AGENTS/ARCHITECTURE.md](references/AGENTS/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `references/AGENTS/BACKEND.md` and `references/AGENTS/FRONTEND.md` are thin pointers into them.
 
 ---
 

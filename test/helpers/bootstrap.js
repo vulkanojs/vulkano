@@ -3,15 +3,17 @@ require('dotenv').config();
 process.env.PORT = process.env.TEST_PORT || '8199';
 process.env.NODE_ENV = 'test';
 
-// Mandatory — never run tests against the same MONGO_URI as dev/prod. See reference/TESTING.md § Environment.
-if (!process.env.TEST_MONGO_URI) {
-  throw new Error(
-    'TEST_MONGO_URI is not set. Refusing to run tests against MONGO_URI (dev/prod). ' +
-      'Set TEST_MONGO_URI in .env to a dedicated test database first — see reference/TESTING.md § Environment.'
-  );
+// The @vulkano/core's loadDatabaseApplication()
+// skips mongoose.connect() entirely when settings.database.connection is
+// falsy (see node_modules/@vulkano/core/database/mongodb.js), so tests boot
+// with no database by default. If a model is added later and needs one,
+// set TEST_MONGO_URI to a dedicated test database — never MONGO_URI
+// (dev/prod) — see references/AGENTS/TESTING.md § Environment.
+if (process.env.TEST_MONGO_URI) {
+  process.env.MONGO_URI = process.env.TEST_MONGO_URI;
+} else {
+  delete process.env.MONGO_URI;
 }
-
-process.env.MONGO_URI = process.env.TEST_MONGO_URI;
 
 const vulkano = require('@vulkano/core');
 

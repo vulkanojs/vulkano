@@ -10,20 +10,20 @@ This is the **Vulkano Framework** — the full-stack app template built on top o
 
 ## Project requirements — SEO / Analytics / Accessibility
 
-A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [reference/ARCHITECTURE.md § Multiple entry points](reference/ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
-
-On the first task touching a new area (no row for it yet in the table below), ask the user what that area is — landing page, landing + form, multi-page website, blog, embeddable widget, or CMS/admin panel — then set that row from the mapping instead of asking about SEO/Analytics/Accessibility one by one:
-
-- **Landing / landing + form / website / blog** (public, crawlable pages) → SEO on, Analytics on, Accessibility on.
-- **Embeddable widget** (mounts inside someone else's page, no page of its own to index) → SEO off, Accessibility on; Analytics — ask the user whether they want usage tracking (clicks, conversions) on the widget itself, don't assume off.
-- **CMS / admin panel** (internal, logged-in tool) → SEO off, Analytics off, Accessibility on.
-- Anything that doesn't fit cleanly: ask directly which of the three apply.
-
-Show the user the resulting row so they can correct it before proceeding. From then on, treat this table as the answer and don't ask again for that area:
+Decision process, category mapping, and doc pointers: `references/AGENTS/AREAS.md`. This table is this project's actual state — treat it as the answer, don't ask again for a listed area:
 
 | Area (path/entry point)                    | SEO | Analytics | Accessibility |
 | ------------------------------------------ | --- | --------- | ------------- |
 | `/` (`frontend/website/`) — public site    | on  | on        | on            |
 | `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |
 
-A blank/missing area means: not decided yet, ask on first touch. Marking an area's column "off" means: skip that doc entirely (don't read it, don't apply its checklist) for work scoped to that area — [reference/SEO.md](reference/SEO.md), [reference/ANALYTICS.md](reference/ANALYTICS.md), [reference/ACCESSIBILITY.md](reference/ACCESSIBILITY.md).
+## Deployment
+
+**CI/CD pipeline: TBD.** No automated pipeline (GitHub Actions or otherwise) exists yet — deploys today are manual, via one of PM2/Docker/Coolify below.
+
+- `ecosystem.config.js` — PM2 config for VPS deployment (bare-metal/VPS, no container)
+- `Dockerfile` — multi-stage build: `build` stage runs `pnpm install --frozen-lockfile` + `pnpm run build` (produces `public/`), `runtime` stage installs prod-only deps and copies `public/`, `app/`, `app.js`; exposes port `8000`, runs `node app.js`
+- `docker-compose.yml` — `app` service builds from the `Dockerfile`, reads `.env` via `env_file`, maps `${PORT:-8000}`; optional `mongo` service under the `local-db` profile for local Mongo without a managed DB
+- **Coolify**: default build pack is Nixpacks (auto-detects Node, runs `pnpm install` + start script), not the repo's `Dockerfile` — pick "Dockerfile" as the build pack in the Coolify app settings if you want it to build from `Dockerfile`/`docker-compose.yml` instead. No dedicated Coolify config file in the repo either way
+
+<!-- On project init: pick the deployment mechanism this project actually uses and trim the rest. -->
