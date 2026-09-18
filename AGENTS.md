@@ -33,7 +33,8 @@ Before any `git` action (commit, push, branch, reset, etc.) — read `references
 Where a skill under `.claude/skills/vulkano-skills/` covers the task, invoke it and skip the matching `references/AGENTS/` doc — read the doc only if the skills submodule isn't installed.
 
 - Touching `app/` (backend) — read `references/AGENTS/BACKEND.md` first (code principles, security, handoff checklist). Routing, controllers, models, views, and auth are covered by skills; read [`@vulkano/core`'s README](node_modules/@vulkano/core/README.md) only for what they don't cover (cron jobs, auto-loaded globals, express/middleware config) — search it for the section you need, don't read it whole.
-- Touching `frontend/` — read `references/AGENTS/FRONTEND.md` first (code principles, security, UI components, forms, handoff checklist; CSS and microinteractions are split into `CSS.md` / `MICROINTERACTIONS.md`, read on demand).
+- Touching `frontend/` — read `references/AGENTS/FRONTEND.md` first (code principles, security, forms, handoff checklist; CSS and microinteractions are split into `CSS.md` / `MICROINTERACTIONS.md`, read on demand).
+- Needs a pre-built UI component (dialog, dropdown, table, etc.) — read `references/AGENTS/UI.md` first.
 - Creating a file or folder, or unsure where something lives — read `references/AGENTS/ARCHITECTURE.md` (project structure).
 - Adds/changes a controller, model, service, or middleware, or a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — it needs a test: skill `vulkano-testing` (doc: `references/AGENTS/TESTING.md`).
 - Adds/edits a Pinia store (`frontend/<entrypoint>/store/`) — skill `vulkano-frontend-store` (doc: `references/AGENTS/STORE.md`).

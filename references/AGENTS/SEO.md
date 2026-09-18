@@ -6,6 +6,6 @@ SEO convention for Vulkano Framework projects. No Vue SSR/prerendering in this f
 
 ## Default rule
 
-Every public/crawlable **area** of a project must be crawlable unless the user explicitly says SEO is not required for it — see [PROJECT.md § Project requirements](../../PROJECT.md#project-requirements--seo--analytics--accessibility) for the per-area decision. Backend views are the SEO surface for public areas; the Vue SPA is never SEO-covered.
+Every public/crawlable **area** of a project must be crawlable unless the area's SEO column in [PROJECT.md § Project requirements](../../PROJECT.md#project-requirements--seo--analytics--accessibility) is off — that table is the only place that decides; this doc is a reference. Backend views are the SEO surface for public areas; the Vue SPA is never SEO-covered.
 
 Full pre-production launch checklist (indexing, robots.txt, sitemap, analytics, meta tags together): [references/AGENTS/LAUNCH.md](LAUNCH.md).

@@ -35,10 +35,6 @@ Writing/editing `.scss` or page layout — read [CSS.md](CSS.md) first: CSS unit
 
 - Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` — client-readable storage is exposed to XSS. After login, fetch the current user via `GET /api/auth/current`, and re-fetch it on every route change (router guard) instead of caching it client-side.
 
-## UI components
-
-Task needs a pre-built UI component (dialog, dropdown, etc.) — see [references/AGENTS/UI.md](UI.md) first: `components/ui/` isolation, component-splitting convention, `views/ui/` styleguide. Library choice lives in `PROJECT.md`, not here.
-
 ## Forms
 
 Any `<form>` add/edit — always load the `vulkano-frontend-form` skill first (`.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md`): required-field asterisks, JS-only validation via `useFormValidation`, `fieldErrors` pattern, input types, date-picker choice. Don't hand-roll form validation from memory of this note — the skill is the source of truth, load it every time, not just when it "seems needed".
