@@ -26,9 +26,8 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 
 ## Project structure
 
-- `app/` is the Express backend
-- `frontend/website/` is the public Vue 3 SPA
-- `frontend/admin/` is the admin one with Vue 3 SPA and separate entry point (optional, remove if you don't need it)
+- `app/` is the backend
+- `frontend/` — multi entry point for Vue 3 SPA or vanilla JS
 
 See references/AGENTS/ARCHITECTURE.md § Multiple entry points.
 
@@ -38,12 +37,13 @@ Full folder layout: see **[references/AGENTS/ARCHITECTURE.md](references/AGENTS/
 
 ## Stack
 
-| Layer     | Technology                                     |
-| --------- | ---------------------------------------------- |
-| Backend   | Node.js 24, Express 5, Mongoose, @vulkano/core |
-| Frontend  | Vue 3, Vue Router, Vite                        |
-| Styling   | SCSS, Foundation Sites                         |
-| Dev tools | Nodemon, Vite Plus                             |
+| Layer     | Technology                                               |
+| --------- | -------------------------------------------------------- |
+| Runtime   | Node.js >=24, pnpm                                       |
+| Backend   | Express 5, Mongoose, Socket.io, JWT, i18n, @vulkano/core |
+| Frontend  | Vue 3, Vue Router, JS Vanilla, Vite                      |
+| Styling   | SCSS, Foundation Sites                                   |
+| Dev tools | Nodemon, Vite Plus                                       |
 
 ---
 
@@ -128,15 +128,7 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 
 ## Environment variables
 
-```
-PORT=8000
-MONGO_URI=mongodb://localhost:27017/myapp   # optional, for database connection
-SALT_KEY=random-string   # optional, for hashing passwords
-JWT_SECRET_KEY=supersecret   # optional, for auth
-COOKIES_SECRET_KEY=another-secret   # optional, only for signed cookies
-VITE_CHUNK_NAMES=false   # optional, only to chunk files — not recommended: public/ isn't cleared on build, and Vulkano already busts cache via ?v={app.pkg.version}, so old chunks just pile up
-VITE_HOST=192.168.x.x   # optional — forces a specific dev-server host; unset uses auto LAN detection
-```
+Create a `.env` file in the project root. Full list of variables: see **[references/AGENTS/ARCHITECTURE.md § Environment variables](references/AGENTS/ARCHITECTURE.md#environment-variables)**.
 
 ---
 
@@ -256,7 +248,7 @@ Use the **Docker Compose** deployment type in Coolify and point it at this
 repo — it picks up `docker-compose.yml` and `nixpacks.toml` automatically.
 
 `.env` is gitignored and never reaches the build, so set your environment
-variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET_KEY`, etc) in Coolify's
+variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET_KEY`, `COOKIES_SECRET_KEY`, etc) in Coolify's
 own **Environment Variables** panel for the app — Coolify injects them into
 the running container at deploy time.
 

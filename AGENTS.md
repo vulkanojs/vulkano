@@ -6,12 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this framework is
 
-Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 frontend, bundled by Vite.
-
-- **Backend**: `@vulkano/core` (Express, Mongoose, Socket.io, JWT, i18n)
-- **Frontend**: Vue 3 + Vue Router, bundled by Vite Plus
-- **Package manager**: `pnpm`
-- **Node**: `>=24`
+Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 / vanilla JS frontend, bundled by Vite.
 
 See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SEO/Analytics/Accessibility settings — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or per-area decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
 
