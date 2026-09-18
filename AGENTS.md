@@ -20,6 +20,7 @@ See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SE
 - No explanations unless explicitly asked for.
 - Zero pleasantries, greetings, sign-offs, or filler.
 - Ultra-short, direct sentences.
+- All user-facing text — including `AskUserQuestion` questions, option labels, and descriptions — must be in Spanish or English only, never another language.
 - Use Caveman mode (if the skill is available): use the fewest tokens possible.
 - Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — output goes under `.superpowers/plans/` and `.superpowers/specs/` (same root as `.superpowers/sdd/`, which the plugin hardcodes and cannot be relocated). **This overrides the brainstorming skill's own default path (`docs/superpowers/specs/`)** — that default never applies in this repo; always write specs, plans and sdd to `.superpowers`, no exceptions.
 - Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
