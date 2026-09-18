@@ -58,10 +58,6 @@ Touching a new entry point/area with no row yet in `PROJECT.md`'s table — read
 
 Deploying/launching a project to production — read `references/AGENTS/LAUNCH.md` first.
 
-## Deployment
-
-Deploying, or editing `ecosystem.config.js`, `Dockerfile`, `docker-compose.yml`, or `nixpacks.toml` — read `references/AGENTS/DEPLOYMENT.md` first.
-
 ---
 
 ## Quick workflow

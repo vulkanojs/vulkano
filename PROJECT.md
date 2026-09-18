@@ -28,9 +28,9 @@ Blank means: no override, the skill's/reference doc's default applies — don't 
 
 **CI/CD pipeline: TBD.** No automated pipeline (GitHub Actions or otherwise) exists yet — deploys today are manual.
 
-Mechanism used per environment (PM2 / Docker / Coolify) — fill in on project init. What each option is and how it's wired: `references/AGENTS/DEPLOYMENT.md`, read only when deploying.
-
 | Environment | Mechanism |
 | ----------- | --------- |
 | staging     | TBD       |
 | production  | TBD       |
+
+<!-- On project init: replace each TBD with the mechanism this project uses for that environment (PM2, Docker, or Coolify + build pack) — options in README.md § Deployment. List only the selected ones. -->

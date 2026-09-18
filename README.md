@@ -196,7 +196,7 @@ Details (what the script rewrites, `loading="lazy"` on `<img>`): see **[referenc
 
 ## Deployment
 
-The framework supports several deploy options. Pick **one per environment** (e.g. staging, production) and record it in [PROJECT.md § Deployment](PROJECT.md#deployment).
+The framework supports several deploy options. Pick **one per environment** (e.g. staging, production) and record only the selected ones in [PROJECT.md § Deployment](PROJECT.md#deployment).
 
 ### PM2 (SSH)
 
@@ -232,8 +232,11 @@ docker compose --profile local-db up --build
 
 ### Coolify
 
-Use the **Docker Compose** deployment type in Coolify and point it at this
-repo — it picks up `docker-compose.yml` and `nixpacks.toml` automatically.
+Point Coolify at this repo and pick a build pack in the app settings:
+
+- **Nixpacks** (Coolify's default) — builds from `nixpacks.toml` (Node 24, `pnpm install --frozen-lockfile`, `pnpm run build`, starts with `pnpm run start`).
+- **Dockerfile** — builds the repo's `Dockerfile`.
+- **Docker Compose** — builds from `docker-compose.yml`, which builds the `Dockerfile`.
 
 `.env` is gitignored and never reaches the build, so set your environment
 variables (`PORT`, `MONGO_URI`, `SALT_KEY`, `JWT_SECRET_KEY`, `COOKIES_SECRET_KEY`, etc) in Coolify's
