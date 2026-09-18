@@ -114,7 +114,7 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 ## Dev workflow
 
 | Command        | Description                                                      |
-| -------------- | ----------------------------------------------------------------- |
+| -------------- | ---------------------------------------------------------------- |
 | `vp run dev`   | Start Express + Vite dev server with HMR                         |
 | `vp run clean` | Choose entrypoint count + remove demo boilerplate (new projects) |
 | `vp build`     | Build frontend assets into `public/`                             |
