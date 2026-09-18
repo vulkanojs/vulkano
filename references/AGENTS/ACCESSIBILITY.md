@@ -6,4 +6,4 @@ Accessibility convention for Vulkano Framework projects.
 
 ## Default rule
 
-Every project meets these minimums unless the user explicitly says accessibility is not required for this project (see the SEO/Analytics/Accessibility area table in the root `CLAUDE.md`). If a task touches images, navigation, forms, or any interactive element and these minimums aren't met, fix them as part of the task — don't skip silently.
+Every project meets these minimums unless the user explicitly says accessibility is not required for this project (see the SEO/Analytics/Accessibility area table in `PROJECT.md` § Project requirements). If a task touches images, navigation, forms, or any interactive element and these minimums aren't met, fix them as part of the task — don't skip silently.
