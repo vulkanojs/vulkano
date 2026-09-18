@@ -31,7 +31,7 @@ Before any `git` action (commit, push, branch, reset, etc.) — read `references
 ## Area conventions
 
 - Touching `app/` (backend) — read `references/AGENTS/ARCHITECTURE.md`, `references/AGENTS/BACKEND.md`, and [`@vulkano/core`'s own README](node_modules/@vulkano/core/README.md) first (project structure, code principles, security, handoff checklist — core README is the source of truth for routing/controllers/models/JWT auth, not optional background reading).
-- Touching `frontend/` — read `references/AGENTS/ARCHITECTURE.md` and `references/AGENTS/FRONTEND.md` first (project structure, code principles, security, UI components, forms, microinteractions, safety boundaries, handoff checklist).
+- Touching `frontend/` — read `references/AGENTS/ARCHITECTURE.md` and `references/AGENTS/FRONTEND.md` first (project structure, code principles, security, UI components, forms, handoff checklist; CSS and microinteractions are split into `CSS.md` / `MICROINTERACTIONS.md`, read on demand).
 - Adds/changes a controller, model, service, or middleware — also read `references/AGENTS/TESTING.md`.
 - Adds/changes a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — also read `references/AGENTS/TESTING.md`.
 - Adds/edits a Pinia store (`frontend/<entrypoint>/store/`) — also read `references/AGENTS/STORE.md`.

@@ -44,24 +44,9 @@ Covered by `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`: 
 
 Adding/editing a Pinia store — see `.claude/skills/vulkano-skills/vulkano-frontend-store/SKILL.md` first ([STORE.md](STORE.md) for the same detail without the submodule): store-per-concern splitting, setup-style `defineStore`, the `useAppStore` app-shell exception, and store testing.
 
-## CSS Grid, BEM, and the responsive grid system — `frontend/<entrypoint>/scss/`
+## CSS — layout, units, grid system
 
-Covered by `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md`: CSS Grid layout (no Flexbox), BEM naming, and the project's Foundation-style column system below.
-
-Foundation-style responsive grid, built on CSS Grid, imported once per entrypoint's `style.scss` (e.g. `frontend/website/style.scss`):
-
-```html
-<div class="row">
-  <div class="column small-12 medium-6 large-4">...</div>
-</div>
-```
-
-- `.row`: `display: grid; grid-template-columns: repeat(12, 1fr);` — 12-column grid.
-- `.column`: `grid-column: span 12` default (mobile-first, full row).
-- Size classes `.small-N` / `.medium-N` / `.large-N` / `.xlarge-N` (1-12), each `grid-column: span N` — `small` unscoped (base), `medium`/`large`/`xlarge` wrapped in `min-width` media queries (`$breakpoints` map: medium 40rem/640px, large 64rem/1024px, xlarge 75rem/1200px).
-- Gutter: `0.875rem` (small), `0.9375rem` from `medium` up. `.row--collapsed` removes it (`gap: 0`).
-- Nesting: any `.column` can also carry `.row` to nest a grid inside it — no special helper needed.
-- No offset/push-pull classes (not needed yet — add only when a task requires them).
+Writing/editing `.scss` or page layout — read [CSS.md](CSS.md) first: CSS units and `rem` rules, `display: grid` (not flex) layout, and the Foundation-style responsive grid. Skill: `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md` (CSS Grid layout, BEM naming).
 
 ## Vite build/dev config and backend injection
 
@@ -81,19 +66,7 @@ Any `<form>` add/edit — always load the `vulkano-frontend-form` skill first (`
 
 ## Microinteractions
 
-- Every async action (fetch, submit, delete) needs a `loading` state: spinner/skeleton, disabled or `--loading` button state, visual feedback while waiting for the response.
-- Interactive elements (buttons, table rows, cards, links) need hover/rollover: subtle color/shadow/scale transition, never an abrupt change.
-- Every `<button>` (and any clickable non-native element, e.g. a `div`/`span` acting as one) gets `cursor: pointer`, disabled state excepted (`cursor: not-allowed` or default). Reuse a shared base button style/mixin instead of setting it per view.
-- State transitions (modal/toast/dropdown/error appearing or disappearing) use a short `transition`/`animation` (~150-250ms), no instant jump.
-- Reuse shared utilities (`.is-loading`, transition mixins in `_index.scss` or design tokens) instead of repeating the animation per view — see [AGENTS.md § Code principles](../../AGENTS.md#code-principles--dry-kiss-divide-and-conquer).
-- For polished/complex animations (staggered lists, timeline sequences, scroll-triggered effects) CSS transitions can't cleanly express, GSAP is allowed — not yet a dependency, install with `pnpm add gsap` before first use and call this out explicitly in the diff.
-- For scroll-reveal effects (fade/slide-in as elements enter viewport), AOS is allowed — not yet a dependency, install with `pnpm add aos` before first use and call this out explicitly in the diff.
-
-## Safety boundaries
-
-- CSS units: use `rem`, `px`, `dvh`, `vw`, or `%` only — no `ch`, `em`, `vh` (use `dvh`), or other units. `ch` in particular renders inconsistently across the font stacks a host page might cascade in.
-- CSS `rem` values (`frontend/**/*.scss`): only use a `rem` value whose px equivalent (at the 16px root) is a whole number — never a decimal px. E.g. use `0.75rem` (12px) not `0.7rem` (11.2px); use `0.375rem` (6px) not `0.3rem` (4.8px); `1px` is `0.0625rem`.
-- Frontend layout (`frontend/**/*.scss`): use `display: grid` for layout, not `display: flex` — keep the layout system consistent across the front. Only reach for flex when a component genuinely needs flex-only behavior grid can't express.
+Adding/editing a button or clickable element, an async action (fetch, submit, delete), or a transition/animation — read [MICROINTERACTIONS.md](MICROINTERACTIONS.md) first: loading states, hover, `cursor: pointer`, transition timing, GSAP/AOS policy.
 
 ## Before handoff checklist
 
