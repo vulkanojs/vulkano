@@ -1,6 +1,6 @@
 # State — `frontend/<entrypoint>/store/`
 
-See [FRONTEND.md](FRONTEND.md) for general frontend conventions and [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview.
+Only applies when adding or editing a Pinia store. Otherwise skip this file.
 
 Keep state in [Pinia](https://pinia.vuejs.org/) rather than local component `ref`/`reactive`, especially for anything worth surviving a re-render: component-local state resets whenever HMR can't hot-swap a module in place and falls back to a full reload, while state in a store is less likely to be lost across that reload.
 

@@ -1,7 +1,5 @@
 # Backend (`app/`)
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../../AGENTS.md) for workflow/safety rules.
-
 **Controller/route, model, view, and auth work is covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
 
 - `.claude/skills/vulkano-skills/vulkano-backend-controller/SKILL.md` — controller placement, routing convention, `res.vsr`/`res.render`, scaffold, sockets

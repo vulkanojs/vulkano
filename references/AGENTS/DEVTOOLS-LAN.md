@@ -1,0 +1,7 @@
+# Visual verification — LAN device and WSL
+
+Only applies when testing the dev server from a phone/other LAN device, or when running on WSL. Otherwise skip this file.
+
+**Testing from a phone/other LAN device (`http://<VITE_HOST>:8000`)** — if the page loads but assets/HMR fail with connection errors pointing at `localhost` instead of the LAN IP: `@vulkano/core` reads the Vite dev manifest (`public/.vite/manifest.development.json`, written by `vite-plugin-dev-manifest`) into `app.vite` **once, at Express boot** (`Vite.init()`), then caches it in memory for the life of the process. If the backend started before `VITE_HOST` was set or before Vite wrote the manifest with the correct LAN URL, `app.vite.url` stays stale — and stays stale even after the manifest file on disk is fixed, since `nodemon.json` ignores `frontend/` and never restarts Express for it. Fix: `touch app.js` (or otherwise trigger nodemon) to force a backend restart and re-read the manifest — don't chase this as a frontend/network bug first.
+
+**On WSL**: `VITE_HOST` must be the Windows host's LAN IP, not the WSL/Ubuntu internal IP (`ip addr show eth0` inside WSL gives an address only reachable from the Windows host itself, not from other LAN devices). Get the right one from Windows (`ipconfig`, the adapter actually on the LAN/Wi-Fi) — a phone or other device connecting to the WSL-internal IP will fail the same way regardless of the manifest/restart fix above.

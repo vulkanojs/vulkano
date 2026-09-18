@@ -1,6 +1,6 @@
 # Architecture
 
-Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.md) for backend (`app/`) conventions, [FRONTEND.md](FRONTEND.md) for frontend (`frontend/`) conventions, and [SEO.md](SEO.md) for the SEO convention referenced in [ENTRYPOINTS.md](ENTRYPOINTS.md). See [../../AGENTS.md](../../AGENTS.md) for workflow, safety, and security rules. See [ANALYTICS.md](ANALYTICS.md) for the tracking convention and [ACCESSIBILITY.md](ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work. See [VITE.md](VITE.md) for `vite.config.mjs` build/dev mechanics and the backend `vite()` injection helper, and [ROUTING.md](ROUTING.md) for frontend routes + the backend SPA catch-all convention.
+Project structure overview for the Vulkano Framework. Only applies when creating a file or folder, or when unsure where something lives. Otherwise skip this file.
 
 ## Project structure
 

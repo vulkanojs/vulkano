@@ -1,7 +1,5 @@
 # Frontend (`frontend/`)
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [AGENTS.md](../../AGENTS.md) for workflow/safety rules.
-
 **Component/view layout, routing, forms, analytics, and accessibility are covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
 
 - `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, installed UI kit
@@ -20,15 +18,8 @@ Prefer the **Composition API** (`setup()`, `ref`/`reactive`, composables) over t
 
 ## Code principles
 
+- **Never reach across entrypoints** through another one's `@<dir>` alias (`@website` from inside `frontend/admin/`).
 - **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
-
-## Entry point — `frontend/<entrypoint>/app.js`
-
-Only touched when creating a new entrypoint or fixing its router base — covered by `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` (scaffold, `createWebHistory(base)` requirement) and `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` § Multiple entry points (why the base must match the backend catch-all's path prefix).
-
-## Routing — adding routes, view naming, SPA catch-all
-
-Adding/editing a route (either side) — see [ROUTING.md](ROUTING.md) first: frontend `routes.js` wiring pointer and the full backend catch-all rule (HTML5-history rationale, scoped multi-entry-point catch-alls). Route↔view naming detail: `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md`.
 
 ## Calling the API from a component
 
@@ -36,21 +27,9 @@ Adding/editing a route (either side) — see [ROUTING.md](ROUTING.md) first: fro
 
 `frontend/<entrypoint>/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
-## Component/view file layout
-
-Covered by `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `frontend/<entrypoint>/components/` vs `frontend/<entrypoint>/views/` aggregator convention.
-
-## State — `frontend/<entrypoint>/store/`
-
-Adding/editing a Pinia store — see `.claude/skills/vulkano-skills/vulkano-frontend-store/SKILL.md` first ([STORE.md](STORE.md) for the same detail without the submodule): store-per-concern splitting, setup-style `defineStore`, the `useAppStore` app-shell exception, and store testing.
-
 ## CSS — layout, units, grid system
 
 Writing/editing `.scss` or page layout — read [CSS.md](CSS.md) first: CSS units and `rem` rules, `display: grid` (not flex) layout, and the Foundation-style responsive grid. Skill: `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md` (CSS Grid layout, BEM naming).
-
-## Vite build/dev config and backend injection
-
-Covered by [VITE.md](VITE.md): `vite.config.mjs` build/dev-server mechanics (output, HMR, manifest, cache hashing) and how a backend template injects a bundle via the `vite()` helper. One alias detail worth repeating here since it's a frontend-authoring mistake, not a config one: never reach across entrypoints through another one's `@<dir>` alias (`@website` from inside `frontend/admin/`).
 
 ## Security
 
@@ -71,6 +50,6 @@ Adding/editing a button or clickable element, an async action (fetch, submit, de
 ## Before handoff checklist
 
 - The frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [references/AGENTS/DEVTOOLS.md](DEVTOOLS.md).
-- For changes involving user interaction (form, button, download, video, page), analytics tracking was added per [references/AGENTS/ANALYTICS.md](ANALYTICS.md), or the user explicitly confirmed tracking is not required for this task.
-- For changes involving images, navigation, or forms, accessibility minimums per [references/AGENTS/ACCESSIBILITY.md](ACCESSIBILITY.md) were met, or the user explicitly confirmed accessibility is not required for this task.
-- For new public/crawlable pages, SEO essentials per [references/AGENTS/SEO.md](SEO.md) (backend view, meta tags, sitemap entry) were met, or the user explicitly confirmed SEO is not required for this task.
+- For changes involving user interaction (form, button, download, video, page), analytics tracking was added per [references/AGENTS/ANALYTICS.md](ANALYTICS.md) unless the area's Analytics column in `PROJECT.md` is off.
+- For changes involving images, navigation, or forms, accessibility minimums per [references/AGENTS/ACCESSIBILITY.md](ACCESSIBILITY.md) were met unless the area's Accessibility column in `PROJECT.md` is off.
+- For new public/crawlable pages, SEO essentials per [references/AGENTS/SEO.md](SEO.md) (backend view, meta tags, sitemap entry) were met unless the area's SEO column in `PROJECT.md` is off.

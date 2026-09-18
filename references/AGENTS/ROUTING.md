@@ -1,6 +1,6 @@
 # Routing — frontend routes, backend catch-all
 
-Cross-cutting: applies to both `frontend/` (Vue Router routes) and `app/` (`app/config/routes.js` catch-all) work. See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [BACKEND.md](BACKEND.md)/[FRONTEND.md](FRONTEND.md) for area code conventions.
+Cross-cutting: applies to both `frontend/` (Vue Router routes) and `app/` (`app/config/routes.js` catch-all) work.
 
 **Before touching `app/config/routes.js` or an entrypoint's `routes.js`, load `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md`** — don't wire catch-alls from memory.
 
