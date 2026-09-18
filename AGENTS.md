@@ -17,22 +17,8 @@ See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SE
 - Ultra-short, direct sentences.
 - All user-facing text — including `AskUserQuestion` questions, option labels, and descriptions — must be in Spanish or English only, never another language.
 - Use Caveman mode (if the skill is available): use the fewest tokens possible.
-- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — output goes under `.superpowers/plans/` and `.superpowers/specs/` (same root as `.superpowers/sdd/`, which the plugin hardcodes and cannot be relocated). **This overrides the brainstorming skill's own default path (`docs/superpowers/specs/`)** — that default never applies in this repo; always write specs, plans and sdd to `.superpowers`, no exceptions.
-- Implement plans one task at a time (`superpowers:executing-plans`): after each task, mark it done in the plan file and note which task is next, then clear the conversation or start a new session. On "continue"/"next task", read the plan file's status first to know exactly where to resume.
+- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — read `references/AGENTS/PLANS.md` first (output paths under `.superpowers/`, one task at a time, framework skills inside a plan).
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
-
-## Framework skills inside a superpowers plan (writing-plans / subagent-driven-development)
-
-When writing a plan (`superpowers:writing-plans`) whose tasks touch `app/controllers/*.js`, `app/models/*.js`, `app/views/*.html`, an auth flow, or `frontend/**` frontend code, load the matching project skill (`vulkano-backend-controller`, `vulkano-backend-model`, `vulkano-backend-views-nunjucks`/`-handlebars`, `vulkano-backend-auth`, `vulkano-frontend-*`) **before finalizing that task's code in the plan** — not later, not by hoping the implementer subagent will discover it.
-
-Why this order matters: under `superpowers:subagent-driven-development`, implementer subagents are dispatched fresh with zero session context — they only see the task brief. If the plan-author (you) didn't consult the relevant skill before writing that task's exact code into the plan/brief, a convention violation ships silently, because the implementer has no reason to go looking for a skill it was never told about.
-
-Checklist per task, at plan-authoring time:
-
-1. Identify the file type(s) the task creates/modifies.
-2. Load every project skill whose "When to use" matches.
-3. Bake that skill's binding conventions directly into the task's code before it goes in the plan.
-4. Copy the same binding conventions into that task's future task-reviewer dispatch (the "global constraints" block) — the reviewer is also a fresh subagent with no memory of which skills applied.
 
 ---
 
@@ -91,7 +77,7 @@ Deploying/launching a project to production — read `references/AGENTS/LAUNCH.m
 - **DRY**: don't repeat code blocks — extract reusable functions/components instead of copy-pasting.
 - **KISS**: write simple code a human understands fast. Avoid clever tricks and long functions. Use clear names for variables and functions.
 - **Divide and conquer**: keep components small, each doing one task. Split large components into smaller pieces rather than growing one file.
-- **Unused variables — prefix with `_`**: applies front and back, any language in this repo. When a function parameter or binding is intentionally unused (e.g. a `catch` block that doesn't need the error), prefix it with `_` so the linter's `no-unused-vars` rule doesn't flag it: `catch (_err) {`.
+- **Unused variables — prefix with `_`** (front and back, any language): an intentionally unused parameter/binding gets a `_` prefix so `no-unused-vars` doesn't flag it, e.g. `catch (_err) {`.
 
 ## Security considerations
 
@@ -106,7 +92,7 @@ Deploying/launching a project to production — read `references/AGENTS/LAUNCH.m
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.mjs`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
-- Local search commands (`find`, `grep`, `rg`, `ag`, etc.): always scope to relative/project path (`find ./ ...`, `grep -r ... ./`), never absolute root (`find / ...`, `grep -r ... /`) — scanning from root is slow and unnecessary when target is inside project/cwd.
+- Local search commands (`find`, `grep`, `rg`, `ag`): scope to relative/project paths (`find ./ ...`), never absolute root (`find / ...`).
 
 ## Before handoff checklist
 
