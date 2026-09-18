@@ -4,13 +4,15 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [A
 
 **Component/view layout, routing, forms, analytics, and accessibility are covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
 
-- `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, Pinia store per concern, BEM styling, CSS Grid layout
+- `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, installed UI kit
 - `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` — adding routes, resource+action file naming (`Form.vue` for create+edit), the SPA catch-all(s), auth guard/current-user fetching
 - `.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md` — required-field asterisks, JS-only validation, `fieldErrors` pattern
+- `.claude/skills/vulkano-skills/vulkano-frontend-store/SKILL.md` — Pinia store-per-concern, `useAppStore` exception ([STORE.md](STORE.md))
+- `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md` — CSS Grid layout, responsive grid system, BEM naming
 - `.claude/skills/vulkano-skills/vulkano-frontend-analytics/SKILL.md` — tracking wiring ([ANALYTICS.md](ANALYTICS.md))
 - `.claude/skills/vulkano-skills/vulkano-frontend-a11y/SKILL.md` — accessibility minimums ([ACCESSIBILITY.md](ACCESSIBILITY.md))
 
-This file keeps only what those skills don't cover: `$api` usage and the conventions below. Entry point scaffold is in `vulkano-frontend-entrypoint`, state (Pinia) is in [STORE.md](STORE.md), Vite config is in [VITE.md](VITE.md).
+This file keeps only what those skills don't cover: `$api` usage and the conventions below. Entry point scaffold is in `vulkano-frontend-entrypoint`, Vite config is in [VITE.md](VITE.md).
 
 The `frontend/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`. Paths below are written as `frontend/<entrypoint>/...` — `frontend/` is always a container, one subfolder per entrypoint, even with only 1 (`frontend/website/app.js`, `frontend/website/Api.js`, ...); this template ships 2 by default (`website` + `admin`, each with its own subfolder) — see `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` for adding a new one. Concrete examples below use `website` since that's this template's current default.
 
@@ -34,17 +36,17 @@ Adding/editing a route (either side) — see [ROUTING.md](ROUTING.md) first: fro
 
 `frontend/<entrypoint>/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
-## Component/view file layout, CSS Grid, BEM
+## Component/view file layout
 
-Covered by `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `frontend/<entrypoint>/components/` vs `frontend/<entrypoint>/views/` aggregator convention, CSS Grid layout (no Flexbox), BEM naming.
+Covered by `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`: `.vue`/`.js`/`.scss` pairing, `frontend/<entrypoint>/components/` vs `frontend/<entrypoint>/views/` aggregator convention.
 
 ## State — `frontend/<entrypoint>/store/`
 
-Adding/editing a Pinia store — see [STORE.md](STORE.md) first: store-per-concern splitting, setup-style `defineStore`, the `useAppStore` app-shell exception, and store testing.
+Adding/editing a Pinia store — see `.claude/skills/vulkano-skills/vulkano-frontend-store/SKILL.md` first ([STORE.md](STORE.md) for the same detail without the submodule): store-per-concern splitting, setup-style `defineStore`, the `useAppStore` app-shell exception, and store testing.
 
-## Responsive grid system — `frontend/<entrypoint>/scss/_grid.scss`
+## CSS Grid, BEM, and the responsive grid system — `frontend/<entrypoint>/scss/`
 
-Extends the CSS Grid rule in `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md` with the project's Foundation-style column system:
+Covered by `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md`: CSS Grid layout (no Flexbox), BEM naming, and the project's Foundation-style column system below.
 
 Foundation-style responsive grid, built on CSS Grid, imported once per entrypoint's `style.scss` (e.g. `frontend/website/style.scss`):
 
