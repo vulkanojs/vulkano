@@ -128,7 +128,7 @@ Asks for confirmation before deleting anything. Skip this if you want to keep bo
 
 ## Environment variables
 
-Create a `.env` file in the project root. Full list of variables: see **[references/AGENTS/ARCHITECTURE.md § Environment variables](references/AGENTS/ARCHITECTURE.md#environment-variables)**.
+Copy [`.env.example`](.env.example) to `.env` in the project root and adjust the values. Every variable is documented there.
 
 ---
 

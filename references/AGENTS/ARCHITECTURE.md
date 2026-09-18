@@ -2,24 +2,6 @@
 
 Project structure overview for the Vulkano Framework. See [BACKEND.md](BACKEND.md) for backend (`app/`) conventions, [FRONTEND.md](FRONTEND.md) for frontend (`frontend/`) conventions, and [SEO.md](SEO.md) for the SEO convention referenced in [Multiple entry points](#multiple-entry-points--front--cms-or-any-other-split-app) below. See [../../AGENTS.md](../../AGENTS.md) for workflow, safety, and security rules. See [ANALYTICS.md](ANALYTICS.md) for the tracking convention and [ACCESSIBILITY.md](ACCESSIBILITY.md) for accessibility minimums — both apply to frontend work. See [VITE.md](VITE.md) for `vite.config.mjs` build/dev mechanics and the backend `vite()` injection helper, and [ROUTING.md](ROUTING.md) for frontend routes + the backend SPA catch-all convention.
 
-## Environment variables
-
-```
-PORT=8000
-# optional, for database connection (ignore if you don't use a database)
-MONGO_URI=mongodb://localhost:27017/myapp
-# optional, for hashing passwords
-SALT_KEY=random-string
-# optional, for auth
-JWT_SECRET_KEY=supersecret
-# only needed for signed cookies — see vulkano-backend-auth skill
-COOKIES_SECRET_KEY=another-secret
-# optional, only to chunk files — not recommended: public/ isn't cleared on build, and Vulkano already busts cache via ?v={app.pkg.version}, so old chunks just pile up
-# VITE_CHUNK_NAMES=false
-# optional — forces a specific dev-server host; unset uses auto LAN detection
-# VITE_HOST=192.168.x.x
-```
-
 ## Project structure
 
 ```

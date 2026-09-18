@@ -57,7 +57,7 @@ Adding/editing an image, font, or downloadable file (lives in `public/`, referen
 
 ## Environment variables
 
-Adding/reading a new `.env` variable, or setting up a project's `.env` for the first time — read `references/AGENTS/ARCHITECTURE.md` first.
+Adding/reading a new `.env` variable, or setting up a project's `.env` for the first time — read `.env.example` first (every variable is documented there; `.env` is a copy of it).
 
 ## Vite / build
 
