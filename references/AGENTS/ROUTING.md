@@ -28,7 +28,7 @@ Without it, every non-`/` client route 404s on hard refresh/direct URL while sti
 
 ### Multiple entry points — scoped catch-alls
 
-Each entrypoint beyond the public front (e.g. `/admin`) needs its own catch-all, scoped to its path prefix and registered **before** the generic `/*` so the more specific pattern isn't shadowed by it — see [ARCHITECTURE.md § Multiple entry points](ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app):
+Each entrypoint beyond the public front (e.g. `/admin`) needs its own catch-all, scoped to its path prefix and registered **before** the generic `/*` so the more specific pattern isn't shadowed by it — see [ENTRYPOINTS.md](ENTRYPOINTS.md):
 
 ```js
 module.exports = {

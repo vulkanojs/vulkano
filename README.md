@@ -29,7 +29,7 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 - `app/` is the backend
 - `frontend/` — multi entry point for Vue 3 SPA or vanilla JS
 
-See references/AGENTS/ARCHITECTURE.md § Multiple entry points.
+See [references/AGENTS/ENTRYPOINTS.md](references/AGENTS/ENTRYPOINTS.md) for how multiple entry points work.
 
 Full folder layout: see **[references/AGENTS/ARCHITECTURE.md](references/AGENTS/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `references/AGENTS/BACKEND.md` and `references/AGENTS/FRONTEND.md` are thin pointers into them.
 

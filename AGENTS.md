@@ -50,6 +50,7 @@ Before any `git` action (commit, push, branch, reset, etc.) — read `references
 - Adds/changes a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — also read `references/AGENTS/TESTING.md`.
 - Adds/edits a Pinia store (`frontend/<entrypoint>/store/`) — also read `references/AGENTS/STORE.md`.
 - Adds/edits a route (`frontend/<entrypoint>/routes.js` or `app/config/routes.js`) — also read `references/AGENTS/ROUTING.md`.
+- Creates/renames/removes a frontend entrypoint, or wires its Vite entry, backend layout, or catch-all — also read `references/AGENTS/ENTRYPOINTS.md`.
 
 ## Assets
 

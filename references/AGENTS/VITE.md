@@ -1,6 +1,6 @@
 # Vite — build, dev server, backend injection
 
-Cross-cutting: applies to both `app/` (backend template injection) and `frontend/` (build/dev config) work. See [ARCHITECTURE.md § Multiple entry points](ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app) for `vite.entries.mjs` (the entrypoint map itself, and how to wire a new entry) — that file is the single source of truth for the map; this one covers what `vite.config.mjs` does with it and how a backend template consumes the result.
+Cross-cutting: applies to both `app/` (backend template injection) and `frontend/` (build/dev config) work. See [ENTRYPOINTS.md](ENTRYPOINTS.md) for `vite.entries.mjs` (the entrypoint map itself, and how to wire a new entry) — that file is the single source of truth for the map; this one covers what `vite.config.mjs` does with it and how a backend template consumes the result.
 
 ## Build & dev server (`vite.config.mjs`)
 
@@ -13,7 +13,7 @@ Cross-cutting: applies to both `app/` (backend template injection) and `frontend
 
 Every backend template that mounts a Vue entry (`app/views/_shared/templates/<name>.html`) calls a `vite({ entry, type })` helper to inject that entry's built `<script>`/`<link>` tags, reading the manifest above:
 
-- `entry` must match a key in `vite.entries.mjs`'s map — the entry name for the area this template belongs to (see ARCHITECTURE.md § Multiple entry points).
+- `entry` must match a key in `vite.entries.mjs`'s map — the entry name for the area this template belongs to (see ENTRYPOINTS.md).
 - `type` is `'style'` (in `<head>`) or `'script'` (before `</body>`) — both calls needed per template.
 
 Exact call syntax differs by templating engine — see `.claude/skills/vulkano-skills/vulkano-backend-views-nunjucks/SKILL.md` § Vite asset injection or `.claude/skills/vulkano-skills/vulkano-backend-views-handlebars/SKILL.md` § Vite asset injection for the engine actually configured in this project (`app/config/views.js`).

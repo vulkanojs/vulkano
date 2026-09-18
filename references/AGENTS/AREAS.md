@@ -1,6 +1,6 @@
 # Per-area requirements — SEO / Analytics / Accessibility
 
-A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [references/AGENTS/ARCHITECTURE.md § Multiple entry points](ARCHITECTURE.md#multiple-entry-points--front--cms-or-any-other-split-app)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
+A single Vulkano project can have several entry points/areas at once (e.g. a public front — landing + form — plus a separate CMS/admin area, each its own Vue app/Vite entry/backend layout — see [references/AGENTS/ENTRYPOINTS.md](ENTRYPOINTS.md)) — decide **per area**, not once for the whole project. SEO in particular only ever applies to the public/crawlable area(s); a CMS/admin area is never a SEO target even when the front next to it has SEO on.
 
 On the first task touching a new area (no row for it yet in `PROJECT.md`'s table), ask the user what that area is — landing page, landing + form, multi-page website, blog, embeddable widget, or CMS/admin panel — then set that row from the mapping instead of asking about SEO/Analytics/Accessibility one by one:
 
