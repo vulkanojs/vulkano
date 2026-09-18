@@ -9,7 +9,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [A
 - `.claude/skills/vulkano-skills/vulkano-backend-views/SKILL.md` — `res.render` vs `res.vsr` decision; routes to the Nunjucks or Handlebars skill for actual template syntax (layouts, SEO locals, i18n, formatting helpers, Vite injection)
 - `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md` — Auth/User model, `AuthController` convention, JWT via `httpOnly` cookie
 
-This file keeps only what those skills don't cover.
+This file keeps only what those skills don't cover. `app/config/routes.js` explicit mappings and the SPA catch-all convention are in [ROUTING.md](ROUTING.md) (cross-cutting with `frontend/`).
 
 ## Code principles
 

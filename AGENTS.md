@@ -52,6 +52,8 @@ Before any `git` action (commit, push, branch, reset, etc.) — read `references
 - Touching `frontend/` — read `references/AGENTS/ARCHITECTURE.md` and `references/AGENTS/FRONTEND.md` first (project structure, code principles, security, UI components, forms, microinteractions, safety boundaries, handoff checklist).
 - Adds/changes a controller, model, service, or middleware — also read `references/AGENTS/TESTING.md`.
 - Adds/changes a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — also read `references/AGENTS/TESTING.md`.
+- Adds/edits a Pinia store (`frontend/<entrypoint>/store/`) — also read `references/AGENTS/STORE.md`.
+- Adds/edits a route (`frontend/<entrypoint>/routes.js` or `app/config/routes.js`) — also read `references/AGENTS/ROUTING.md`.
 
 ## Assets
 

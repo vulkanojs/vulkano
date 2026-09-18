@@ -10,7 +10,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the project structure overview and [A
 - `.claude/skills/vulkano-skills/vulkano-frontend-analytics/SKILL.md` — tracking wiring ([ANALYTICS.md](ANALYTICS.md))
 - `.claude/skills/vulkano-skills/vulkano-frontend-a11y/SKILL.md` — accessibility minimums ([ACCESSIBILITY.md](ACCESSIBILITY.md))
 
-This file keeps only what those skills don't cover: the entry point, `$api` usage, state (Pinia), Vite config, and the conventions below.
+This file keeps only what those skills don't cover: `$api` usage and the conventions below. Entry point scaffold is in `vulkano-frontend-entrypoint`, state (Pinia) is in [STORE.md](STORE.md), Vite config is in [VITE.md](VITE.md).
 
 The `frontend/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`. Paths below are written as `frontend/<entrypoint>/...` — `frontend/` is always a container, one subfolder per entrypoint, even with only 1 (`frontend/website/app.js`, `frontend/website/Api.js`, ...); this template ships 2 by default (`website` + `admin`, each with its own subfolder) — see `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` for adding a new one. Concrete examples below use `website` since that's this template's current default.
 
@@ -22,78 +22,15 @@ Prefer the **Composition API** (`setup()`, `ref`/`reactive`, composables) over t
 
 ## Entry point — `frontend/<entrypoint>/app.js`
 
-```js
-import { createApp } from 'vue';
-import { createWebHistory } from 'vue-router';
-
-import '@website/style.scss';
-
-import createRouter from '@website/routes';
-import App from '@website/App.vue';
-import Api from '@website/Api';
-
-const router = createRouter(createWebHistory('/')); // scoped to this entrypoint's path prefix — '/admin' for frontend/admin/, etc.
-
-const app = createApp(App);
-app.config.globalProperties.$api = Api;
-
-app.use(router).mount('#app');
-```
-
-`createWebHistory()`'s base must match the backend catch-all's path prefix for this entrypoint (`/` for the public front, `/admin` for `frontend/admin/`, ...) — see `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` § Multiple entry points. Mismatch is a common miss: the backend route serves the app fine, but every client-side route inside it fails to match because the router still expects `/`.
+Only touched when creating a new entrypoint or fixing its router base — covered by `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` (scaffold, `createWebHistory(base)` requirement) and `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` § Multiple entry points (why the base must match the backend catch-all's path prefix).
 
 ## Routing — adding routes, view naming, SPA catch-all
 
-Covered by `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md`: `frontend/<entrypoint>/routes.js` wiring, route↔view naming (`Index.vue` for plain/nested routes, `Form.vue` for resource create+edit), and the `app/config/routes.js` catch-all(s) (including multi-entry-point `/admin*` setups). Example kept below for the catch-all's HTML5-history rationale:
-
-Vue Router uses HTML5 history mode, so every client-side route inside a mounted SPA needs the server to return the same shell on a hard refresh or direct URL hit — otherwise Express 404s before Vue Router ever runs. A catch-all only makes sense for an area whose backend template actually mounts a Vue app (`id="app"` + `vite({ entry: '<name>' })`) — see `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` § Backend catch-all for the full backend+frontend pairing rule:
-
-```js
-module.exports = {
-  '/': 'HomeController.get',
-  '/admin': 'AdminController.get',
-
-  // Scoped catch-all for the admin entry only — it mounts a Vue app
-  // (app/views/_shared/templates/admin.html). No public '/*': the
-  // public front is fully server-rendered Nunjucks (static.html, no
-  // Vue mount point), so an invalid public URL should fall through to
-  // @vulkano/core's built-in 404 handler instead of soft-200ing into
-  // the homepage.
-  '/admin/*': 'AdminController.get'
-};
-```
-
-Safe to keep scoped catch-alls anywhere in the map: `@vulkano/core` registers convention routes (`app/controllers/api/*` → `/api/*`) before `config/routes.js` entries (`bootstrap/server.js`), so `/admin/*` never shadows an API route. If a scoped catch-all goes missing once a mounted-SPA area's routes grow past one, every non-root client route in that area 404s on refresh while still working via in-app `<router-link>`/`router.push` navigation — that split symptom is the tell. Each such entrypoint's `routes.js` should also have its own Vue Router catch-all (`{ path: '/:pathMatch(.*)*', component: NotFound }`) so an invalid path renders an actual 404 view instead of falling through to the home route.
+Adding/editing a route (either side) — see [ROUTING.md](ROUTING.md) first: frontend `routes.js` wiring pointer and the full backend catch-all rule (HTML5-history rationale, scoped multi-entry-point catch-alls). Route↔view naming detail: `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md`.
 
 ## Calling the API from a component
 
-`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from './Api'` directly in components:
-
-```js
-// MyComponent.js
-import { ref, onMounted, getCurrentInstance, toRef } from 'vue';
-
-export default {
-  setup(props) {
-    /**
-     * INSTANCE (for $api variable)
-     */
-    const { $api } = getCurrentInstance().proxy || {};
-
-    /**
-     * REACTIVE FIELDS
-     */
-    const sku = toRef(props, 'sku');
-    const products = ref([]);
-
-    onMounted(async () => {
-      products.value = await $api.get('/product');
-    });
-
-    return { products, sku };
-  }
-};
-```
+`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from './Api'` directly in components. Worked example: `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
 
 `frontend/<entrypoint>/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
 
@@ -103,68 +40,7 @@ Covered by `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`: 
 
 ## State — `frontend/<entrypoint>/store/`
 
-Keep state in [Pinia](https://pinia.vuejs.org/) rather than local component `ref`/`reactive`, especially for anything worth surviving a re-render: component-local state resets whenever HMR can't hot-swap a module in place and falls back to a full reload, while state in a store is less likely to be lost across that reload.
-
-Split state into one Pinia store per concern — not one global store. If a payload carries data for multiple entities (e.g. an event, its attendee, and a campaign), split it into independent stores rather than one combined store:
-
-```
-store/
-  useEventStore.js
-  useAttendeeStore.js
-  useCampaignStore.js
-```
-
-Each store owns only its own entity's state, getters, and actions — a component importing `useAttendeeStore` should never need to reach into event or campaign state. This keeps each store small, its logic easy to follow, and its mutations traceable to one concern instead of a shared blob every component can write to.
-
-```js
-// store/useEventStore.js
-import { ref, getCurrentInstance } from 'vue';
-import { defineStore } from 'pinia';
-
-export const useEventStore = defineStore('event', () => {
-  const { $api } = getCurrentInstance().proxy || {};
-  const current = ref(null);
-
-  async function fetch(id) {
-    current.value = await $api.get(`/event/${id}`);
-  }
-
-  return { current, fetch };
-});
-```
-
-(setup-style store, in line with the Composition API preference above — not the options-style `defineStore('event', { state, actions })`.)
-
-Naming: `use<Entity>Store` (singular, matching the model naming convention), file per store, no aggregator/barrel file — import each store directly where it's used.
-
-Pinia is installed by default (`app.use(createPinia())` already registered in each entrypoint's `app.js`, e.g. `frontend/website/app.js`) — just create the store file.
-
-### Global app-shell state — `useAppStore`
-
-App-shell-level state — things there's only ever one of, shared across the whole app regardless of route — lives in a single `useAppStore`, not split per concern like entity stores: a global loading spinner, Socket.io connection status (`connected`/`reconnecting`/`disconnected`), a sidebar-open flag, a theme toggle. This is the one deliberate exception to "one store per concern": these are all facets of the same app shell, read/written from unrelated places (a router guard, the socket client, any component), so bundling them in one store avoids a proliferation of near-empty singleton stores. Entity data (`useEventStore`, etc.) still stays split — this exception is for app-shell/UI state only. Applies to any area of the app (public site, CMS/admin, widget) that needs this kind of shared state:
-
-```js
-// store/useAppStore.js
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-
-export const useAppStore = defineStore('app', () => {
-  const isLoading = ref(false);
-  const socketStatus = ref('disconnected'); // 'connected' | 'reconnecting' | 'disconnected'
-
-  function setLoadingStatus(status) {
-    isLoading.value = status;
-  }
-
-  function setSocketStatus(status) {
-    socketStatus.value = status;
-  }
-
-  return { isLoading, socketStatus, setLoadingStatus, setSocketStatus };
-});
-```
-
-**Testing** — each store gets its own test file (e.g. `test/frontend/<entrypoint>/store/useEventStore.test.js`), independent of other stores' tests. Because stores are split by concern, tests can exercise one store's actions/getters in isolation, with `createPinia()` + `setActivePinia()` in `beforeEach`, without needing to set up unrelated entity state. Mock `$api` calls at the store boundary rather than hitting the real API. Full pattern table (store, composable, util): `.claude/skills/vulkano-skills/vulkano-testing/SKILL.md`, [TESTING.md](TESTING.md).
+Adding/editing a Pinia store — see [STORE.md](STORE.md) first: store-per-concern splitting, setup-style `defineStore`, the `useAppStore` app-shell exception, and store testing.
 
 ## Responsive grid system — `frontend/<entrypoint>/scss/_grid.scss`
 
