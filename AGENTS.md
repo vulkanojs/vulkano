@@ -92,6 +92,7 @@ Deploying/launching a project to production — read `references/AGENTS/LAUNCH.m
 ## Safety boundaries
 
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
+- Do only what was asked. If the user says they will build a piece themselves (an endpoint, a migration, a page), do not build it — note the expected contract in the handoff instead.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.mjs`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.

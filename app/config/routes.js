@@ -28,8 +28,10 @@ module.exports = {
   // the generic '/*' so it isn't shadowed, and all must stay last so
   // they never shadow /api/* convention routes, which @vulkano/core
   // registers before config/routes.js entries. Without these, a hard
-  // refresh on any client-side route 404s at the server. Uncomment
-  // once each area has more than one route:
+  // refresh on any client-side route 404s at the server. Every area that
+  // mounts a Vue app needs its own scoped catch-all (uncomment it, or add
+  // '/<name>/*' for a new entrypoint) plus a NotFound route in its
+  // frontend routes.js, even while it has a single route:
   // '/admin/*': 'AdminController.get',
   // '/*': 'HomeController.get',
 };
