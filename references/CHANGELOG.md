@@ -1,3 +1,13 @@
+## 2026-09-20 — Minimum rules block in AGENTS.md
+
+**Changed:**
+
+- `AGENTS.md`: new § "Minimum rules (if `references/` or the skills are missing)" — no native dialogs, `useFormValidation`, thin controllers, scoped catch-all + NotFound, mirrored tests, grid + whole-pixel `rem`, non-empty `JWT_SECRET_KEY` when adding auth, `_` prefix. Applies only when `references/AGENTS/` and the skills submodule are absent.
+
+**Migration:**
+
+- None. Pull the new `AGENTS.md`; no project files change.
+
 ## 2026-09-20 — Scope rule, catch-all guidance, skill checklists
 
 **Changed:**

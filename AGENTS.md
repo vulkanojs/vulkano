@@ -98,6 +98,19 @@ Deploying/launching a project to production — read `references/AGENTS/LAUNCH.m
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
 - Local search commands (`find`, `grep`, `rg`, `ag`): scope to relative/project paths (`find ./ ...`), never absolute root (`find / ...`).
 
+## Minimum rules (if `references/` or the skills are missing)
+
+Only when `references/AGENTS/` and `.claude/skills/vulkano-skills/` don't exist — otherwise the docs and skills above win.
+
+- Never `window.confirm`/`alert`/`prompt`: use the installed UI library's confirm/message components; none installed → one shared, reusable confirm component.
+- Forms: JS-only validation through the shared `useFormValidation` composable (`fieldErrors`), never native browser validation; mark required fields with an asterisk.
+- Controllers stay thin: nothing top-level besides `require`/import and the exported object — no consts or helper functions. Logic goes in the model or `app/services/`.
+- New frontend entrypoint: scoped backend catch-all `'/<name>/*'` in `app/config/routes.js` before `'/*'`, a `NotFound` route in the frontend, and `createWebHistory('/<name>')`.
+- Tests mirror the source path under `test/` (`test/app/controllers/<Name>.http.test.js`, `test/app/models/<Name>.test.js`).
+- CSS: CSS Grid, no Flexbox; `rem` only where `value × 16` is a whole pixel (`0.25`, `0.375`, `0.5`, `0.625`, `0.75`, `0.875`, `1`, `1.125`, `1.25`…); never `em`, `vh`, `ch`.
+- Adding auth: set a non-empty `JWT_SECRET_KEY` in `.env` (empty → login returns 500). Never print or commit it.
+- Unused variables keep the `_` prefix (see Code principles).
+
 ## Before handoff checklist
 
 - The changed paths match the requested scope.
