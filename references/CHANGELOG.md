@@ -1,3 +1,31 @@
+## 2026-09-20 — Scope rule, catch-all guidance, skill checklists
+
+**Changed:**
+
+- `AGENTS.md` § Safety boundaries: do only what was asked; if the user says they will build a piece, note the contract in the handoff instead of building it.
+- `app/config/routes.js`: comment now says every area that mounts a Vue app needs its scoped catch-all plus a NotFound route in its frontend `routes.js`, even with a single route.
+- Skills submodule: `vulkano-frontend-css` gains a whole-pixel `rem` table; `vulkano-frontend-entrypoint`, `vulkano-backend-model`, `vulkano-backend-auth` and `vulkano-seo` end with hard `[ ]` checklists.
+
+**Migration:**
+
+- If `app/config/routes.js` still says "Uncomment once each area has more than one route", replace that sentence with the new comment.
+- If an area mounts a Vue app without a scoped `'/<name>/*'` catch-all before `'/*'`, or without a `NotFound` route in its `routes.js`, add both.
+
+## 2026-09-20 — Pinned dependencies, core 2.1.2, all skills registered
+
+**Changed:**
+
+- `pnpm-workspace.yaml`: `@vulkano/core` pinned to `2.1.2` (was `^2.1.1`); `vite`, `vitest`, `vite-plus` pinned to `0.3.3` (were `@latest` / `^0.3.2`); dependency policy comment added.
+- `pnpm-lock.yaml`: regenerated so it matches the catalog. It was stale, so any `pnpm <script>` re-installed and ran `postinstall`.
+- `@vulkano/core` 2.1.2 fixes unmatched routes returning 500 instead of 404 when `NODE_ENV=production`.
+- Skills submodule: `plugin.json` registers `vulkano-frontend-css`, `vulkano-frontend-store` and `vulkano-template-update` (17 of 17).
+
+**Migration:**
+
+- If `pnpm-workspace.yaml` has `vite`/`vitest` as `@latest` or `@vulkano/core` as a range, pin them to the exact versions above.
+- If `pnpm-lock.yaml` does not match `pnpm-workspace.yaml`, run `pnpm install --lockfile-only --ignore-scripts` and commit it.
+- If the project runs in production, run `pnpm install` to get `@vulkano/core` 2.1.2.
+
 # Template changelog
 
 The Vulkano template's changelog: changes to template-owned files (`AGENTS.md`, `references/`, the skills submodule) and the migrations they need in project-owned files. Overwritten from the template on sync; a project's own changes go in the root `CHANGELOG.md`. Read by the `vulkano-template-update` skill; agents don't load it for normal work.
