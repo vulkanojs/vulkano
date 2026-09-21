@@ -33,6 +33,7 @@ Before any `git` action (commit, push, branch, reset, etc.) — read `references
 Where a skill under `.claude/skills/vulkano-skills/` covers the task, invoke it and skip the matching `references/AGENTS/` doc — read the doc only if the skills submodule isn't installed.
 
 - Touching `app/` (backend) — read `references/AGENTS/BACKEND.md` first (code principles, security, handoff checklist). Routing, controllers, models, views, and auth are covered by skills; read [`@vulkano/core`'s README](node_modules/@vulkano/core/README.md) only for what they don't cover (cron jobs, auto-loaded globals, express/middleware config) — search it for the section you need, don't read it whole.
+- New public/crawlable page (a page a browser navigates to directly — landing, "about", blog post, product page) — read `references/AGENTS/BACKEND.md` and skill `vulkano-backend-views` **first**, before any `frontend/` skill: decide `res.render` (server-rendered) vs a Vue SPA route there. Don't default to `frontend/` just because the prompt says "page" or "route" — the SPA is never SEO-covered. Also read skill `vulkano-seo` for this same page — sitemap/robots/meta tags are required, not optional, whenever the area is SEO-on.
 - Touching `frontend/` — read `references/AGENTS/FRONTEND.md` first (code principles, security, forms, handoff checklist; CSS and microinteractions are split into `CSS.md` / `MICROINTERACTIONS.md`, read on demand).
 - Needs a pre-built UI component (dialog, dropdown, table, etc.) — read `references/AGENTS/UI.md` first.
 - Creating a file or folder, or unsure where something lives — read `references/AGENTS/ARCHITECTURE.md` (project structure).
@@ -92,10 +93,24 @@ Deploying/launching a project to production — read `references/AGENTS/LAUNCH.m
 ## Safety boundaries
 
 - Keep the edit set targeted; do not overwrite, clean up, or reformat unrelated worktree changes.
+- Do only what was asked. If the user says they will build a piece themselves (an endpoint, a migration, a page), do not build it — note the expected contract in the handoff instead.
 - Do not silently change public APIs, controller/model contracts, or compatibility requirements — call these out explicitly.
 - Never claim a tool, script, or command is supported merely because it's conventional; require evidence in `package.json`, `vite.config.mjs`, or another tracked config file.
 - Avoid source-mutating formatters or normalizers beyond what `vp check` already runs, unless the task requires it.
 - Local search commands (`find`, `grep`, `rg`, `ag`): scope to relative/project paths (`find ./ ...`), never absolute root (`find / ...`).
+
+## Minimum rules (if `references/` or the skills are missing)
+
+Only when `references/AGENTS/` and `.claude/skills/vulkano-skills/` don't exist — otherwise the docs and skills above win.
+
+- Never `window.confirm`/`alert`/`prompt`: use the installed UI library's confirm/message components; none installed → one shared, reusable confirm component.
+- Forms: JS-only validation through the shared `useFormValidation` composable (`fieldErrors`), never native browser validation; mark required fields with an asterisk.
+- Controllers stay thin: nothing top-level besides `require`/import and the exported object — no consts or helper functions. Logic goes in the model or `app/services/`.
+- New frontend entrypoint: scoped backend catch-all `'/<name>/*'` in `app/config/routes.js` before `'/*'`, a `NotFound` route in the frontend, and `createWebHistory('/<name>')`.
+- Tests mirror the source path under `test/` (`test/app/controllers/<Name>.http.test.js`, `test/app/models/<Name>.test.js`).
+- CSS: CSS Grid, no Flexbox; `rem` only where `value × 16` is a whole pixel (`0.25`, `0.375`, `0.5`, `0.625`, `0.75`, `0.875`, `1`, `1.125`, `1.25`…); never `em`, `vh`, `ch`.
+- Adding auth: set a non-empty `JWT_SECRET_KEY` in `.env` (empty → login returns 500). Never print or commit it.
+- Unused variables keep the `_` prefix (see Code principles).
 
 ## Before handoff checklist
 
