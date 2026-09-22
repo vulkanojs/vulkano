@@ -1,3 +1,16 @@
+## 2026-09-21 — T07 sitemap fixes: AGENTS.md dispatch, routes.js comment, SITE_URL
+
+**Changed:**
+
+- `AGENTS.md` § Area conventions: a new public/crawlable page (a page a browser navigates to directly) now routes to skills `vulkano-backend-views` and `vulkano-seo` **before** any `frontend/` skill, so the decision between a server-rendered view and a Vue SPA route happens first — was defaulting to `frontend/` and building an unwanted SPA route for an SEO-facing page.
+- `app/config/routes.js`: the Vue Router catch-all comment now says explicitly it only applies to a `frontend/` entrypoint, not a plain server-rendered page — the old wording was ambiguous enough to be read as "uncomment this to add any new page."
+- `.env.example`: `SITE_URL` documented as an optional, recommended var — absolute base for `sitemap.xml`/`robots.txt` once a domain is known.
+- Skills submodule (`vulkano-seo`): never skip `public/sitemap.xml` for a missing domain (fall back to relative URLs) or because the project is still in the noindex/private-mode default.
+
+**Migration:**
+
+- None. Pull the new `AGENTS.md`, `app/config/routes.js`, and `.env.example`; no project files change.
+
 ## 2026-09-20 — Minimum rules block in AGENTS.md
 
 **Changed:**
