@@ -1,5 +1,12 @@
-# Visual verification (frontend)
+# Visual verification
 
-For `frontend/` changes, don't just read the diff — look at it running. The `chrome-devtools` MCP is the recommended tool for this — prefer it over other browser MCPs (e.g. `claude-in-chrome`) when both are available: its screenshots and page snapshots surface in the conversation, so the user sees the actual work being verified, not just a text confirmation. If it's available, use it: check first whether the port (`8000`/`$PORT`) is already in use — if it's this project already running (the user may have started it themselves), navigate straight to it, don't restart it, and ask the user first if you're unsure whether it's safe to touch. If it's a different, unrelated project holding that port, don't kill it — start this one with `PORT=<alt> pnpm run dev` for the check instead. Navigate, take a screenshot, and check the console/network tab for new errors. Stop only the dev server you started yourself once you're done — never a server you didn't start. This is how you catch layout, styling, and runtime issues that a type-check or `vp check` can't — treat it as part of verifying the change, not an optional extra.
+For `frontend/` or `app/views/` changes, look at it running — `vp check` doesn't catch layout, styling or runtime errors.
 
-Testing from a phone/other LAN device, or running on WSL — read [DEVTOOLS-LAN.md](DEVTOOLS-LAN.md) first.
+- Prefer the `chrome-devtools` MCP (its screenshots show up in the conversation). Navigate, screenshot, check console and network for new errors.
+- Port `8000`/`$PORT` in use by this project → reuse it, don't restart (ask if unsure). In use by another project → don't kill it; run `PORT=<alt> pnpm run dev`.
+- Stop only a dev server you started.
+
+## Phone / LAN device, WSL
+
+- Page loads but assets/HMR point at `localhost` instead of the LAN IP → `@vulkano/core` caches the Vite dev manifest once at Express boot. Fix: `touch app.js` to restart the backend (nodemon ignores `frontend/`).
+- WSL: `VITE_HOST` must be the Windows host's LAN IP (`ipconfig` on Windows), not the WSL internal IP.

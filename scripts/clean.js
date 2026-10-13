@@ -156,15 +156,6 @@ function keepWebsiteOnly(root) {
       .replace("  // '/admin/*': 'AdminController.get',\n", '')
   );
 
-  writeFile(
-    root,
-    'AGENTS.md',
-    readFile(root, 'AGENTS.md').replace(
-      '| `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |\n',
-      ''
-    )
-  );
-
   flatten(root, 'website');
 }
 

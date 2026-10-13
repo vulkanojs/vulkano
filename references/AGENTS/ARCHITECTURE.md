@@ -1,81 +1,77 @@
 # Architecture
 
-Project structure overview for the Vulkano Framework. Only applies when creating a file or folder, or when unsure where something lives. Otherwise skip this file.
+How the code is organized and what each piece is. Read when creating a file or folder, or when unsure where something lives.
 
 ## Project structure
 
 ```
 framework/
 ├── app.js                  # Entry point — calls vulkano()
-├── vite.config.mjs         # Vite config — reads vite.entries.mjs for build.rollupOptions.input/aliases
-├── vite.entries.mjs        # One key per entrypoint (e.g. { website: 'frontend/website/app.js' }) — see [ENTRYPOINTS.md](ENTRYPOINTS.md)
-├── nodemon.json            # Nodemon watches app/ only (ignores public/, frontend/, references/, test, scripts)
+├── vite.config.mjs         # Vite config — reads vite.entries.mjs (see BUILD.md)
+├── vite.entries.mjs        # One key per frontend entrypoint, e.g. { website: 'frontend/website/app.js' }
+├── nodemon.json            # Watches app/ only (ignores public/, frontend/, references/, test, scripts)
 │
-├── app/                    # Backend
+├── app/                    # Backend — Express MVC on @vulkano/core (see BACKEND.md)
 │   ├── config/
 │   │   ├── settings.js     # Port, DB URI, salt key
-│   │   ├── routes.js       # Explicit route mappings (override convention)
-│   │   ├── express/        # cookies, cors, csp, helmet, json, jwt, permissionPolicy, settings
+│   │   ├── routes.js       # Explicit routes only (convention covers the rest)
+│   │   ├── <section>.js    # Any file here → app.config.<section> (e.g. common.js)
+│   │   ├── bootstrap.js    # Boot hook — true globals, cron jobs
+│   │   ├── express/        # Optional core overrides: cookies, cors, csp, helmet, json, jwt…
+│   │   ├── middlewares/    # Optional global middlewares (e.g. seo.js)
+│   │   ├── sockets/        # Socket.io config + events.js
 │   │   └── locales/        # i18n files
-│   ├── controllers/        # Convention-based request handlers
-│   │   ├── sockets/        # Socket.io handlers
-│   │   └── api/            # Scaffold or custom API controllers
-│   ├── models/             # Mongoose models (auto-loaded as globals)
-│   ├── services/           # Shared libs (auto-loaded as globals)
-│   └── views/              # Nunjucks/Handlebars layouts
+│   ├── controllers/        # View controllers (res.render) — URL = controller name
+│   │   ├── api/            # JSON API controllers (res.vsr) — /api/<resource>
+│   │   └── sockets/        # Socket.io handlers
+│   ├── models/             # Mongoose models — auto-loaded globals (Order.js → Order)
+│   ├── services/           # Shared libs — auto-loaded globals
+│   └── views/              # Nunjucks/Handlebars templates
+│       ├── _shared/templates/  # Base layouts, one per entrypoint (default.html, admin.html)
+│       ├── _shared/partials/
+│       ├── _shared/errors/     # 404/500
+│       └── <resource>/*.html   # Page views
 │
-├── frontend/                # Vue 3 apps — always one folder per entrypoint, even with only 1 (below); ships
-│   │                        # with 2 by default — see [ENTRYPOINTS.md](ENTRYPOINTS.md)
-│   ├── website/             # Public front — see [ENTRYPOINTS.md](ENTRYPOINTS.md)
-│   │   ├── app.js           # Vue entry — mounts App.vue, registers $api global
+├── frontend/               # Vue 3 apps — always one folder per entrypoint, even with only 1 (see FRONTEND.md)
+│   ├── website/            # Public front (fixed name)
+│   │   ├── app.js          # Vue entry — mounts App.vue, registers $api
 │   │   ├── App.vue
-│   │   ├── routes.js        # Vue Router routes
-│   │   ├── Api.js           # Native fetch wrapper (replaces axios)
-│   │   ├── style.scss       # Single style entry point — chains components/views/layouts index
-│   │   ├── components/
-│   │   │   ├── _index.scss  # Aggregator — imports every component's own _index.scss
-│   │   │   └── MyComponent/
-│   │   │       ├── MyComponent.vue
-│   │   │       ├── MyComponent.js
-│   │   │       └── _index.scss
+│   │   ├── routes.js       # Vue Router routes
+│   │   ├── Api.js          # fetch wrapper → /api
+│   │   ├── style.scss      # Single style entry — chains the _index.scss aggregators
+│   │   ├── scss/           # Shared SCSS (_grid.scss…)
+│   │   ├── components/<Name>/   # <Name>.vue + <Name>.js + _index.scss
+│   │   ├── components/ui/       # Vendored UI-library components
 │   │   ├── layouts/
-│   │   │   ├── _index.scss  # Aggregator — imports every layout's own _index.scss
-│   │   │   └── Layout.vue / Layout.js
-│   │   └── views/
-│   │       ├── _index.scss  # Aggregator — imports every view's own _index.scss (or module's)
-│   │       ├── MyView/       # /my-view → views/MyView/Index.*
-│   │       │   ├── Index.vue
-│   │       │   ├── Index.js
-│   │       │   └── _index.scss
-│   │       └── MyModule/     # /my-module/my-view → views/MyModule/MyView/Index.*
-│   │           ├── _index.scss # Aggregator — imports every child view's _index.scss
-│   │           └── MyView/
-│   │               ├── Index.vue
-│   │               ├── Index.js
-│   │               └── _index.scss
-│   │
-│   └── admin/                # Admin panel — same shape as website/, minimal by default
-│       └── ...
+│   │   ├── views/<Name>/Index.* # One folder per route
+│   │   ├── store/          # Pinia stores — use<Entity>Store.js (created on demand)
+│   │   ├── composables/    # (created on demand)
+│   │   └── utils/          # (created on demand)
+│   └── admin/              # Admin panel — same shape, minimal by default
 │
-└── public/                 # Built assets (output of vite build)
-    ├── js/
-    ├── css/
-    ├── img/
-    └── files/              # Uploaded files
+├── public/                 # Served as-is by Express
+│   ├── js/ css/            # Vite build output
+│   ├── img/ fonts/         # Static assets — referenced as /img/…, /fonts/…
+│   ├── files/              # Downloadable/uploaded files
+│   ├── robots.txt
+│   └── sitemap.xml
+│
+├── test/                   # Vitest — mirrors source path (test/app/…, test/frontend/…)
+├── scripts/                # Tooling (webp.js, clean…)
+└── references/             # Agent docs (this folder)
 ```
 
-(`.claude/`, `.github/`, `references/`, `scripts/`, and `test/` sit alongside the above at the repo root — omitted from the tree since it's dotfiles/tooling, not app structure.)
+## Request flow
 
----
+- **Page** — browser → `app/controllers/<Name>Controller.js` → `res.render('<resource>/x.html')` → template under `app/views/` extends a base layout that injects one frontend entrypoint via `vite()`.
+- **API** — Vue (`$api`) → `/api/<resource>` → `app/controllers/api/<Name>Controller.js` → model/service → `res.vsr()` envelope `{ success, statusCode, data }`.
+- **SPA route** — client route inside a mounted Vue app; a hard refresh hits the backend catch-all, which re-renders the same layout.
+- **Socket** — `app/config/sockets/events.js` → `app/controllers/sockets/<Name>Controller.js`.
 
-## Skills submodule (`.claude/skills/vulkano-skills/`)
+## Entrypoints
 
-The `vulkano-*` Claude Code skills referenced throughout this doc and [AGENTS.md](../../AGENTS.md) don't live in this repo directly — they're a separate repo, [github.com/vulkanojs/vulkano-skills](https://github.com/vulkanojs/vulkano-skills), mounted here as a git submodule at `.claude/skills/vulkano-skills/`. This keeps the skills versioned and shareable across every Vulkano-based project instead of copy-pasted per project.
+Each separate area (public front, admin panel, one-off landing) is its own Vue app (or vanilla JS bundle), its own Vite entry, its own backend layout and its own catch-all — never one shared app with route conditionals. Template ships 2 (`website` + `admin`); `pnpm run clean` → "1" removes `admin`. Wiring: [BUILD.md](BUILD.md).
 
-Adding the submodule to a new project, pulling updates, adding/editing a skill — see `.claude/skills/vulkano-skills/README.md`, that repo's own doc and single source of truth for those steps.
+## Skills submodule
 
----
-
-## Multiple entry points — front + CMS (or any other split app)
-
-Moved to [ENTRYPOINTS.md](ENTRYPOINTS.md) — read it only when creating, renaming, removing, or wiring a frontend entrypoint.
+`.claude/skills/vulkano-skills/` is a git submodule ([vulkanojs/vulkano-skills](https://github.com/vulkanojs/vulkano-skills)), shared across Vulkano projects. Install/update/edit: its own `README.md`.

@@ -63,13 +63,6 @@ function writeEntrypointsFixture() {
     'app/config/routes.js',
     "module.exports = {\n  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'\n\n  // '/admin/*': 'AdminController.get',\n  // '/*': 'HomeController.get',\n};\n"
   );
-  write(
-    'AGENTS.md',
-    '| Area | SEO | Analytics | Accessibility |\n' +
-      '| ---- | --- | --------- | ------------- |\n' +
-      '| `/` (`frontend/website/`) — public site | on  | on        | on            |\n' +
-      '| `/admin` (`frontend/admin/`) — admin panel | off | off       | on            |\n'
-  );
 }
 
 beforeEach(() => {
@@ -101,10 +94,6 @@ describe('keepWebsiteOnly', () => {
     const routes = fs.readFileSync(path.join(root, 'app/config/routes.js'), 'utf8');
     expect(routes).toContain("'/': 'HomeController.get'");
     expect(routes).not.toContain('admin');
-
-    const agents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
-    expect(agents).not.toContain('/admin');
-    expect(agents).toContain('/` (`frontend/website/`)');
   });
 
   it('merges instead of crashing when frontend/ already has leftover entries from a previous run', () => {

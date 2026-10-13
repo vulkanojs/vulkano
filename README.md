@@ -29,9 +29,9 @@ Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
 - `app/` is the backend
 - `frontend/` — multi entry point for Vue 3 SPA or vanilla JS
 
-See [references/AGENTS/ENTRYPOINTS.md](references/AGENTS/ENTRYPOINTS.md) for how multiple entry points work.
+See [references/AGENTS/BUILD.md](references/AGENTS/BUILD.md) for how multiple entry points work.
 
-Full folder layout: see **[references/AGENTS/ARCHITECTURE.md](references/AGENTS/ARCHITECTURE.md)**. Detailed conventions (routing, controller/model, auth, components, testing, SEO, ...) live as Claude Code skills under **`.claude/skills/`** — `references/AGENTS/BACKEND.md` and `references/AGENTS/FRONTEND.md` are thin pointers into them.
+Full folder layout: see **[references/AGENTS/ARCHITECTURE.md](references/AGENTS/ARCHITECTURE.md)**. Rules per area: `references/AGENTS/BACKEND.md` and `references/AGENTS/FRONTEND.md`. Worked code (routing, controller/model, auth, components, forms, testing, ...) lives as Claude Code skills under **`.claude/skills/`**, loaded automatically when a task matches.
 
 ---
 
@@ -190,7 +190,7 @@ Drop photographic images (`.jpg`/`.jpeg`/`.png`) directly under `public/img/`, t
 vp run webp
 ```
 
-Details (what the script rewrites, `loading="lazy"` on `<img>`): see **[references/AGENTS/ASSETS.md](references/AGENTS/ASSETS.md)**.
+Details (what the script rewrites, `loading="lazy"` on `<img>`): see **[references/AGENTS/FRONTEND.md § Assets](references/AGENTS/FRONTEND.md#assets)**.
 
 ---
 

@@ -1,3 +1,21 @@
+## 2026-10-13 — Docs consolidation: skills = code, references = rules
+
+**Changed:**
+
+- `references/AGENTS/`: 22 docs → 6. `ARCHITECTURE.md` (what is what), `BACKEND.md` (controllers, scaffold, models, auth, views, autoload/libraries, config, routes, SEO wiring, security), `FRONTEND.md` (components, UI library, store, forms, routes, CSS, microinteractions, assets, analytics wiring), `BUILD.md` (entrypoints + Vite), `DEVTOOLS.md` (+ LAN/WSL), `WORKFLOW.md` (git + plans). Each holds short rules and names the skill with the worked code — no text repeated in both.
+- Removed: `ACCESSIBILITY.md`, `ANALYTICS.md`, `AREAS.md`, `ASSETS.md`, `CONFIG.md`, `CSS.md`, `DEVTOOLS-LAN.md`, `ENTRYPOINTS.md`, `GIT.md`, `LAUNCH.md`, `MICROINTERACTIONS.md`, `PLANS.md`, `ROUTING.md`, `SEO.md`, `STORE.md`, `TESTING.md`, `UI.md`, `VITE.md`.
+- `AGENTS.md`: area dispatch points to the 6 docs + skills; § Per-area requirements and § Launch removed.
+- `PROJECT.md`: SEO/Analytics/Accessibility per-area table removed — general-purpose SEO/a11y/analytics skills do that job better; Vulkano-specific wiring (`res.locals.seo`, `SEO_NOINDEX`, robots/sitemap, vue-gtag) is now a few rules in BACKEND.md/FRONTEND.md.
+- `scripts/clean.js`: no longer edits the per-area table.
+- Skills submodule: `vulkano-seo`, `vulkano-frontend-a11y`, `vulkano-frontend-analytics` removed (14 skills); links in the rest point to the new docs; `vulkano-template-update` drops the old table on migration.
+
+**Migration:**
+
+- Delete the removed `references/AGENTS/*.md` files listed above (template update step 6 does this).
+- `PROJECT.md`: if it has § "Project requirements — SEO / Analytics / Accessibility", delete that section (keep the other sections and their values). Pointers to `references/AGENTS/UI.md` or the css skill in § Frontend conventions → `references/AGENTS/FRONTEND.md` § UI library / § CSS.
+- `.env.example`: `SITE_URL` comment now points to `references/AGENTS/BACKEND.md` § SEO wiring.
+- Project files that mention removed docs (e.g. `public/robots.txt`, `test/helpers/bootstrap.js`, `frontend/**/scss/_grid.scss`, `README.md`): repoint to BACKEND.md/FRONTEND.md/BUILD.md or skill `vulkano-testing`.
+
 ## 2026-09-21 — T07 sitemap fixes: AGENTS.md dispatch, routes.js comment, SITE_URL
 
 **Changed:**

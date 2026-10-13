@@ -1,51 +1,66 @@
 # Frontend (`frontend/`)
 
-**Component/view layout, routing, forms, analytics, and accessibility are covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
+Rules only. Worked code lives in the skills named per section — they load automatically when the task matches. Paths are `frontend/<entrypoint>/…` (`website`, `admin`, …).
 
-- `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md` — `.vue`/`.js`/`.scss` file splitting, `views/` vs `components/` placement, route↔view naming, installed UI kit
-- `.claude/skills/vulkano-skills/vulkano-frontend-router/SKILL.md` — adding routes, resource+action file naming (`Form.vue` for create+edit), the SPA catch-all(s), auth guard/current-user fetching
-- `.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md` — required-field asterisks, JS-only validation, `fieldErrors` pattern
-- `.claude/skills/vulkano-skills/vulkano-frontend-store/SKILL.md` — Pinia store-per-concern, `useAppStore` exception ([STORE.md](STORE.md))
-- `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md` — CSS Grid layout, responsive grid system, BEM naming
-- `.claude/skills/vulkano-skills/vulkano-frontend-analytics/SKILL.md` — tracking wiring ([ANALYTICS.md](ANALYTICS.md))
-- `.claude/skills/vulkano-skills/vulkano-frontend-a11y/SKILL.md` — accessibility minimums ([ACCESSIBILITY.md](ACCESSIBILITY.md))
+## Code organization — skill `vulkano-frontend-component`
 
-This file keeps only what those skills don't cover: `$api` usage and the conventions below. Entry point scaffold is in `vulkano-frontend-entrypoint`, Vite config is in [VITE.md](VITE.md).
+- Composition API only (`setup()`, `ref`/`reactive`, composables) — never `data()`/`methods`/`created()`.
+- `views/` = one folder per route (`/users` → `views/Users/Index.*`, `/system/users` → `views/System/Users/Index.*`). `components/` = reusable pieces.
+- Every component/view is split in 3 files: `<Name>.vue` (template), `<Name>.js` (logic), `_index.scss` (styles), and its `_index.scss` is imported by the parent aggregator.
+- Business logic goes in a store or a composable (`composables/useX.js`), not the component. Pure helpers → `utils/`.
+- Never import across entrypoints (`@website` from inside `frontend/admin/`).
+- API calls: `$api` from `getCurrentInstance().proxy` — never `import Api` in a component. `Api.js` prefixes `/api`, unwraps `data` from the `res.vsr` envelope, rejects on non-2xx.
 
-The `frontend/` folder is a standard Vue 3 SPA wired to the Express backend via `Api.js`. Paths below are written as `frontend/<entrypoint>/...` — `frontend/` is always a container, one subfolder per entrypoint, even with only 1 (`frontend/website/app.js`, `frontend/website/Api.js`, ...); this template ships 2 by default (`website` + `admin`, each with its own subfolder) — see `.claude/skills/vulkano-skills/vulkano-frontend-entrypoint/SKILL.md` for adding a new one. Concrete examples below use `website` since that's this template's current default.
+## UI library and reuse
 
-Prefer the **Composition API** (`setup()`, `ref`/`reactive`, composables) over the Options API for new and edited components — do not add new `data()`/`methods`/`created()`-style options blocks.
+- The library (shadcn-vue, Element Plus, …) is a project choice: `PROJECT.md` § Frontend conventions, else check `package.json`.
+- Installed → every input, button, dialog, confirm and toast goes through it. Vendored code lives in `components/ui/`, split like any component, never edited for one screen (compose or extend it).
+- `views/UI/Index.vue` (route `/ui`, dev/admin only) = live catalog of every reusable component — check it before building a new one; add each new reusable component to it.
+- Never `window.confirm`/`alert`/`prompt` — use the library's confirm/message components, or one shared custom modal if none is installed.
 
-## Code principles
+## Store — skill `vulkano-frontend-store`
 
-- **Never reach across entrypoints** through another one's `@<dir>` alias (`@website` from inside `frontend/admin/`).
-- **Separate logic from view**: within a component/view, split `.vue` (template), `.js` (logic), and `.scss` (styles) as their own files — see `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
+- Pinia, setup-style, one store per concern: `store/use<Entity>Store.js`, no barrel file.
+- Single exception: `useAppStore` for app-shell state (global loading, socket status, sidebar, theme).
+- Never store the user or the token in `localStorage`/`sessionStorage`.
 
-## Calling the API from a component
+## Forms — skill `vulkano-frontend-form` (load before any `<form>`)
 
-`$api` is registered as a global property (`app.config.globalProperties.$api`), not exported as a module — pull it off `getCurrentInstance().proxy` inside `setup()`, don't `import Api from './Api'` directly in components. Worked example: `.claude/skills/vulkano-skills/vulkano-frontend-component/SKILL.md`.
+- JS-only validation via the shared `useFormValidation` composable + `utils/validators.js` (`V.required`, …) → `fieldErrors`. `novalidate`; never native validation UI.
+- Required labels get an asterisk (shared class + danger color token). Inline error under the input.
+- Correct input `type` always. Submit shows a loading state; failure always shows a message.
 
-`frontend/<entrypoint>/Api.js` is a thin `fetch` wrapper (no axios): it prefixes requests with `/api`, serializes/parses JSON, unwraps the `data` field from the `res.vsr` envelope, and rejects with the raw `Response` on non-2xx status.
+## Routes — skill `vulkano-frontend-router`
 
-## CSS — layout, units, grid system
+- `frontend/<entrypoint>/routes.js`, hand-written, HTML5 history (`createWebHistory('/<base>')` for non-root entrypoints).
+- Route path mirrors view folder (kebab-case URL → PascalCase folder). Resource routes: `Product/List.vue` + one `Product/Form.vue` for create and edit.
+- Every Vue entrypoint has a `NotFound` route (`/:pathMatch(.*)*`) paired with its backend catch-all (see BACKEND.md § Routes).
+- Auth guard re-fetches `GET /api/auth/current` on every route change — never cache the user.
 
-Writing/editing `.scss` or page layout — read [CSS.md](CSS.md) first: CSS units and `rem` rules, `display: grid` (not flex) layout, and the Foundation-style responsive grid. Skill: `.claude/skills/vulkano-skills/vulkano-frontend-css/SKILL.md` (CSS Grid layout, BEM naming).
+## CSS and layout — skill `vulkano-frontend-css`
 
-## Security
+- BEM; block name = component folder in kebab-case.
+- Layout with CSS Grid, no Flexbox (unless `PROJECT.md` overrides). Grid system: `.row` / `.column small-N medium-N large-N` from `scss/_grid.scss`.
+- Units: `rem`, `px`, `dvh`, `vw`, `%`. Never `em`, `vh`, `ch`. A `rem` must equal whole pixels (`value × 16`).
 
-- Never store user data (profile, role, etc.) in `localStorage`/`sessionStorage` — client-readable storage is exposed to XSS. After login, fetch the current user via `GET /api/auth/current`, and re-fetch it on every route change (router guard) instead of caching it client-side.
+## Design patterns — microinteractions
 
-## Forms
+- Every async action (fetch, submit, delete) has a loading state (disabled/`--loading` button, spinner or skeleton).
+- Hover on interactive elements; `cursor: pointer` on every clickable (`not-allowed` when disabled) — via a shared base style.
+- State changes (modal, toast, dropdown, error) animate ~150-250ms, never jump.
+- Reuse shared utilities/mixins (`.is-loading`, transitions) — no per-view copies.
+- Complex sequences → GSAP; scroll reveal → AOS. Neither installed: `pnpm add`, and call out the new dependency.
 
-Any `<form>` add/edit — always load the `vulkano-frontend-form` skill first (`.claude/skills/vulkano-skills/vulkano-frontend-form/SKILL.md`): required-field asterisks, JS-only validation via `useFormValidation`, `fieldErrors` pattern, input types, date-picker choice. Don't hand-roll form validation from memory of this note — the skill is the source of truth, load it every time, not just when it "seems needed".
+## Assets
 
-## Microinteractions
+- Images, fonts, downloads live in `public/img|fonts|files/`, referenced by absolute path (`/img/x.webp`) — never imported through Vite or `@<entrypoint>`.
+- Namespace per feature (`public/img/<section>/…`). Photos → `.webp` via `pnpm run webp`. Below-the-fold images get `loading="lazy"`.
 
-Adding/editing a button or clickable element, an async action (fetch, submit, delete), or a transition/animation — read [MICROINTERACTIONS.md](MICROINTERACTIONS.md) first: loading states, hover, `cursor: pointer`, transition timing, GSAP/AOS policy.
+## Analytics wiring (public areas only)
 
-## Before handoff checklist
+How to track well = any analytics skill. Where Vulkano wires it: Vue pages → `vue-gtag` (not installed, `pnpm add vue-gtag`); server-rendered pages → `gtag.js` snippet in the layout `<head>`. Provider ID from an env var (e.g. `VITE_GA_ID`, add it to `.env.example`) or hardcoded, as the user prefers. While `SEO_NOINDEX=true` (private mode) tracking still fires — warn the user.
 
-- The frontend was checked visually in a browser (`chrome-devtools` MCP if available) — see [references/AGENTS/DEVTOOLS.md](DEVTOOLS.md).
-- For changes involving user interaction (form, button, download, video, page), analytics tracking was added per [references/AGENTS/ANALYTICS.md](ANALYTICS.md) unless the area's Analytics column in `PROJECT.md` is off.
-- For changes involving images, navigation, or forms, accessibility minimums per [references/AGENTS/ACCESSIBILITY.md](ACCESSIBILITY.md) were met unless the area's Accessibility column in `PROJECT.md` is off.
-- For new public/crawlable pages, SEO essentials per [references/AGENTS/SEO.md](SEO.md) (backend view, meta tags, sitemap entry) were met unless the area's SEO column in `PROJECT.md` is off.
+## Before handoff
+
+- New/changed store, composable or util has a test (skill `vulkano-testing`).
+- Checked visually in a browser — [DEVTOOLS.md](DEVTOOLS.md).

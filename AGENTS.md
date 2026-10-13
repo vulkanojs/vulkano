@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Vulkano Framework project — full-stack app built on `@vulkano/core`: Express MVC backend + Vue 3 / vanilla JS frontend, bundled by Vite.
 
-See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SEO/Analytics/Accessibility settings — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or per-area decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
+See [PROJECT.md](PROJECT.md) for this project's name/purpose and project-level overrides — the only file a template update never touches, and the only place project-specific facts belong. Never write project name, purpose, or project decisions into this file — put them in PROJECT.md instead, so pulling a newer AGENTS.md from the template stays a clean overwrite.
 
 # Default communication
 
@@ -17,50 +17,32 @@ See [PROJECT.md](PROJECT.md) for this project's name/purpose and its per-area SE
 - Ultra-short, direct sentences.
 - All user-facing text — including `AskUserQuestion` questions, option labels, and descriptions — must be in Spanish or English only, never another language.
 - Use Caveman mode (if the skill is available): use the fewest tokens possible.
-- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — read `references/AGENTS/PLANS.md` first (output paths under `.superpowers/`, one task at a time, framework skills inside a plan).
+- Use the `superpowers` skill (brainstorming, writing-plans) for planning and specs before multi-step work — read `references/AGENTS/WORKFLOW.md` § Plans first (output paths under `.superpowers/`, one task at a time, framework skills inside a plan).
 - If `caveman` or `superpowers` skills aren't installed/available, tell the user and recommend installing them.
 
 ---
 
 ## Git
 
-Before any `git` action (commit, push, branch, reset, etc.) — read `references/AGENTS/GIT.md` first.
+Before any `git` action (commit, push, branch, reset, etc.) — read `references/AGENTS/WORKFLOW.md` § Git first.
 
 ---
 
 ## Area conventions
 
-Where a skill under `.claude/skills/vulkano-skills/` covers the task, invoke it and skip the matching `references/AGENTS/` doc — read the doc only if the skills submodule isn't installed.
+Skills under `.claude/skills/vulkano-skills/` hold the worked code and load automatically when the task matches — invoke the matching one. `references/AGENTS/` holds the rules; read the doc for the area you touch:
 
-- Touching `app/` (backend) — read `references/AGENTS/BACKEND.md` first (code principles, security, handoff checklist). Routing, controllers, models, views, and auth are covered by skills; read [`@vulkano/core`'s README](node_modules/@vulkano/core/README.md) only for what they don't cover (cron jobs, auto-loaded globals, express/middleware config) — search it for the section you need, don't read it whole.
-- New public/crawlable page (a page a browser navigates to directly — landing, "about", blog post, product page) — read `references/AGENTS/BACKEND.md` and skill `vulkano-backend-views` **first**, before any `frontend/` skill: decide `res.render` (server-rendered) vs a Vue SPA route there. Don't default to `frontend/` just because the prompt says "page" or "route" — the SPA is never SEO-covered. Also read skill `vulkano-seo` for this same page — sitemap/robots/meta tags are required, not optional, whenever the area is SEO-on.
-- Touching `frontend/` — read `references/AGENTS/FRONTEND.md` first (code principles, security, forms, handoff checklist; CSS and microinteractions are split into `CSS.md` / `MICROINTERACTIONS.md`, read on demand).
-- Needs a pre-built UI component (dialog, dropdown, table, etc.) — read `references/AGENTS/UI.md` first.
-- Creating a file or folder, or unsure where something lives — read `references/AGENTS/ARCHITECTURE.md` (project structure).
-- Adds/changes a controller, model, service, or middleware, or a `frontend/<entrypoint>/store/`, `composables/`, or `utils/` file — it needs a test: skill `vulkano-testing` (doc: `references/AGENTS/TESTING.md`).
-- Adds/edits a Pinia store (`frontend/<entrypoint>/store/`) — skill `vulkano-frontend-store` (doc: `references/AGENTS/STORE.md`).
-- Adds/edits a route (`frontend/<entrypoint>/routes.js` or `app/config/routes.js`) — skill `vulkano-frontend-router` (doc: `references/AGENTS/ROUTING.md`).
-- Creates/renames/removes a frontend entrypoint, or wires its Vite entry, backend layout, or catch-all — also read `references/AGENTS/ENTRYPOINTS.md`.
-
-## Assets
-
-Adding/editing an image, font, or downloadable file (lives in `public/`, referenced from `app/views/` or `frontend/`) — read `references/AGENTS/ASSETS.md` first. Applies to both `app/` and `frontend/` work.
+- Unsure where something lives, or creating a file/folder — `references/AGENTS/ARCHITECTURE.md`.
+- Touching `app/` (controllers, scaffold, models, auth, views, autoload/libraries, config, routes, SEO wiring) — `references/AGENTS/BACKEND.md`. Core details it doesn't cover: [`@vulkano/core`'s README](node_modules/@vulkano/core/README.md) — search the section, don't read it whole.
+- Touching `frontend/` (components, UI library, store, forms, routes, CSS, microinteractions, assets, analytics wiring) — `references/AGENTS/FRONTEND.md`.
+- New page a browser opens directly (landing, "about", blog post, product) — BACKEND.md § Views + skill `vulkano-backend-views` **first**: `res.render`, not a Vue SPA route (the SPA isn't crawlable). Then BACKEND.md § SEO wiring.
+- Creating/renaming/removing a frontend entrypoint, or editing `vite.config.mjs`, `vite.entries.mjs`, or a `vite()` call — `references/AGENTS/BUILD.md`.
+- Adds/changes a controller, model, service, middleware, or a `frontend/<entrypoint>/store/`, `composables/`, `utils/` file — it needs a test: skill `vulkano-testing`.
+- Verifying UI in a browser — `references/AGENTS/DEVTOOLS.md`.
 
 ## Environment variables
 
 Adding/reading a new `.env` variable, or setting up a project's `.env` for the first time — read `.env.example` first (every variable is documented there; `.env` is a copy of it).
-
-## Vite / build
-
-Editing `vite.config.mjs`, `vite.entries.mjs`, or a backend template's `vite()` injection call — read `references/AGENTS/VITE.md` first. Applies to both `app/` and `frontend/` work.
-
-## Per-area requirements (SEO / Analytics / Accessibility)
-
-Touching a new entry point/area with no row yet in `PROJECT.md`'s table — read `references/AGENTS/AREAS.md` first.
-
-## Launch
-
-Deploying/launching a project to production — read `references/AGENTS/LAUNCH.md` first.
 
 ---
 

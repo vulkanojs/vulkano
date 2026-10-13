@@ -1,31 +1,68 @@
 # Backend (`app/`)
 
-**Controller/route, model, view, and auth work is covered by Claude Code skills** — invoke them for detailed conventions and worked code instead of relying on this file alone:
+Rules only. Worked code lives in the skills named per section — they load automatically when the task matches. Core internals not covered here: [`@vulkano/core` README](../../node_modules/@vulkano/core/README.md) (search the section you need, don't read it whole).
 
-- `.claude/skills/vulkano-skills/vulkano-backend-controller/SKILL.md` — controller placement, routing convention, `res.vsr`/`res.render`, scaffold, sockets
-- `.claude/skills/vulkano-skills/vulkano-backend-model/SKILL.md` — model naming, schema, standard CRUD methods, hooks, `active`/soft-delete, `autopopulate`/`_buildPopulate`
-- `.claude/skills/vulkano-skills/vulkano-backend-views/SKILL.md` — `res.render` vs `res.vsr` decision; routes to the Nunjucks or Handlebars skill for actual template syntax (layouts, SEO locals, i18n, formatting helpers, Vite injection)
-- `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md` — Auth/User model, `AuthController` convention, JWT via `httpOnly` cookie
+## Controllers — skill `vulkano-backend-controller`
 
-This file keeps only what those skills don't cover. `app/config/routes.js` explicit mappings and the SPA catch-all convention are in [ROUTING.md](ROUTING.md) (cross-cutting with `frontend/`).
+- Routing is by convention: `/:resource/:method?/:param?` → `<Resource>Controller.<method>`. Filename plural PascalCase; URL segment = filename kebab-cased (`VatTypesController` → `/vat-types`).
+- Method keys: `get`, `'get :id'`, `post`, `'put :id'`, `'delete :id'`, `'post save'`. No verb = GET.
+- View controller → `app/controllers/` + `res.render()`. API → `app/controllers/api/` + `res.vsr(promise, status?)`. Socket → `app/controllers/sockets/` + `app/config/sockets/events.js`.
+- Thin: read params → call model/service → respond. Nothing top-level besides `require` and the exported object. Lookup/mapping tables are domain logic → model.
+- Create + edit share one method/template, branching on `:id`.
 
-## Code principles
+## Scaffold
 
-- **DB field/data scripts — singular collection names**: before writing any script that reads/changes a DB field (one-off migration, ad-hoc fix, not just a new model), load `.claude/skills/vulkano-skills/vulkano-backend-model/SKILL.md` first. Collections are singular (`order`, `user`), never pluralized (`orders`, `users`) — don't write the script from memory of generic Mongo/Node conventions.
-  (Unused-variable naming is a repo-wide rule, not backend-specific — see [AGENTS.md § Code principles](../../AGENTS.md#code-principles--dry-kiss-divide-and-conquer).)
+- Full CRUD API with no code: controller `{ scaffold: 'Product', allowedMethods: [...] }` + model with `attributes` (+ optional `fillable`).
+- Write CRUD methods by hand only when overriding scaffold behavior.
+
+## Models — skill `vulkano-backend-model` (only if `MONGO_URI` is set)
+
+- `app/models/<Name>.js`, singular PascalCase; collection singular (`order`, never `orders`) — also in migration/fix scripts.
+- Business logic and validation live in the model, never in the controller. No repository layer, no shared CRUD factory.
+- `getAll` returns a page object (`.items`) — or a bare array when `?page=all`.
+- `active` = soft-delete only. `createdAt`/`updatedAt` are automatic — never hand-roll timestamps.
+- Populate only through `autopopulate: true` / `_buildPopulate`; `select: false` does not protect fields from `?populate=`.
+
+## Auth — skill `vulkano-backend-auth`
+
+- Dedicated `Auth`/`User` model + `app/controllers/api/AuthController.js` (`post login`, `post logout`, `current`).
+- JWT in an `httpOnly` cookie; never in the response body, `localStorage` or `sessionStorage`. `JWT_SECRET_KEY` must be non-empty.
+
+## Views — skill `vulkano-backend-views` (→ `-nunjucks` / `-handlebars`)
+
+- Page a browser opens directly (landing, about, blog post, product) → `res.render`, never a Vue SPA route: the SPA isn't crawlable.
+- Engine from `app/config/views.js` (absent = Nunjucks). One base layout per entrypoint under `app/views/_shared/templates/`.
+- HTML outside a request (PDF, email) → `View.render(view, data)` inside a service, not the controller.
+
+## SEO wiring (public areas only)
+
+How to do SEO well = any SEO skill. Where Vulkano wires it:
+
+- `app/config/middlewares/seo.js` sets `res.locals.seo` (`title`, `description`, `image`, `url`, `noindex`) from `app/config/common.js` `SEO_DEFAULT_*`. Override per route: `res.locals.seo = { ...res.locals.seo, title }` before `res.render`. Layout prints `seo.*`; an admin layout prints none.
+- Private by default: `SEO_NOINDEX` (env, default `true`) → `<meta name="robots" content="noindex">`, and `public/robots.txt` ships `Disallow: /`. At launch flip both together (`SEO_NOINDEX=false` + real robots rules) — one without the other still blocks crawl.
+- `public/sitemap.xml` lists every crawlable view (static, or generated by a controller/service when data-driven). Absolute URLs from `SITE_URL` in `.env`; unset → relative.
+
+## Autoload and libraries
+
+- `app/models/*` and `app/services/*` are auto-loaded globals (`Order`, `Upload`) — never `require()` them.
+- Core libs are globals too (no `require`, core README § Built-in Global Libs): `VSError` (errors), `Paginate`, `Jwt`, `Encrypter` (passwords), `Filter` (sanitize input), `Merge`, `ApiClient` (external HTTP), `Upload`/`Download` (files), `View`, `Crontab`, `i18n`, `mongoose`. Use them before adding an npm dependency.
+- Shared helper logic → `app/services/<Name>.js`. Shared constants → `app/config/<section>.js` (read as `app.config.<section>.X`); a true global → `global.X` in `app/config/bootstrap.js`.
+- Cron jobs: `Crontab.schedule(...)` in `app/config/bootstrap.js` (core README § Cron Jobs).
+- `app/config/express/*` and `app/config/middlewares/*` are optional — don't pre-scaffold. To customize one, copy only that file from `node_modules/@vulkano/core/examples/config/` and edit what the task needs.
+
+## Routes — `app/config/routes.js` (skill `vulkano-frontend-router` for the SPA side)
+
+- Add an explicit entry only when convention can't express it (absolute path, catch-all). Never duplicate a convention route.
+- SPA catch-all only for an area that mounts a Vue app: scoped `'/<area>/*'` before generic `'/*'`, all last. Always paired with a frontend `NotFound` route.
+- Fully server-rendered area → no catch-all; the core returns a real 404 (`app/views/_shared/errors/404.html`).
+- `/api/*` convention routes register first — a catch-all never shadows them.
 
 ## Security
 
-- Escape dynamic view output for its rendered context, and avoid exposing sensitive values in responses, exceptions, fixtures, or logs like passwords and API keys, etc.
-- No endpoint response (`res.vsr`/`res.render` payload, error body, list/detail serialization) may expose passwords, hashes, tokens, or API keys — strip/select fields explicitly rather than returning a full model document. Only exception: the user explicitly asks, for that specific case.
-- When implementing authentication: use a dedicated `Auth`/`User` model — don't bolt login logic onto an unrelated model. Route login/logout/session-check through their own controller (e.g. `AuthController`, following the core's `login`/`logout`/`current` action convention — see `.claude/skills/vulkano-skills/vulkano-backend-auth/SKILL.md`). On successful login, set the session token as an `httpOnly` cookie, not `localStorage`/`sessionStorage` or a plain response body field — client-readable storage is exposed to XSS.
-- If credentials for Amazon S3, DigitalOcean Spaces, or any other S3-compatible storage are present (env vars, config), never use them to delete objects from the bucket — no `DeleteObjectCommand`/`DeleteObjectsCommand` or equivalent, in app code, scripts, or ad-hoc commands run during a task. Uploads/reads are fine; deletion is off-limits regardless of what the task asks for.
+- Escape dynamic output for its context. No response (`res.vsr`, `res.render`, error body) exposes passwords, hashes, tokens or API keys — select fields explicitly, never return a raw document. Exception: user asks explicitly for that case.
+- S3/Spaces/S3-compatible credentials: never delete objects (`DeleteObjectCommand` etc.), in app code, scripts or ad-hoc commands. Uploads/reads are fine.
 
-## Framework core conventions
+## Before handoff
 
-Adding a shared constant (`app/config/<sectionName>.js` / `bootstrap.js`), customizing `app/config/express/*` or `app/config/middlewares/*`, or scheduling a cron job — read [CONFIG.md](CONFIG.md) first. Source of truth for everything else in the core: [`@vulkano/core` README](../../node_modules/@vulkano/core/README.md).
-
-## Before handoff checklist
-
-- For changes with no automated test coverage, the server was started (`vp run dev` / `vp run start`) and the affected endpoints/controllers were verified manually.
-- No `require(...)` of a project model or service (`app/models/`, `app/services/`) — both are auto-loaded as globals; reference them by name directly (e.g. `User`, `Project`) instead.
+- New/changed controller, model, service or middleware has a test (skill `vulkano-testing`).
+- No automated test → start the server (`vp run dev`) and hit the endpoint manually.

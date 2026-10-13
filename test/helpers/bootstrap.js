@@ -8,7 +8,7 @@ process.env.NODE_ENV = 'test';
 // falsy (see node_modules/@vulkano/core/database/mongodb.js), so tests boot
 // with no database by default. If a model is added later and needs one,
 // set TEST_MONGO_URI to a dedicated test database — never MONGO_URI
-// (dev/prod) — see references/AGENTS/TESTING.md § Environment.
+// (dev/prod) — see skill vulkano-testing § Database.
 if (process.env.TEST_MONGO_URI) {
   process.env.MONGO_URI = process.env.TEST_MONGO_URI;
 } else {
