@@ -56,7 +56,7 @@ framework/
 │   ├── img/ fonts/         # Static assets — referenced as /img/…, /fonts/…
 │   ├── files/              # Downloadable/uploaded files
 │   ├── robots.txt
-│   └── sitemap.xml
+│   └── sitemap.xml         # not shipped — created by the project (see BACKEND.md § SEO wiring)
 │
 ├── test/                   # Vitest — mirrors source path (test/app/…, test/frontend/…)
 ├── scripts/                # Tooling (webp.js, clean…)

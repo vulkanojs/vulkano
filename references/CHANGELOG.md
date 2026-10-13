@@ -1,3 +1,14 @@
+## 2026-10-13 — sitemap.xml is project-owned, not shipped
+
+**Changed:**
+
+- `references/AGENTS/BACKEND.md` § SEO wiring, `ARCHITECTURE.md`: `public/sitemap.xml` is not part of the template — each project creates it by hand or with a script/service that regenerates it; agents don't create or edit it unless asked (docs used to describe it as shipped).
+- Skills submodule: controller/templates skills no longer ask to add each view to the sitemap.
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — nodemon watches only the backend
 
 **Changed:**
