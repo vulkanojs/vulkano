@@ -1,3 +1,14 @@
+## 2026-10-13 — AGENTS.md slimmed (102 → ~50 lines)
+
+**Changed:**
+
+- `AGENTS.md`: removed § Minimum rules (`references/AGENTS/` is tracked in the project, only the skills submodule can be missing — the references already state every rule); merged Git/Plans pointers into § Where to look; Quick workflow + handoff checklist + "do only what was asked" merged into § Workflow; Code principles collapsed to two lines; Security/Safety trimmed. New dispatch lines: cron (BACKEND.md), deploy/launch (PROJECT.md § Deployment + SEO flip), missing submodule (`git submodule update --init`).
+- Skills submodule READMEs: fallback is the project's references, not "§ Minimum rules".
+
+**Migration:**
+
+- None (template update overwrites `AGENTS.md`). Projects that edited AGENTS.md locally: move project facts to `PROJECT.md`.
+
 ## 2026-10-13 — Catch-all rule in one place
 
 **Changed:**
