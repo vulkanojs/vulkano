@@ -1,3 +1,13 @@
+## 2026-10-13 — Testing skill: useFormValidation signature
+
+**Changed:**
+
+- Skills submodule (`vulkano-testing`): composable example uses the real signature `useFormValidation(rules).validate(formData)` → boolean (was `useFormValidation(model, rules).validate(cb)`, which doesn't exist).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — Router auth guard: meta.auth, inside the routes.js factory
 
 **Changed:**
