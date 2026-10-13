@@ -8,4 +8,4 @@ Entry format:
 - **Changed:** what changed and why, in a few bullets.
 - **Template:** only if the commit edits a template-owned file (`AGENTS.md`, `references/`) or deviates from the template — say what and why, so a template sync doesn't overwrite it blindly. Prefer `PROJECT.md` for project-specific facts.
 
-A template sync adds an entry titled `## YYYY-MM-DD — Vulkano template sync <sha>` (written by the `vulkano-template-update` skill); the next sync uses that sha as its diff base.
+A template sync (`npx @vulkano/cli update`) adds an entry titled `## YYYY-MM-DD — Vulkano template sync <sha>`. The base for the next sync is stored in `.vulkano.json`, not in the entry title.

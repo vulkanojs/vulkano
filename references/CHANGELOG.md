@@ -1,3 +1,27 @@
+# Template changelog
+
+The Vulkano template's changelog: changes to template-owned files (`AGENTS.md`, `references/`, the skills submodule) and the migrations they need in project-owned files. Overwritten from the template on sync; a project's own changes go in the root `CHANGELOG.md`. Read by the `vulkano-template-update` skill; agents don't load it for normal work.
+
+Newest first. Every commit in the Vulkano template repo adds an entry here.
+
+Entry format:
+
+- `## YYYY-MM-DD — title`
+- **Changed:** template-owned files added, removed, or changed.
+- **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
+
+## 2026-10-13 — Template sync moves to `npx @vulkano/cli update`
+
+**Changed:**
+
+- New `@vulkano/cli` 1.0 command `update`: syncs `AGENTS.md`, `references/`, the skills submodule, `.env.example` keys and `@vulkano/core` with `master` of the template; creates `PROJECT.md` only if missing; records the synced sha in `.vulkano.json`.
+- Skills submodule: `vulkano-template-update` now runs the CLI and only handles migrations and kept local edits.
+- `CHANGELOG.md` stub: the next sync's base lives in `.vulkano.json`.
+
+**Migration:**
+
+- Run `npx @vulkano/cli update` in the project root and commit the result (including `.vulkano.json`).
+
 ## 2026-10-13 — model skill: `delete` is an update
 
 **Changed:**
@@ -445,18 +469,6 @@
 - If `pnpm-workspace.yaml` has `vite`/`vitest` as `@latest` or `@vulkano/core` as a range, pin them to the exact versions above.
 - If `pnpm-lock.yaml` does not match `pnpm-workspace.yaml`, run `pnpm install --lockfile-only --ignore-scripts` and commit it.
 - If the project runs in production, run `pnpm install` to get `@vulkano/core` 2.1.2.
-
-# Template changelog
-
-The Vulkano template's changelog: changes to template-owned files (`AGENTS.md`, `references/`, the skills submodule) and the migrations they need in project-owned files. Overwritten from the template on sync; a project's own changes go in the root `CHANGELOG.md`. Read by the `vulkano-template-update` skill; agents don't load it for normal work.
-
-Newest first. Every commit in the Vulkano template repo adds an entry here.
-
-Entry format:
-
-- `## YYYY-MM-DD — title`
-- **Changed:** template-owned files added, removed, or changed.
-- **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
 ## 2026-09-18 — Lower per-task agent context
 
