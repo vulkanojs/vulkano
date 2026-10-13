@@ -1,3 +1,13 @@
+## 2026-10-13 — config layering documented
+
+**Added:**
+
+- `references/AGENTS/BACKEND.md` § Config: `app/config/<section>.js` → `app.config.<section>`, deep-merged with `env/<NODE_ENV>/` (or `env/<NODE_ENV>.js`) and gitignored `local.js`, last wins. Secrets only in `.env`. "Shared constants" moved here from § Autoload. `ARCHITECTURE.md` tree lists `env/` and `local.js` as optional, not shipped.
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — scaffold `create` writes the whole body
 
 **Changed:**

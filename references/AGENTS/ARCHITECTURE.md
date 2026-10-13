@@ -16,6 +16,8 @@ framework/
 │   │   ├── settings.js     # Port, DB URI, salt key
 │   │   ├── routes.js       # Explicit routes only (convention covers the rest)
 │   │   ├── <section>.js    # Any file here → app.config.<section> (e.g. common.js)
+│   │   ├── env/<NODE_ENV>/ # Optional per-environment overrides (not shipped — BACKEND.md § Config)
+│   │   ├── local.js        # Optional per-machine overrides, gitignored (not shipped)
 │   │   ├── bootstrap.js    # Boot hook — true globals, cron jobs
 │   │   ├── express/        # Optional core overrides: cookies, cors, csp, helmet, json, jwt…
 │   │   ├── middlewares/    # Optional global middlewares (e.g. seo.js)

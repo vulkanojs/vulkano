@@ -48,11 +48,17 @@ How to do SEO well = any SEO skill. Where Vulkano wires it:
 - Private by default: `SEO_NOINDEX` (env, default `true`) → `<meta name="robots" content="noindex">`, and `public/robots.txt` ships `Disallow: /`. At launch flip both together (`SEO_NOINDEX=false` + real robots rules) — one without the other still blocks crawl.
 - `public/sitemap.xml` is not shipped — the project creates it: by hand for a fixed page set, or with a script/service (cron, `Crontab` in `bootstrap.js`) that regenerates it when content changes. Absolute URLs from `SITE_URL` in `.env`. Don't create or edit it unless the task asks.
 
+## Config
+
+- `app/config/<section>.js` → `app.config.<section>.X` — shared constants live here. Deep merge, last wins: base → `env/<NODE_ENV>/<section>.js` (or `env/<NODE_ENV>.js` exporting `{ <section>: {...} }`) → `local.js` (gitignored, per-machine, same shape).
+- Secrets and per-deploy values → `.env` (`process.env.X`, documented in `.env.example`) — never in `env/`, `local.js` or any tracked config.
+- `env/` only for non-secret differences between environments. Don't create `env/` or `local.js` unless the task needs it.
+
 ## Autoload and libraries
 
 - `app/models/*` and `app/services/*` are auto-loaded globals (`Order`, `Upload`) — never `require()` them.
 - Core libs are globals too (no `require`, core README § Built-in Global Libs): `VSError` (errors), `Paginate`, `Jwt`, `Encrypter` (reversible encryption — never passwords), `Filter` (sanitize input), `Merge`, `ApiClient` (external HTTP), `Upload`/`Download` (files), `View`, `Crontab`, `i18n`, `mongoose`. Use them before adding an npm dependency.
-- Shared helper logic → `app/services/<Name>.js`. Shared constants → `app/config/<section>.js` (read as `app.config.<section>.X`); a true global → `global.X` in `app/config/bootstrap.js`.
+- Shared helper logic → `app/services/<Name>.js`. A true global → `global.X` in `app/config/bootstrap.js`.
 - Cron jobs: `Crontab.schedule(...)` in `app/config/bootstrap.js` (core README § Cron Jobs).
 - `app/config/express/*` and `app/config/middlewares/*` are optional — don't pre-scaffold. To customize one, copy only that file from `node_modules/@vulkano/core/examples/config/` and edit what the task needs.
 
