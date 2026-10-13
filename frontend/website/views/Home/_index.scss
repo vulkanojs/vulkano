@@ -11,7 +11,7 @@
     &:first-child {
       &:hover {
         img {
-          filter: drop-shadow(0 0 2em #5b3328aa);
+          filter: drop-shadow(0 0 2rem #5b3328aa);
         }
       }
     }
@@ -19,7 +19,7 @@
     &:nth-child(2) {
       &:hover {
         img {
-          filter: drop-shadow(0 0 2em #646cffaa);
+          filter: drop-shadow(0 0 2rem #646cffaa);
         }
       }
     }
@@ -27,7 +27,7 @@
     &:last-of-type {
       &:hover {
         img {
-          filter: drop-shadow(0 0 2em #42b883aa);
+          filter: drop-shadow(0 0 2rem #42b883aa);
         }
       }
     }
@@ -46,12 +46,12 @@
 
   &__title {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.125rem;
   }
 
   &__intro {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     opacity: 0.8;
   }
 
@@ -62,9 +62,9 @@
 
   &__group-title {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.0625rem;
     opacity: 0.6;
   }
 
@@ -82,7 +82,7 @@
       padding: 0.5rem 0.75rem;
       background: #64646414;
       border-radius: 0.25rem;
-      font-size: 0.85rem;
+      font-size: 0.8125rem;
     }
   }
 }

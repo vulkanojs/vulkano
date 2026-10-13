@@ -1,8 +1,10 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <div class="hello-world">
+    <h1 class="hello-world__title">{{ msg }}</h1>
 
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
+    <div class="hello-world__card">
+      <button type="button" @click="count++">count is {{ count }}</button>
+    </div>
   </div>
 </template>
 

@@ -1,3 +1,17 @@
+## 2026-10-13 — Template SCSS follows its own CSS rules
+
+**Changed:**
+
+- `frontend/website/style.scss`: `body` grid instead of flex, `100dvh`, `h1` `3.25rem`, no `.card`; imports new `scss/_base.scss`.
+- `frontend/website/scss/_base.scss` (new): shared `a`/`button` base styles (hover, `cursor: pointer`, disabled) in `rem` — replaces the scss-only `components/Buttons/` folder (deleted).
+- `frontend/website/components/HelloWorld`: BEM (`.hello-world__title`, `__card`) instead of a bare `h1`.
+- `frontend/website/views/Home/_index.scss`: whole-pixel `rem` only, no `em`.
+- `frontend/admin/style.scss`: `100dvh`.
+
+**Migration:**
+
+- None required; projects still on the demo styles can copy these files.
+
 ## 2026-10-13 — AGENTS.md slimmed (102 → ~50 lines)
 
 **Changed:**

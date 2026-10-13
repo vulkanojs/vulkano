@@ -1,4 +1,5 @@
 @import './scss/grid';
+@import './scss/base';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -17,19 +18,15 @@
 
 body {
   margin: 0;
-  display: flex;
+  display: grid;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 3.25rem;
   line-height: 1.1;
-}
-
-.card {
-  padding: 2em;
 }
 
 #app {
