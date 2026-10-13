@@ -1,3 +1,20 @@
+## 2026-10-13 — `@vulkano/core` 2.1.6
+
+**Changed:**
+
+- `pnpm-workspace.yaml`: `@vulkano/core` pinned to `2.1.6` (was `2.1.2`), lockfile regenerated.
+- Core 2.1.6 brings:
+  - `?fields=` / `?populate=rel:fields` can no longer select `select: false` paths (security);
+  - scaffold `delete` soft-deletes even when `fillable` omits `active`;
+  - scaffold `create` no longer echoes hidden fields;
+  - `get<Model>(id, props)` populates;
+  - the view engine is read from `config/views.js`;
+  - `res.vsr` resolving `null` works.
+
+**Migration:**
+
+- `pnpm install`. Code that used the value resolved by a scaffold `create` as a Mongoose document (`.save()` on it) must re-fetch it — it's a plain object now.
+
 ## 2026-10-13 — list views render loading/error/empty/data
 
 **Added:**
@@ -63,7 +80,7 @@
 
 **Migration:**
 
-- Needs `@vulkano/core` with the scaffold `delete`/`create` fixes (next release after 2.1.4): older core leaves records active on `DELETE` when `fillable` omits `active`, and echoes `select: false` fields from `POST`.
+- Needs `@vulkano/core` with the scaffold `delete`/`create` fixes (2.1.6+): older core leaves records active on `DELETE` when `fillable` omits `active`, and echoes `select: false` fields from `POST`.
 
 ## 2026-10-13 — `getAll` props rule, secrets via `select: false`
 
@@ -74,7 +91,7 @@
 
 **Migration:**
 
-- Requires `@vulkano/core` with `_sanitizeFields` (next release after 2.1.4). Older core: `?fields=+password` returns the hash — never expose `getAll(req.query)` on a model with secrets until upgraded.
+- Requires `@vulkano/core` with `_sanitizeFields` (2.1.6+). Older core: `?fields=+password` returns the hash — never expose `getAll(req.query)` on a model with secrets until upgraded.
 
 ## 2026-10-13 — `res.vsr(async fn)` documented
 
