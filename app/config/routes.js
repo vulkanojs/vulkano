@@ -23,16 +23,8 @@
 module.exports = {
   '/': 'HomeController.get'
 
-  // Catch-alls for Vue Router (SPA) — ONLY for a Vue app entrypoint under
-  // frontend/, not for a plain server-rendered page (see
-  // vulkano-backend-views for that decision). Each scoped one must come
-  // before the generic '/*' so it isn't shadowed, and all must stay last
-  // so they never shadow /api/* convention routes, which @vulkano/core
-  // registers before config/routes.js entries. Without these, a hard
-  // refresh on any client-side route 404s at the server. Every Vue
-  // entrypoint needs its own scoped catch-all (uncomment it, or add
-  // '/<name>/*' for a new one) plus a NotFound route in its frontend
-  // routes.js, even while it has a single route:
+  // SPA catch-alls — only for a Vue entrypoint, scoped before '/*', always last.
+  // Rule: references/AGENTS/BACKEND.md § Routes.
   // '/admin/*': 'AdminController.get',
   // '/*': 'HomeController.get',
 };

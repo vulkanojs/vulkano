@@ -52,10 +52,10 @@ How to do SEO well = any SEO skill. Where Vulkano wires it:
 - Cron jobs: `Crontab.schedule(...)` in `app/config/bootstrap.js` (core README § Cron Jobs).
 - `app/config/express/*` and `app/config/middlewares/*` are optional — don't pre-scaffold. To customize one, copy only that file from `node_modules/@vulkano/core/examples/config/` and edit what the task needs.
 
-## Routes — `app/config/routes.js` (skill `vulkano-frontend-router` for the SPA side)
+## Routes — `app/config/routes.js` (catch-all code: skill `vulkano-frontend-entrypoint`)
 
 - Add an explicit entry only when convention can't express it (absolute path, catch-all). Never duplicate a convention route.
-- SPA catch-all only for an area that mounts a Vue app: scoped `'/<area>/*'` before generic `'/*'`, all last. Always paired with a frontend `NotFound` route.
+- SPA catch-all only for an area that mounts a Vue app (`<div id="app">` in its layout): scoped `'/<area>/*'` before generic `'/*'`, all last. Always paired with a frontend `NotFound` route. Missing → in-app navigation works, hard refresh 404s.
 - Fully server-rendered area → no catch-all; the core returns a real 404 (`app/views/_shared/errors/404.html`).
 - `/api/*` convention routes register first — a catch-all never shadows them.
 

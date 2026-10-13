@@ -1,3 +1,13 @@
+## 2026-10-13 — Catch-all rule in one place
+
+**Changed:**
+
+- The SPA catch-all rule lived in 6 places. Now: rule only in `references/AGENTS/BACKEND.md` § Routes (adds the "hard refresh 404s" symptom); code only in skill `vulkano-frontend-entrypoint` § Wiring; skill `vulkano-frontend-router` keeps just the frontend `NotFound` snippet + links (~30 lines less); `BUILD.md` links to BACKEND.md; `app/config/routes.js` comment cut to 2 lines + link.
+
+**Migration:**
+
+- Optional: replace the long catch-all comment in `app/config/routes.js` with the 2-line version.
+
 ## 2026-10-13 — Nunjucks + Handlebars skills merged into vulkano-backend-templates
 
 **Changed:**
