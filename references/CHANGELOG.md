@@ -1,3 +1,14 @@
+## 2026-10-13 — scaffold `subdocs` documented
+
+**Added:**
+
+- `references/AGENTS/BACKEND.md` § Scaffold: rule line for `subdocs` (CRUD routes for embedded array fields, off by default).
+- Skills submodule: controller skill shows the `subdocs` config and the routes it registers (404 unknown key, 405 method not allowed).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — sitemap.xml is project-owned, not shipped
 
 **Changed:**

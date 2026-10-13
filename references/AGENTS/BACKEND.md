@@ -13,6 +13,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 ## Scaffold
 
 - Every model inherits the CRUD methods; the controller decides exposure. Full CRUD API with no code: controller `{ scaffold: 'Product', allowedMethods: [...] }` + model with `attributes` + `fillable` (the only fields the inherited `update` writes).
+- CRUD routes for an embedded array field: `subdocs` (off by default; only listed keys, optional methods per key) — skill `vulkano-backend-controller`.
 - Write CRUD methods by hand only when overriding scaffold behavior.
 
 ## Models — skill `vulkano-backend-model` (only if `MONGO_URI` is set)
