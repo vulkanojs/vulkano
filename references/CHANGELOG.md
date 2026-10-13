@@ -1,3 +1,17 @@
+## 2026-10-13 — layouts and composables defined
+
+**Added:**
+
+- `references/AGENTS/FRONTEND.md` § Code organization: `layouts/` = the SPA's page template (header/nav/footer around `<router-view />`, parent `component` in `routes.js`); composable = reusable component logic like form validation (`useFormValidation`), own state per call — shared state → store, no reactivity → `utils/`.
+
+**Changed:**
+
+- `frontend/website/layouts/Layout.js`: removed the unused `loading` ref.
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — store vs `$api` rule
 
 **Added:**

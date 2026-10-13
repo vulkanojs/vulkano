@@ -8,6 +8,8 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - `views/` = one folder per route (`/users` → `views/Users/Index.*`, `/system/users` → `views/System/Users/Index.*`). `components/` = reusable pieces.
 - Every component/view is split in 3 files: `<Name>.vue` (template), `<Name>.js` (logic), `_index.scss` (styles), and its `_index.scss` is imported by the parent aggregator.
 - Business logic goes in a store or a composable (`composables/useX.js`), not the component. Pure helpers → `utils/`.
+- `layouts/` = the SPA's page template (the frontend's `_shared/templates/`): header/nav/footer around `<router-view />`, set as the parent `component` in `routes.js`. One per template variant; views fill the content.
+- Composable = reusable component logic, e.g. form validation (`useFormValidation`, skill `vulkano-frontend-form`): `composables/use<Name>.js`, named export, called in `setup()`, returns refs + functions, own state per call. Shared state → store; no reactivity → `utils/`.
 - Never import across entrypoints (`@website` from inside `frontend/admin/`).
 - API calls: components use `$api` from `getCurrentInstance().proxy`; stores, composables, utils and router guards `import Api from '../Api'` (no component instance there — `getCurrentInstance()` is null). `Api.js` prefixes `/api`, unwraps `data` from the `res.vsr` envelope, and on failure rejects with an `Error`: `message` = the backend's `error.detail` (the text the controller/model threw), plus `status` (0 = network), `code`, `name`, `data`. Show `err.message`; branch on `err.status`. Each entrypoint keeps its own `Api.js` — never shared.
 
