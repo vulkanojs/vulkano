@@ -1,3 +1,14 @@
+## 2026-10-13 — list views render loading/error/empty/data
+
+**Added:**
+
+- `references/AGENTS/FRONTEND.md` § Design patterns: every list/fetched view renders loading, error (`err.message` + retry), empty and data; reads `.items` (bare array only with `?page=all`).
+- Skills submodule: component skill § List view — 4 states snippet; skeleton reads `.items` from `getAll` (was assigning the page object to the list).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — layouts and composables defined
 
 **Added:**

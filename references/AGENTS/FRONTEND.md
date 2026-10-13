@@ -55,6 +55,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 ## Design patterns — microinteractions
 
 - Every async action (fetch, submit, delete) has a loading state (disabled/`--loading` button, spinner or skeleton).
+- Every list/fetched view renders 4 states: loading, error (`err.message` + retry), empty (a message, never a blank area), data. Read `data.items` + page metadata — a bare array only when the request sent `?page=all`. Code: skill `vulkano-frontend-component` § List view.
 - Hover on interactive elements; `cursor: pointer` on every clickable (`not-allowed` when disabled) — via a shared base style.
 - State changes (modal, toast, dropdown, error) animate ~150-250ms, never jump.
 - Reuse shared utilities/mixins (`.is-loading`, transitions) — no per-view copies.
