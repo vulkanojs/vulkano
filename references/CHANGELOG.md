@@ -1,3 +1,13 @@
+## 2026-10-13 — model skill: `delete` is an update
+
+**Changed:**
+
+- Skills submodule: model skill's hand-written `delete` is back to `return this.update(_id, { active: false })` — a soft delete is an update (its hand-written `update` doesn't filter by `fillable`). The core scaffold's own `delete` keeps its direct write (its inherited `update` applies `fillable`).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — docs/skills consistency pass
 
 **Changed:**
