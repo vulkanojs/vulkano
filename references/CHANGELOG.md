@@ -1,3 +1,16 @@
+## 2026-10-13 — Admin layout: no SEO, title set per controller
+
+**Changed:**
+
+- `app/views/_shared/templates/admin.html`: only `<title>{{ seo.title }}</title>` + fixed `noindex, nofollow` — no description/canonical/og (unchanged markup, now documented).
+- `app/controllers/AdminController.js`: default title `VulkanoJS - Admin` (was `Vulkano App — Admin`); any admin controller may override it.
+- `test/app/controllers/Admin.http.test.js`: asserts the title and no `og:` tags.
+- `references/AGENTS/BACKEND.md` § SEO wiring + skills `vulkano-backend-views-nunjucks`/`-handlebars`: CMS/admin layouts carry no SEO besides the title (docs said "prints none" / "hardcode the title").
+
+**Migration:**
+
+- None required. Optionally rename the admin title in `AdminController` (`VulkanoJS - Admin`) to `<Project> - Admin`.
+
 ## 2026-10-13 — routes.js: drop redundant /admin entry
 
 **Changed:**
