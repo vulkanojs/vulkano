@@ -1,0 +1,15 @@
+.not-found {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  padding: 4rem 1rem;
+
+  &__title {
+    margin: 0;
+    font-size: 4rem;
+  }
+
+  &__text {
+    margin: 0;
+  }
+}

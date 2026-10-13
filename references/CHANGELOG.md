@@ -1,3 +1,16 @@
+## 2026-10-13 — NotFound route in both entrypoints, catch-alls enabled
+
+**Changed:**
+
+- `frontend/website` and `frontend/admin`: new `views/NotFound/` (Vue + JS + BEM SCSS) and a `:pathMatch(.*)*` child route under each `Layout` — the template now follows its own "every Vue entrypoint has a NotFound route" rule.
+- `app/config/routes.js`: `'/admin/*'` and `'/*'` catch-alls enabled (both areas mount a Vue app).
+- `scripts/clean.js` + test: strip the now-active `'/admin/*'` line.
+- `references/AGENTS/BACKEND.md` § Routes: a non-existent `/api` URL gets the SPA's HTML (200) once `'/*'` is active.
+
+**Migration:**
+
+- Projects without a NotFound route: copy `views/NotFound/` and the route; enable the catch-all of each Vue area in `app/config/routes.js`.
+
 ## 2026-10-13 — Template SCSS follows its own CSS rules
 
 **Changed:**

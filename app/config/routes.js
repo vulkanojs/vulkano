@@ -21,10 +21,10 @@
  */
 
 module.exports = {
-  '/': 'HomeController.get'
+  '/': 'HomeController.get',
 
   // SPA catch-alls — only for a Vue entrypoint, scoped before '/*', always last.
   // Rule: references/AGENTS/BACKEND.md § Routes.
-  // '/admin/*': 'AdminController.get',
-  // '/*': 'HomeController.get',
+  '/admin/*': 'AdminController.get',
+  '/*': 'HomeController.get'
 };

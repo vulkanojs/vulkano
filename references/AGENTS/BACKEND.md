@@ -57,7 +57,7 @@ How to do SEO well = any SEO skill. Where Vulkano wires it:
 - Add an explicit entry only when convention can't express it (absolute path, catch-all). Never duplicate a convention route.
 - SPA catch-all only for an area that mounts a Vue app (`<div id="app">` in its layout): scoped `'/<area>/*'` before generic `'/*'`, all last. Always paired with a frontend `NotFound` route. Missing → in-app navigation works, hard refresh 404s.
 - Fully server-rendered area → no catch-all; the core returns a real 404 (`app/views/_shared/errors/404.html`).
-- `/api/*` convention routes register first — a catch-all never shadows them.
+- `/api/*` convention routes register first — a catch-all never shadows an `/api` route that exists; a non-existent `/api` URL gets the SPA's HTML (200) instead of a 404.
 
 ## Security
 
