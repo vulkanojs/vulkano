@@ -1,3 +1,14 @@
+## 2026-10-13 — nodemon watches only the backend
+
+**Changed:**
+
+- `nodemon.json`: explicit `watch` (`app/`, `app.js`, `.env`) and `ext` (`js,json,env`) instead of an ignore list — edits to `.claude/`, `.superpowers/`, `vite.config.mjs`, `package.json` or docs no longer restart Express; `.env` changes now do. Templates (`.html`) reload through the view engine's own watch, no restart.
+- `references/AGENTS/ARCHITECTURE.md`, `BUILD.md`, `DEVTOOLS.md`: describe the new watch list.
+
+**Migration:**
+
+- Replace `nodemon.json`'s `ignore` with the `watch` + `ext` above.
+
 ## 2026-10-13 — Design system per entrypoint: tokens, base styles, /design-system page
 
 **Added:**

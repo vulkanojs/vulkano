@@ -1,6 +1,7 @@
 {
   "verbose": true,
-  "ignore": [".git/", "public/", "frontend/", "reference/", "test", "scripts", ".md"],
+  "watch": ["app/", "app.js", ".env"],
+  "ext": "js,json,env",
   "env": {
     "NODE_ENV": "development"
   }

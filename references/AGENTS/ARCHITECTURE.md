@@ -9,7 +9,7 @@ framework/
 ├── app.js                  # Entry point — calls vulkano()
 ├── vite.config.mjs         # Vite config — reads vite.entries.mjs (see BUILD.md)
 ├── vite.entries.mjs        # One key per frontend entrypoint, e.g. { website: 'frontend/website/app.js' }
-├── nodemon.json            # Watches app/ only (ignores public/, frontend/, references/, test, scripts)
+├── nodemon.json            # Restarts Express on app/, app.js, .env changes only
 │
 ├── app/                    # Backend — Express MVC on @vulkano/core (see BACKEND.md)
 │   ├── config/

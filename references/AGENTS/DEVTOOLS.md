@@ -8,5 +8,5 @@ For `frontend/` or `app/views/` changes, look at it running — `vp check` doesn
 
 ## Phone / LAN device, WSL
 
-- Page loads but assets/HMR point at `localhost` instead of the LAN IP → `@vulkano/core` caches the Vite dev manifest once at Express boot. Fix: `touch app.js` to restart the backend (nodemon ignores `frontend/`).
+- Page loads but assets/HMR point at `localhost` instead of the LAN IP → `@vulkano/core` caches the Vite dev manifest once at Express boot. Fix: `touch app.js` to restart the backend (nodemon only watches `app/`, `app.js`, `.env`).
 - WSL: `VITE_HOST` must be the Windows host's LAN IP (`ipconfig` on Windows), not the WSL internal IP.
