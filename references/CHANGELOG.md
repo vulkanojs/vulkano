@@ -1,3 +1,14 @@
+## 2026-10-13 — `getAll` props rule, secrets via `select: false`
+
+**Changed:**
+
+- `references/AGENTS/BACKEND.md` § Models: `props` is `req.query` (untrusted) — build `filter` from named keys, never spread `props`/`props.filter`. Secrets → `select: false`; the core drops them from `?fields=` and `?populate=rel:fields` (replaces "`select: false` does not protect fields from `?populate=`").
+- Skills submodule: model skill shows the unsafe spread as a never, and notes `_sanitizeFields` on `?fields=`.
+
+**Migration:**
+
+- Requires `@vulkano/core` with `_sanitizeFields` (next release after 2.1.4). Older core: `?fields=+password` returns the hash — never expose `getAll(req.query)` on a model with secrets until upgraded.
+
 ## 2026-10-13 — `res.vsr(async fn)` documented
 
 **Added:**

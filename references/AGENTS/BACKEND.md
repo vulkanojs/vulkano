@@ -21,8 +21,10 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - `app/models/<Name>.js`, singular PascalCase; collection singular (`order`, never `orders`) — also in migration/fix scripts.
 - Business logic and validation live in the model, never in the controller. No repository layer, no shared CRUD factory.
 - `getAll` returns a page object (`.items`) — or a bare array when `?page=all`.
+- `getAll(props)`: `props` is `req.query` (untrusted) — build `filter` from named keys, never spread `props` or `props.filter` into it.
 - `active` = soft-delete only. `createdAt`/`updatedAt` are automatic — never hand-roll timestamps.
-- Populate only through `autopopulate: true` / `_buildPopulate`; `select: false` does not protect fields from `?populate=`.
+- Populate only through `autopopulate: true` / `_buildPopulate`.
+- Secrets (password hash, tokens, API keys) → `select: false` in `attributes`. The core drops them from `?fields=` and `?populate=rel:fields` (model `_sanitizeFields`); read them only with `.select('+field')` in model code.
 
 ## Auth — skill `vulkano-backend-auth`
 
