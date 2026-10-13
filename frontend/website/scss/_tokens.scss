@@ -1,0 +1,50 @@
+// Design tokens — the single source of colors, type, spacing and radii for this
+// entrypoint. Use var(--token) in every stylesheet, never a raw value. The
+// /design-system page (views/DesignSystem, dev only) renders them.
+// Rule: references/AGENTS/FRONTEND.md § Design system.
+
+:root {
+  // Colors — dark scheme (default)
+  --color-bg: #242424;
+  --color-surface: #1a1a1a;
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-border: #646464;
+  --color-primary: #646cff;
+  --color-primary-hover: #535bf2;
+  --color-danger: #e5484d;
+  --color-success: #30a46c;
+
+  // Typography
+  --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-size-small: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h1: 3.25rem;
+
+  // Spacing (4px scale)
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  // Radii
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #ffffff;
+    --color-surface: #f9f9f9;
+    --color-text: #213547;
+    --color-text-muted: #5b6b79;
+    --color-border: #d0d7de;
+    --color-primary-hover: #747bff;
+  }
+}

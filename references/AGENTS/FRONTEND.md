@@ -15,7 +15,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 
 - The library (shadcn-vue, Element Plus, …) is a project choice: `PROJECT.md` § Frontend conventions, else check `package.json`.
 - Installed → every input, button, dialog, confirm and toast goes through it. Vendored code lives in `components/ui/`, split like any component, never edited for one screen (compose or extend it).
-- `views/UI/Index.vue` (route `/ui`, dev/admin only) = live catalog of every reusable component — check it before building a new one; add each new reusable component to it.
+- `views/DesignSystem/Index.vue` (route `/design-system`, dev only) = the entrypoint's design system page and component catalog — check it before building a new one; add each new reusable component to it.
 - Never `window.confirm`/`alert`/`prompt` — use the library's confirm/message components, or one shared custom modal if none is installed.
 
 ## Store — skill `vulkano-frontend-store`
@@ -36,6 +36,12 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - Route path mirrors view folder (kebab-case URL → PascalCase folder). Resource routes: `Product/List.vue` + one `Product/Form.vue` for create and edit.
 - Every Vue entrypoint has a `NotFound` route (`/:pathMatch(.*)*`) paired with its backend catch-all (see BACKEND.md § Routes).
 - Auth guard inside the `routes.js` factory. Mixed public/private entrypoint → protected routes carry `meta: { auth: true }` (on the parent `Layout` for a section); entrypoint fully behind login (admin) → guard every route except `/login*`. The guard re-fetches `GET /api/auth/current` on each — never cache the user. The guard is UX; the API enforces auth.
+
+## Design system
+
+- Each entrypoint owns its tokens in `scss/_tokens.scss` (CSS custom properties: `--color-*`, `--font-size-*`, `--space-*`, `--radius-*`, light/dark) and base element styles in `scss/_base.scss` (links, buttons, inputs, `.field-required`). Stylesheets use `var(--token)`, never raw colors or sizes.
+- New token → add it to `_tokens.scss` and to the lists in `views/DesignSystem/Index.js` so `/design-system` shows it.
+- `/design-system` is registered only when `import.meta.env.DEV`; production builds drop it.
 
 ## CSS and layout — skill `vulkano-frontend-css`
 

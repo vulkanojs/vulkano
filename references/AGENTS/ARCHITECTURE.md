@@ -39,11 +39,13 @@ framework/
 │   │   ├── routes.js       # Vue Router routes
 │   │   ├── Api.js          # fetch wrapper → /api
 │   │   ├── style.scss      # Single style entry — chains the _index.scss aggregators
-│   │   ├── scss/           # Shared SCSS (_grid.scss…)
+│   │   ├── scss/           # _tokens.scss (design tokens), _base.scss (element styles), _grid.scss
 │   │   ├── components/<Name>/   # <Name>.vue + <Name>.js + _index.scss
 │   │   ├── components/ui/       # Vendored UI-library components
 │   │   ├── layouts/
 │   │   ├── views/<Name>/Index.* # One folder per route
+│   │   ├── views/DesignSystem/        # /design-system page (dev only)
+│   │   ├── views/NotFound/  # catch-all route
 │   │   ├── store/          # Pinia stores — use<Entity>Store.js (created on demand)
 │   │   ├── composables/    # (created on demand)
 │   │   └── utils/          # (created on demand)

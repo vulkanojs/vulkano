@@ -1,0 +1,93 @@
+.design-system {
+  display: grid;
+  gap: var(--space-8);
+  text-align: left;
+
+  &__title,
+  &__intro {
+    margin: 0;
+  }
+
+  &__section {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  &__heading {
+    margin: 0;
+    font-size: var(--font-size-h2);
+  }
+
+  &__value {
+    color: var(--color-text-muted);
+  }
+
+  &__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  &__swatch {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__swatch-color {
+    height: 4rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &__type-row,
+  &__space-row {
+    display: grid;
+    grid-template-columns: 1fr 10rem 6rem;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  &__space-bar {
+    height: var(--space-4);
+    background: var(--color-primary);
+  }
+
+  &__radii,
+  &__components {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: end;
+    gap: var(--space-6);
+  }
+
+  &__radius {
+    display: grid;
+    gap: var(--space-1);
+    justify-items: center;
+  }
+
+  &__radius-box {
+    width: 4rem;
+    height: 4rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  &__field {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  &__grid-row {
+    margin-bottom: var(--space-2);
+  }
+
+  &__grid-cell {
+    padding: var(--space-2);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+}

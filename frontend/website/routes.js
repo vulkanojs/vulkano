@@ -16,6 +16,10 @@ const routes = [
         path: '',
         component: Homepage
       },
+      // Design system reference — dev only, tree-shaken from production builds
+      ...(import.meta.env.DEV
+        ? [{ path: 'design-system', component: () => import('./views/DesignSystem/Index.vue') }]
+        : []),
       {
         path: ':pathMatch(.*)*',
         component: NotFound

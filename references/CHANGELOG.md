@@ -1,3 +1,21 @@
+## 2026-10-13 — Design system per entrypoint: tokens, base styles, /design-system page
+
+**Added:**
+
+- `frontend/<website|admin>/scss/_tokens.scss`: CSS custom properties for colors (light/dark), typography, spacing, radii.
+- `frontend/<website|admin>/scss/_base.scss`: links, buttons, inputs, `.field-required` built on the tokens (admin gets it for the first time).
+- `frontend/<website|admin>/views/UI/`: `/design-system` page — color swatches, type scale, spacing/radii, base components, grid demo. Registered only when `import.meta.env.DEV` (dynamic import, dropped from production builds).
+- `frontend/admin/scss/_grid.scss`: copy of the website grid, imported in `admin/style.scss`.
+
+**Changed:**
+
+- `style.scss` (both): uses the tokens instead of raw values.
+- `references/AGENTS/FRONTEND.md` (new § Design system), `ARCHITECTURE.md` tree; skills `vulkano-frontend-css`, `-component`, `-form`: tokens/base/`/design-system` now ship in the template.
+
+**Migration:**
+
+- Optional: copy `scss/_tokens.scss`, `scss/_base.scss` and `views/DesignSystem/` into each entrypoint, add the dev-only `design-system` route, and replace raw colors/sizes with `var(--token)`.
+
 ## 2026-10-13 — NotFound route in both entrypoints, catch-alls enabled
 
 **Changed:**

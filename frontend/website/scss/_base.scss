@@ -1,36 +1,37 @@
-// Shared base styles for native elements — every button/link gets hover and
-// cursor here once, never per view (FRONTEND.md § Design patterns).
+// Shared base styles for native elements, built on the tokens — every
+// button/link/input gets hover, cursor and focus here once, never per view
+// (references/AGENTS/FRONTEND.md § Design patterns).
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-primary);
   text-decoration: inherit;
   transition: color 0.2s;
 
   &:hover {
-    color: #535bf2;
+    color: var(--color-primary-hover);
   }
 }
 
 button {
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
   padding: 0.625rem 1.25rem;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   transition: border-color 0.25s;
 
   &:hover {
-    border-color: #646cff;
+    border-color: var(--color-primary);
   }
 
-  &:focus,
   &:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   &:disabled {
@@ -39,13 +40,23 @@ button {
   }
 }
 
-@media (prefers-color-scheme: light) {
-  a:hover {
-    color: #747bff;
-  }
+input,
+select,
+textarea {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
 
-  button {
-    background-color: #f9f9f9;
-    color: #213547;
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
   }
+}
+
+// Required-field asterisk (vulkano-frontend-form)
+.field-required {
+  color: var(--color-danger);
 }
