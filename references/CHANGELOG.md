@@ -1,3 +1,15 @@
+## 2026-10-13 — Docs cleanup: stale descriptions, dead pointers, version history
+
+**Changed:**
+
+- Skills submodule: entrypoint description drops the removed area decision and nodemon, adds rename/remove; router skill drops the missing `static.html` and uses the real `vite()` call; version history (core 1.24/1.25) and `Paginate.js` line numbers removed; controller/model handoff no longer repeat `vp check`/`vp test`; entrypoint "Router base path" is a real heading (linked from the router skill).
+- `CHANGELOG.md`, `vite.entries.mjs`, `test/helpers/bootstrap.js`: pointers to removed/never-existing files fixed.
+- `references/AGENTS/BACKEND.md` § SEO wiring, `FRONTEND.md` § Analytics wiring: dropped the "(public areas only)" qualifier — no area table defines it anymore.
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — Testing skill: useFormValidation signature
 
 **Changed:**

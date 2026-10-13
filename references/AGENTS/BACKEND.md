@@ -36,7 +36,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - Engine from `app/config/views.js` → `{ engine: 'nunjucks' | 'handlebars' }` (absent = Nunjucks). `app/config/views/config.js` also works; never both (the file wins). One base layout per entrypoint under `app/views/_shared/templates/`.
 - HTML outside a request (PDF, email) → `View.render(view, data)` inside a service, not the controller.
 
-## SEO wiring (public areas only)
+## SEO wiring
 
 How to do SEO well = any SEO skill. Where Vulkano wires it:
 

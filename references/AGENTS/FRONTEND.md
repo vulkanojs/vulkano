@@ -56,7 +56,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - Images, fonts, downloads live in `public/img|fonts|files/`, referenced by absolute path (`/img/x.webp`) — never imported through Vite or `@<entrypoint>`.
 - Namespace per feature (`public/img/<section>/…`). Photos → `.webp` via `pnpm run webp`. Below-the-fold images get `loading="lazy"`.
 
-## Analytics wiring (public areas only)
+## Analytics wiring
 
 How to track well = any analytics skill. Where Vulkano wires it: Vue pages → `vue-gtag` (not installed, `pnpm add vue-gtag`); server-rendered pages → `gtag.js` snippet in the layout `<head>`. Provider ID from an env var (e.g. `VITE_GA_ID`, add it to `.env.example`) or hardcoded, as the user prefers. While `SEO_NOINDEX=true` (private mode) tracking still fires — warn the user.
 
