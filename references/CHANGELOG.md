@@ -1,3 +1,14 @@
+## 2026-10-13 — `res.vsr(async fn)` documented
+
+**Added:**
+
+- `references/AGENTS/BACKEND.md` § Controllers: `res.vsr` accepts an async function — no `try`/`catch` in controllers.
+- Skills submodule: controller skill shows the async pattern for orchestrating several model calls (`return VSError.notFound(...)`, not `throw`, since it's a rejected Promise); stale "Nunjucks or Handlebars skill" pointer now names `vulkano-backend-templates`.
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — scaffold `subdocs` documented
 
 **Added:**
