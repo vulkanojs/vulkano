@@ -22,6 +22,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 
 - Pinia, setup-style, one store per concern: `store/use<Entity>Store.js`, no barrel file.
 - Single exception: `useAppStore` for app-shell state (global loading, socket status, sidebar, theme).
+- Store vs `$api`: data read by one view only (a form submit, a detail nothing else reads) → `$api` in that view. Data read by 2+ components/views or kept across navigation (list + filters, current user) → a store, and components call its actions — never `$api` for that same data.
 - Never store the user or the token in `localStorage`/`sessionStorage`.
 
 ## Forms — skill `vulkano-frontend-form` (load before any `<form>`)

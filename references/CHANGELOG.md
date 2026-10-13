@@ -1,3 +1,13 @@
+## 2026-10-13 — store vs `$api` rule
+
+**Added:**
+
+- `references/AGENTS/FRONTEND.md` § Store: one-view data → `$api` in the view; data shared by 2+ components/views or kept across navigation → store actions, never `$api` for the same data (was only in the store skill's overview).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-13 — `Api.js` rejects with one error shape
 
 **Changed:**
