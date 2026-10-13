@@ -12,6 +12,30 @@ function getHeaders(props = {}) {
 }
 
 /**
+ * Build the one error shape every failed request rejects with: an `Error`
+ * whose `message` is the backend's `error.detail` from the `res.vsr` envelope
+ * (the text the controller/model threw), plus `status`, `code` (`errorCode`),
+ * `name` (`errorName`) and `data` (the parsed body). Network failure → status 0.
+ */
+function setError({ status, message, code = null, name = 'ApiError', data = null }) {
+  return Object.assign(new Error(message), { status, code, name, data });
+}
+
+async function handleError(response) {
+  const json = await response.json().catch(() => null);
+  const error = (json && json.error) || {};
+  const detail = typeof error.detail === 'string' && error.detail;
+
+  return setError({
+    status: response.status,
+    message: detail || response.statusText || 'Request failed',
+    code: error.errorCode,
+    name: error.errorName,
+    data: json
+  });
+}
+
+/**
  * Send a JSON request to the API and return the `data` payload when available.
  *
  * @param {string} method - HTTP method to use.
@@ -20,6 +44,7 @@ function getHeaders(props = {}) {
  * @param {object} props - Optional request options.
  * @param {object} [props.headers] - Additional headers merged into the defaults.
  * @returns {Promise<any>} The parsed `data` field, an empty object, or `null`.
+ * @throws {Error} `{ message, status, code, name, data }` — see setError.
  */
 async function request(method, path, body, props = {}) {
   const options = {
@@ -31,15 +56,19 @@ async function request(method, path, body, props = {}) {
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`${BASE}${path}`, options);
+  let response;
+  try {
+    response = await fetch(`${BASE}${path}`, options);
+  } catch {
+    throw setError({ status: 0, message: 'Network error', name: 'NetworkError' });
+  }
 
   if (!response.ok) {
     // const { status } = response;
     // if (status === 401 && !path.includes('/auth/')) {
     //   window.location.href = '/login/';
-    //   throw new Error('Invalid token');
     // }
-    return Promise.reject(response);
+    throw await handleError(response);
   }
 
   const json = await response.json().catch(() => null);

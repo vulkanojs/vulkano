@@ -1,3 +1,15 @@
+## 2026-10-13 — `Api.js` rejects with one error shape
+
+**Changed:**
+
+- `frontend/website/Api.js`, `frontend/admin/Api.js`: a failed request rejects with an `Error` — `message` = the `res.vsr` envelope's `error.detail` (what the backend threw), plus `status`, `code`, `name`, `data`; network failure → `status: 0`, `NetworkError`. Used to reject with the raw `Response` (non-2xx) or a `TypeError` (network). Tests: `test/frontend/<entrypoint>/Api.test.js` (shared cases in `test/helpers/apiSuite.js`).
+- `references/AGENTS/FRONTEND.md` § Code organization: rejection shape; each entrypoint keeps its own `Api.js`.
+- Skills submodule: form skill shows `err.message` in the flash instead of a fixed text.
+
+**Migration:**
+
+- Code that read the rejected `Response` (`await err.json()`, `err.status` on a `Response`) → use `err.message` / `err.status` / `err.data` directly.
+
 ## 2026-10-13 — config layering documented
 
 **Added:**
