@@ -1,3 +1,13 @@
+## 2026-10-13 — `useFormValidation` keeps `''` for a valid field
+
+**Fixed:**
+
+- Skills submodule: form skill's `useFormValidation` stored the validator's `null` in `fieldErrors` for a valid field (init and `clearError` use `''`) — now `''` always.
+
+**Migration:**
+
+- Project copies of `composables/useFormValidation.js`: `error = validator(formData[field]) || '';`.
+
 ## 2026-10-13 — `@vulkano/core` 2.1.6
 
 **Changed:**
