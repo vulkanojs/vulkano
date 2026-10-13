@@ -35,7 +35,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - `frontend/<entrypoint>/routes.js`, hand-written, HTML5 history (`createWebHistory('/<base>')` for non-root entrypoints).
 - Route path mirrors view folder (kebab-case URL → PascalCase folder). Resource routes: `Product/List.vue` + one `Product/Form.vue` for create and edit.
 - Every Vue entrypoint has a `NotFound` route (`/:pathMatch(.*)*`) paired with its backend catch-all (see BACKEND.md § Routes).
-- Auth guard re-fetches `GET /api/auth/current` on every route change — never cache the user.
+- Auth guard inside the `routes.js` factory. Mixed public/private entrypoint → protected routes carry `meta: { auth: true }` (on the parent `Layout` for a section); entrypoint fully behind login (admin) → guard every route except `/login*`. The guard re-fetches `GET /api/auth/current` on each — never cache the user. The guard is UX; the API enforces auth.
 
 ## CSS and layout — skill `vulkano-frontend-css`
 

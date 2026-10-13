@@ -1,3 +1,14 @@
+## 2026-10-13 — Router auth guard: meta.auth, inside the routes.js factory
+
+**Changed:**
+
+- Skills submodule (`vulkano-frontend-router`): auth guard rewritten — lives inside the `routes.js` factory (the old snippet called `router.beforeEach` where no `router` exists), imports `Api`, two variants — `meta: { auth: true }` for mixed public/private entrypoints, or guard every route except `/login*` for an entrypoint fully behind login (admin); `/login*` via `startsWith` covers 2FA/forgot sub-routes. States the guard is UX; the API enforces auth.
+- `references/AGENTS/FRONTEND.md` § Routes: same rule.
+
+**Migration:**
+
+- Guards that check every route: add `meta: { auth: true }` to protected routes (or their `Layout`) and skip the rest.
+
 ## 2026-10-13 — Stores import Api, no getCurrentInstance
 
 **Changed:**
