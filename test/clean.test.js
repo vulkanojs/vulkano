@@ -61,7 +61,7 @@ function writeEntrypointsFixture() {
   );
   write(
     'app/config/routes.js',
-    "module.exports = {\n  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'\n\n  // '/admin/*': 'AdminController.get',\n  // '/*': 'HomeController.get',\n};\n"
+    "module.exports = {\n  '/': 'HomeController.get'\n\n  // '/admin/*': 'AdminController.get',\n  // '/*': 'HomeController.get',\n};\n"
   );
 }
 

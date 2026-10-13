@@ -1,3 +1,14 @@
+## 2026-10-13 — routes.js: drop redundant /admin entry
+
+**Changed:**
+
+- `app/config/routes.js`: removed `'/admin': 'AdminController.get'` — convention already routes `GET /admin` to `AdminController.get`, and the template was breaking its own "never duplicate a convention route" rule.
+- `scripts/clean.js` + `test/clean.test.js`: no longer strip that line.
+
+**Migration:**
+
+- Optional: delete `'/<area>': '<Area>Controller.get'` entries in `app/config/routes.js` whose controller has a plain `get` method — convention serves them. Keep scoped catch-alls (`'/<area>/*'`).
+
 ## 2026-10-13 — Auth: skill rewritten against working wiring
 
 **Changed:**

@@ -21,8 +21,7 @@
  */
 
 module.exports = {
-  '/': 'HomeController.get',
-  '/admin': 'AdminController.get'
+  '/': 'HomeController.get'
 
   // Catch-alls for Vue Router (SPA) — ONLY for a Vue app entrypoint under
   // frontend/, not for a plain server-rendered page (see

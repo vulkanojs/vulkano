@@ -148,12 +148,7 @@ function keepWebsiteOnly(root) {
   writeFile(
     root,
     'app/config/routes.js',
-    readFile(root, 'app/config/routes.js')
-      .replace(
-        "  '/': 'HomeController.get',\n  '/admin': 'AdminController.get'",
-        "  '/': 'HomeController.get'"
-      )
-      .replace("  // '/admin/*': 'AdminController.get',\n", '')
+    readFile(root, 'app/config/routes.js').replace("  // '/admin/*': 'AdminController.get',\n", '')
   );
 
   flatten(root, 'website');
