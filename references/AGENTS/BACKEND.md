@@ -30,7 +30,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - JWT only in an `httpOnly` cookie (`secure` in production, `sameSite: 'lax'`, `maxAge` = token `expiration`); never in the body, `localStorage` or `sessionStorage`. `JWT_SECRET_KEY` empty with jwt enabled → server doesn't boot.
 - Passwords: `bcryptjs` (project dependency), never `Encrypter` (reversible).
 
-## Views — skill `vulkano-backend-views` (→ `-nunjucks` / `-handlebars`)
+## Views — skills `vulkano-backend-views` (render vs vsr) + `vulkano-backend-templates` (syntax)
 
 - Page a browser opens directly (landing, about, blog post, product) → `res.render`, never a Vue SPA route: the SPA isn't crawlable.
 - Engine from `app/config/views.js` → `{ engine: 'nunjucks' | 'handlebars' }` (absent = Nunjucks). `app/config/views/config.js` also works; never both (the file wins). One base layout per entrypoint under `app/views/_shared/templates/`.

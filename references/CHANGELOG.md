@@ -1,3 +1,14 @@
+## 2026-10-13 — Nunjucks + Handlebars skills merged into vulkano-backend-templates
+
+**Changed:**
+
+- Skills submodule: `vulkano-backend-views-nunjucks` and `vulkano-backend-views-handlebars` (≈370 lines, ~60% identical) replaced by one `vulkano-backend-templates` (~135 lines) — shared rules once, engine syntax side by side. `vulkano-backend-views` stays as the render/vsr/View.render decision and points to it. `plugin.json`, READMEs and cross-skill links updated.
+- `references/AGENTS/BACKEND.md` § Views, `BUILD.md`: point to `vulkano-backend-templates`.
+
+**Migration:**
+
+- None (template update replaces the submodule).
+
 ## 2026-10-13 — Docs cleanup: stale descriptions, dead pointers, version history
 
 **Changed:**
