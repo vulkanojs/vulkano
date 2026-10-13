@@ -1,3 +1,13 @@
+## 2026-10-13 — scaffold `create` writes the whole body
+
+**Changed:**
+
+- `references/AGENTS/BACKEND.md` § Scaffold: `fillable` stays update-only; the inherited `create` writes the whole body, so a model with privileged fields doesn't expose `post` through the scaffold (own `create` in the model).
+
+**Migration:**
+
+- Needs `@vulkano/core` with the scaffold `delete`/`create` fixes (next release after 2.1.4): older core leaves records active on `DELETE` when `fillable` omits `active`, and echoes `select: false` fields from `POST`.
+
 ## 2026-10-13 — `getAll` props rule, secrets via `select: false`
 
 **Changed:**
