@@ -1,3 +1,16 @@
+## 2026-10-13 — Auth: skill rewritten against working wiring
+
+**Changed:**
+
+- Skills submodule (`vulkano-backend-auth`): rewritten. `Auth` model + `User` model (bcrypt + `SALT_KEY`, `password` `select: false`, hash only when modified), `express/jwt.js` enabled with `ignore`, `middlewares/auth.js` decrypting `req.auth`, controller passing the promise to `res.vsr` (no hanging request), token `expiration` = cookie `maxAge`, `secure`/`sameSite` cookie. Old example never logged anyone in (no `expiration`, read `req.user`).
+- `references/AGENTS/BACKEND.md` § Auth: rules match the skill; `Encrypter` marked as reversible, never for passwords.
+- `AGENTS.md` minimum rules: empty `JWT_SECRET_KEY` with jwt enabled stops the server from booting (was "login returns 500").
+- `.env.example`: `COOKIES_SECRET_KEY` comment no longer points to the auth skill.
+
+**Migration:**
+
+- Projects that copied the old auth skill: if `AuthController` reads `req.user` or `Jwt.encode` has no `expiration`, follow the new skill (add `app/config/middlewares/auth.js`, encode `expiration`).
+
 ## 2026-10-13 — Docs consolidation: skills = code, references = rules
 
 **Changed:**

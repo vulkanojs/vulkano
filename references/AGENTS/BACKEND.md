@@ -25,13 +25,15 @@ Rules only. Worked code lives in the skills named per section — they load auto
 
 ## Auth — skill `vulkano-backend-auth`
 
-- Dedicated `Auth`/`User` model + `app/controllers/api/AuthController.js` (`post login`, `post logout`, `current`).
-- JWT in an `httpOnly` cookie; never in the response body, `localStorage` or `sessionStorage`. `JWT_SECRET_KEY` must be non-empty.
+- `Auth` model (login/token/current-user logic) + `User` model (bcrypt hash with `SALT_KEY`, `password` `select: false`) + `app/controllers/api/AuthController.js` (`post login`, `post logout`, `get current`).
+- Enable `app/config/express/jwt.js` + copy `app/config/middlewares/auth.js` (decrypts `req.auth`). Public `/api` endpoints go in `jwt.js` `ignore`; everything else requires the token.
+- JWT only in an `httpOnly` cookie (`secure` in production, `sameSite: 'lax'`, `maxAge` = token `expiration`); never in the body, `localStorage` or `sessionStorage`. `JWT_SECRET_KEY` empty with jwt enabled → server doesn't boot.
+- Passwords: `bcryptjs` (project dependency), never `Encrypter` (reversible).
 
 ## Views — skill `vulkano-backend-views` (→ `-nunjucks` / `-handlebars`)
 
 - Page a browser opens directly (landing, about, blog post, product) → `res.render`, never a Vue SPA route: the SPA isn't crawlable.
-- Engine from `app/config/views.js` (absent = Nunjucks). One base layout per entrypoint under `app/views/_shared/templates/`.
+- Engine from `app/config/views.js` → `{ engine: 'nunjucks' | 'handlebars' }` (absent = Nunjucks). `app/config/views/config.js` also works; never both (the file wins). One base layout per entrypoint under `app/views/_shared/templates/`.
 - HTML outside a request (PDF, email) → `View.render(view, data)` inside a service, not the controller.
 
 ## SEO wiring (public areas only)
@@ -45,7 +47,7 @@ How to do SEO well = any SEO skill. Where Vulkano wires it:
 ## Autoload and libraries
 
 - `app/models/*` and `app/services/*` are auto-loaded globals (`Order`, `Upload`) — never `require()` them.
-- Core libs are globals too (no `require`, core README § Built-in Global Libs): `VSError` (errors), `Paginate`, `Jwt`, `Encrypter` (passwords), `Filter` (sanitize input), `Merge`, `ApiClient` (external HTTP), `Upload`/`Download` (files), `View`, `Crontab`, `i18n`, `mongoose`. Use them before adding an npm dependency.
+- Core libs are globals too (no `require`, core README § Built-in Global Libs): `VSError` (errors), `Paginate`, `Jwt`, `Encrypter` (reversible encryption — never passwords), `Filter` (sanitize input), `Merge`, `ApiClient` (external HTTP), `Upload`/`Download` (files), `View`, `Crontab`, `i18n`, `mongoose`. Use them before adding an npm dependency.
 - Shared helper logic → `app/services/<Name>.js`. Shared constants → `app/config/<section>.js` (read as `app.config.<section>.X`); a true global → `global.X` in `app/config/bootstrap.js`.
 - Cron jobs: `Crontab.schedule(...)` in `app/config/bootstrap.js` (core README § Cron Jobs).
 - `app/config/express/*` and `app/config/middlewares/*` are optional — don't pre-scaffold. To customize one, copy only that file from `node_modules/@vulkano/core/examples/config/` and edit what the task needs.

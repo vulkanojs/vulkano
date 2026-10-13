@@ -91,7 +91,7 @@ Only when `references/AGENTS/` and `.claude/skills/vulkano-skills/` don't exist 
 - New frontend entrypoint: scoped backend catch-all `'/<name>/*'` in `app/config/routes.js` before `'/*'`, a `NotFound` route in the frontend, and `createWebHistory('/<name>')`.
 - Tests mirror the source path under `test/` (`test/app/controllers/<Name>.http.test.js`, `test/app/models/<Name>.test.js`).
 - CSS: CSS Grid, no Flexbox; `rem` only where `value × 16` is a whole pixel (`0.25`, `0.375`, `0.5`, `0.625`, `0.75`, `0.875`, `1`, `1.125`, `1.25`…); never `em`, `vh`, `ch`.
-- Adding auth: set a non-empty `JWT_SECRET_KEY` in `.env` (empty → login returns 500). Never print or commit it.
+- Adding auth: set a non-empty `JWT_SECRET_KEY` in `.env` (empty with jwt enabled → server doesn't boot). Never print or commit it.
 - Unused variables keep the `_` prefix (see Code principles).
 
 ## Before handoff checklist
