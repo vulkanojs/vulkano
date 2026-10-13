@@ -17,7 +17,7 @@ if (process.env.TEST_MONGO_URI) {
 
 const vulkano = require('@vulkano/core');
 
-// Shared across every test file: with `isolate: false` (vitest.config.mjs)
+// Shared across every test file: with `isolate: false` (vite.config.mjs `test`)
 // all files run in one module registry, so this state survives between them.
 if (!global.__vulkanoBootState) {
   global.__vulkanoBootState = {

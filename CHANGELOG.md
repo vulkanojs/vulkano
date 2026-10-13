@@ -1,6 +1,6 @@
 # Changelog
 
-Changes made in this project. Every commit adds an entry here, newest first, in the same commit — see `references/AGENTS/GIT.md`. The Vulkano template's own changelog is `references/CHANGELOG.md`; don't edit that one in a project.
+Changes made in this project. Every commit adds an entry here, newest first, in the same commit — see `references/AGENTS/WORKFLOW.md` § Git. The Vulkano template's own changelog is `references/CHANGELOG.md`; don't edit that one in a project.
 
 Entry format:
 
