@@ -1,3 +1,14 @@
+## 2026-10-13 — Stores import Api, no getCurrentInstance
+
+**Changed:**
+
+- `references/AGENTS/FRONTEND.md`: components use `$api` from `getCurrentInstance().proxy`; stores, composables, utils and router guards `import Api` (no component instance there).
+- Skills submodule: `vulkano-frontend-store` example imports `Api` (the old `getCurrentInstance().proxy` crashed when a store was first used from a router guard/socket client, and pinned the first caller's instance); drops the "survives a full reload" claim. `vulkano-frontend-component` and `vulkano-testing` (mock `Api.js` with `vi.mock`) aligned.
+
+**Migration:**
+
+- Stores using `getCurrentInstance()` → `import Api from '../Api'`; their tests mock `Api.js` with `vi.mock`.
+
 ## 2026-10-13 — Admin layout: no SEO, title set per controller
 
 **Changed:**

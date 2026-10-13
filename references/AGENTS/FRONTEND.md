@@ -9,7 +9,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - Every component/view is split in 3 files: `<Name>.vue` (template), `<Name>.js` (logic), `_index.scss` (styles), and its `_index.scss` is imported by the parent aggregator.
 - Business logic goes in a store or a composable (`composables/useX.js`), not the component. Pure helpers → `utils/`.
 - Never import across entrypoints (`@website` from inside `frontend/admin/`).
-- API calls: `$api` from `getCurrentInstance().proxy` — never `import Api` in a component. `Api.js` prefixes `/api`, unwraps `data` from the `res.vsr` envelope, rejects on non-2xx.
+- API calls: components use `$api` from `getCurrentInstance().proxy`; stores, composables, utils and router guards `import Api from '../Api'` (no component instance there — `getCurrentInstance()` is null). `Api.js` prefixes `/api`, unwraps `data` from the `res.vsr` envelope, rejects on non-2xx.
 
 ## UI library and reuse
 
