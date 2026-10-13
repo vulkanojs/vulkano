@@ -1,3 +1,65 @@
+## 2026-10-13 — docs/skills consistency pass
+
+**Changed:**
+
+- `FRONTEND.md`:
+  - `_index.scss` stays the entry and may import partials (`_list.scss`, `_form.scss`);
+  - `.is-loading` and the `flash` transition are examples, created once in `_base.scss`;
+  - store example no longer lists the current user;
+  - guard imports `./Api`;
+  - `createWebHistory` lives in `app.js`.
+- `BACKEND.md`: page controllers (`Home`, `Admin`) stay singular; robots meta is `noindex, nofollow`.
+- `ARCHITECTURE.md`:
+  - `settings.js` has no salt by default;
+  - `vite.js` listed;
+  - sockets/locales/`components/ui` marked optional;
+  - `test/scripts/`.
+- `BUILD.md`: alias is `@<folder>`; per-entry build.
+- Template SCSS: NotFound, HelloWorld and the Home cheatsheet use design tokens (were raw values).
+- `.env.example`: `TEST_PORT`, `TEST_MONGO_URI` (commented).
+- `test/webp.test.js` → `test/scripts/webp.test.js`.
+- Skills submodule:
+  - controller: module folder = URL prefix, `Product` pointer;
+  - template-update: exact version pin, old section name example;
+  - model: mixin sources;
+  - testing: `config/middlewares/`, `scripts/`, sockets, `Api.test.js`;
+  - store: list-store example;
+  - component: design-system bullets in their section, Flexbox override;
+  - entrypoint: admin layout keeps title + noindex, above/below, `@<folder>`, `environments`;
+  - router: resource `_index.scss` + partials;
+  - form: loader/transition created once;
+  - `README.es.md` "una skill".
+
+**Migration:**
+
+- None.
+
+## 2026-10-13 — skill snippets that failed or leaked
+
+**Fixed (skills submodule):**
+
+- model:
+  - hand-written `delete` writes `active: false` directly (not via an `update` that applies `fillable`);
+  - `create` strips `select: false` paths;
+  - `getExample` filters `active: true`;
+  - populate section no longer claims `?populate=user:password` leaks (core 2.1.6 sanitizes it).
+- controller: `'get edit :id'` registered `/products/edit` without `:id` → `'get edit/:id'`, with a 404 on a missing record; `/products` paths.
+- auth: `getCurrent` answered 404 (via `getUser`/`getByField`) for a missing/inactive user → `findOne({ _id, active: true })`, 401.
+- entrypoint: new-entrypoint scaffold lists `scss/`, `views/{Home,NotFound,DesignSystem}` (`style.scss` doesn't build without `scss/`); `Api.js` never shared.
+- router/entrypoint: NotFound is the last **child** of the `Layout` route (`:pathMatch(.*)*`), as shipped.
+- form: login skeleton gets the password field its rules already required.
+- component: `.items ?? []`; `Api` import by relative path (`../Api`, `./Api` from `routes.js`).
+- router: `Form.js` example has loading + error handling, points to the form skill.
+
+**Changed:**
+
+- `references/AGENTS/FRONTEND.md` § Routes: NotFound is the last child of `Layout`.
+- `references/AGENTS/FRONTEND.md` § Code organization + entrypoint skill: entrypoints never share code — no `frontend/shared/` (the skill used to recommend it).
+
+**Migration:**
+
+- None for code. Projects that copied the old model `delete`/`create`, the auth `getCurrent` or the `'get edit :id'` key should apply the same fixes.
+
 ## 2026-10-13 — `useFormValidation` keeps `''` for a valid field
 
 **Fixed:**

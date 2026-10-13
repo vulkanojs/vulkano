@@ -3,10 +3,10 @@
   justify-items: center;
 
   &__title {
-    font-size: 1.75rem;
+    font-size: var(--font-size-h2);
   }
 
   &__card {
-    padding: 2rem;
+    padding: var(--space-8);
   }
 }

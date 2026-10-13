@@ -4,7 +4,7 @@ Read when creating/renaming/removing a frontend entrypoint, or editing `vite.con
 
 ## Wiring an entrypoint
 
-- **`vite.entries.mjs`** — one key per entry (`admin: 'frontend/admin/app.js'`). `vite.config.mjs` derives `build` input, the `@<name>` alias and the manifest entry from it — nothing else to edit.
+- **`vite.entries.mjs`** — one key per entry (`admin: 'frontend/admin/app.js'`). `vite.config.mjs` derives the per-entry build, the `@<folder>` alias (folder name — same as the key by convention) and the manifest entry from it — nothing else to edit.
 - **Backend layout** — `app/views/_shared/templates/<name>.html` calling `vite({ entry: '<name>', type: 'style' })` in `<head>` and `type: 'script'` before `</body>`. `entry` = the key above. Exact syntax per engine: skill `vulkano-backend-templates`.
 - **Controller + catch-all** — `<Name>Controller.get` renders the layout; catch-all per BACKEND.md § Routes (none for a vanilla-JS entry).
 - **Vue side** — `createWebHistory('/<name>')`, `NotFound` route.

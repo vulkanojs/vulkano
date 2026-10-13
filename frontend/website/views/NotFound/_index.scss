@@ -1,12 +1,12 @@
 .not-found {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
   justify-items: center;
-  padding: 4rem 1rem;
+  padding: calc(var(--space-8) * 2) var(--space-4);
 
   &__title {
     margin: 0;
-    font-size: 4rem;
+    font-size: var(--font-size-h1);
   }
 
   &__text {

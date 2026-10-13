@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { describe, it, expect, afterEach } from 'vitest';
-import webpModule from '../scripts/webp.js';
+import webpModule from '../../scripts/webp.js';
 
 const { filterConvertibleImages, toPublicPath, rewriteReferences, run } = webpModule;
 

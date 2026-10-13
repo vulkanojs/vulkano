@@ -36,33 +36,33 @@
 
 .ai-cheatsheet {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
   max-width: 32rem;
-  margin: 2rem auto 0;
-  padding: 1.5rem;
-  border: 1px solid #64646433;
-  border-radius: 0.5rem;
+  margin: var(--space-8) auto 0;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   text-align: left;
 
   &__title {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: var(--font-size-h3);
   }
 
   &__intro {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: var(--font-size-small);
     opacity: 0.8;
   }
 
   &__group {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   &__group-title {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--font-size-small);
     text-transform: uppercase;
     letter-spacing: 0.0625rem;
     opacity: 0.6;
@@ -70,7 +70,7 @@
 
   &__list {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--space-2);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -79,10 +79,10 @@
   &__item {
     code {
       display: block;
-      padding: 0.5rem 0.75rem;
-      background: #64646414;
-      border-radius: 0.25rem;
-      font-size: 0.8125rem;
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-small);
     }
   }
 }

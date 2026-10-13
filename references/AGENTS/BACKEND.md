@@ -4,7 +4,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 
 ## Controllers — skill `vulkano-backend-controller`
 
-- Routing is by convention: `/:resource/:method?/:param?` → `<Resource>Controller.<method>`. Filename plural PascalCase; URL segment = filename kebab-cased (`VatTypesController` → `/vat-types`).
+- Routing is by convention: `/:resource/:method?/:param?` → `<Resource>Controller.<method>`. Filename plural PascalCase for resources (page controllers `Home`, `Admin` stay singular); URL segment = filename kebab-cased (`VatTypesController` → `/vat-types`).
 - Method keys: `get`, `'get :id'`, `post`, `'put :id'`, `'delete :id'`, `'post save'`. No verb = GET.
 - View controller → `app/controllers/` + `res.render()`. API → `app/controllers/api/` + `res.vsr(promise | async fn, status?)` — no `try`/`catch`. Socket → `app/controllers/sockets/` + `app/config/sockets/events.js`.
 - Thin: read params → call model/service → respond. Nothing top-level besides `require` and the exported object. Lookup/mapping tables are domain logic → model.
@@ -45,7 +45,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 How to do SEO well = any SEO skill. Where Vulkano wires it:
 
 - `app/config/middlewares/seo.js` sets `res.locals.seo` (`title`, `description`, `image`, `url`, `noindex`) from `app/config/common.js` `SEO_DEFAULT_*`. Override per route: `res.locals.seo = { ...res.locals.seo, title }` before `res.render`. The public layout prints `seo.*`. A CMS/admin layout has no SEO: only `<title>{{ seo.title }}</title>` + fixed `noindex, nofollow` (no description/canonical/og). Its controller sets the title (`res.locals.seo = { ...res.locals.seo, title: 'VulkanoJS - Admin' }`); any admin controller may override it.
-- Private by default: `SEO_NOINDEX` (env, default `true`) → `<meta name="robots" content="noindex">`, and `public/robots.txt` ships `Disallow: /`. At launch flip both together (`SEO_NOINDEX=false` + real robots rules) — one without the other still blocks crawl.
+- Private by default: `SEO_NOINDEX` (env, default `true`) → `<meta name="robots" content="noindex, nofollow">`, and `public/robots.txt` ships `Disallow: /`. At launch flip both together (`SEO_NOINDEX=false` + real robots rules) — one without the other still blocks crawl.
 - `public/sitemap.xml` is not shipped — the project creates it: by hand for a fixed page set, or with a script/service (cron, `Crontab` in `bootstrap.js`) that regenerates it when content changes. Absolute URLs from `SITE_URL` in `.env`. Don't create or edit it unless the task asks.
 
 ## Config

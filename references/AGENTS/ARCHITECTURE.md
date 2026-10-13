@@ -13,7 +13,7 @@ framework/
 │
 ├── app/                    # Backend — Express MVC on @vulkano/core (see BACKEND.md)
 │   ├── config/
-│   │   ├── settings.js     # Port, DB URI, salt key
+│   │   ├── settings.js     # Port, DB URI (auth setup adds the salt)
 │   │   ├── routes.js       # Explicit routes only (convention covers the rest)
 │   │   ├── <section>.js    # Any file here → app.config.<section> (e.g. common.js)
 │   │   ├── env/<NODE_ENV>/ # Optional per-environment overrides (not shipped — BACKEND.md § Config)
@@ -21,11 +21,12 @@ framework/
 │   │   ├── bootstrap.js    # Boot hook — true globals, cron jobs
 │   │   ├── express/        # Optional core overrides: cookies, cors, csp, helmet, json, jwt…
 │   │   ├── middlewares/    # Optional global middlewares (e.g. seo.js)
-│   │   ├── sockets/        # Socket.io config + events.js
-│   │   └── locales/        # i18n files
+│   │   ├── vite.js         # Vite manifest loading → the vite() helper in templates
+│   │   ├── sockets/        # Optional — Socket.io config + events.js (not shipped)
+│   │   └── locales/        # Optional — i18n files (not shipped)
 │   ├── controllers/        # View controllers (res.render) — URL = controller name
 │   │   ├── api/            # JSON API controllers (res.vsr) — /api/<resource>
-│   │   └── sockets/        # Socket.io handlers
+│   │   └── sockets/        # Optional — Socket.io handlers (not shipped)
 │   ├── models/             # Mongoose models — auto-loaded globals (Order.js → Order)
 │   ├── services/           # Shared libs — auto-loaded globals
 │   └── views/              # Nunjucks/Handlebars templates
@@ -43,7 +44,7 @@ framework/
 │   │   ├── style.scss      # Single style entry — chains the _index.scss aggregators
 │   │   ├── scss/           # _tokens.scss (design tokens), _base.scss (element styles), _grid.scss
 │   │   ├── components/<Name>/   # <Name>.vue + <Name>.js + _index.scss
-│   │   ├── components/ui/       # Vendored UI-library components
+│   │   ├── components/ui/       # Vendored UI-library components (created on demand)
 │   │   ├── layouts/
 │   │   ├── views/<Name>/Index.* # One folder per route
 │   │   ├── views/DesignSystem/        # /design-system page (dev only)
@@ -60,7 +61,7 @@ framework/
 │   ├── robots.txt
 │   └── sitemap.xml         # not shipped — created by the project (see BACKEND.md § SEO wiring)
 │
-├── test/                   # Vitest — mirrors source path (test/app/…, test/frontend/…)
+├── test/                   # Vitest — mirrors source path (test/app/…, test/frontend/…, test/scripts/…)
 ├── scripts/                # Tooling (webp.js, clean…)
 └── references/             # Agent docs (this folder)
 ```
