@@ -10,6 +10,12 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — Changelog: drop empty Migration blocks
+
+**Changed:**
+
+- `references/CHANGELOG.md`: removed 15 **Migration** blocks that asked nothing of the project (`- None.`, or `None` plus a note that the template sync already covers it), per the entry format ("Omit if none"). `@vulkano/cli update` listed the annotated ones as pending migrations. Blocks with a conditional step for the project stay.
+
 ## 2026-10-14 — `vulkano-reviewer` subagent; type fixes
 
 **Changed:**
@@ -69,10 +75,6 @@ Entry format:
 - `AGENTS.md`: new § Mission — deliver a professional working solution in readable, structured code (runs, follows conventions, has tests); deployment is out of scope.
 - `AGENTS.md` § Where to look → Deploying: only when the user asks, mechanism from `PROJECT.md` § Deployment (TBD → ask; never pick one).
 
-**Migration:**
-
-- None.
-
 ## 2026-10-14 — Lint/format config applied everywhere, conventions enforced
 
 **Changed:**
@@ -109,10 +111,6 @@ Entry format:
 
 - Skills submodule: model skill's hand-written `delete` is back to `return this.update(_id, { active: false })` — a soft delete is an update (its hand-written `update` doesn't filter by `fillable`). The core scaffold's own `delete` keeps its direct write (its inherited `update` applies `fillable`).
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — docs/skills consistency pass
 
 **Changed:**
@@ -144,10 +142,6 @@ Entry format:
   - router: resource `_index.scss` + partials;
   - form: loader/transition created once;
   - `README.es.md` "una skill".
-
-**Migration:**
-
-- None.
 
 ## 2026-10-13 — skill snippets that failed or leaked
 
@@ -209,10 +203,6 @@ Entry format:
 - `references/AGENTS/FRONTEND.md` § Design patterns: every list/fetched view renders loading, error (`err.message` + retry), empty and data; reads `.items` (bare array only with `?page=all`).
 - Skills submodule: component skill § List view — 4 states snippet; skeleton reads `.items` from `getAll` (was assigning the page object to the list).
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — layouts and composables defined
 
 **Added:**
@@ -223,19 +213,11 @@ Entry format:
 
 - `frontend/website/layouts/Layout.js`: removed the unused `loading` ref.
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — store vs `$api` rule
 
 **Added:**
 
 - `references/AGENTS/FRONTEND.md` § Store: one-view data → `$api` in the view; data shared by 2+ components/views or kept across navigation → store actions, never `$api` for the same data (was only in the store skill's overview).
-
-**Migration:**
-
-- None.
 
 ## 2026-10-13 — `Api.js` rejects with one error shape
 
@@ -254,10 +236,6 @@ Entry format:
 **Added:**
 
 - `references/AGENTS/BACKEND.md` § Config: `app/config/<section>.js` → `app.config.<section>`, deep-merged with `env/<NODE_ENV>/` (or `env/<NODE_ENV>.js`) and gitignored `local.js`, last wins. Secrets only in `.env`. "Shared constants" moved here from § Autoload. `ARCHITECTURE.md` tree lists `env/` and `local.js` as optional, not shipped.
-
-**Migration:**
-
-- None.
 
 ## 2026-10-13 — scaffold `create` writes the whole body
 
@@ -287,10 +265,6 @@ Entry format:
 - `references/AGENTS/BACKEND.md` § Controllers: `res.vsr` accepts an async function — no `try`/`catch` in controllers.
 - Skills submodule: controller skill shows the async pattern for orchestrating several model calls (`return VSError.notFound(...)`, not `throw`, since it's a rejected Promise); stale "Nunjucks or Handlebars skill" pointer now names `vulkano-backend-templates`.
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — scaffold `subdocs` documented
 
 **Added:**
@@ -298,20 +272,12 @@ Entry format:
 - `references/AGENTS/BACKEND.md` § Scaffold: rule line for `subdocs` (CRUD routes for embedded array fields, off by default).
 - Skills submodule: controller skill shows the `subdocs` config and the routes it registers (404 unknown key, 405 method not allowed).
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — sitemap.xml is project-owned, not shipped
 
 **Changed:**
 
 - `references/AGENTS/BACKEND.md` § SEO wiring, `ARCHITECTURE.md`: `public/sitemap.xml` is not part of the template — each project creates it by hand or with a script/service that regenerates it; agents don't create or edit it unless asked (docs used to describe it as shipped).
 - Skills submodule: controller/templates skills no longer ask to add each view to the sitemap.
-
-**Migration:**
-
-- None.
 
 ## 2026-10-13 — nodemon watches only the backend
 
@@ -397,10 +363,6 @@ Entry format:
 - Skills submodule: `vulkano-backend-views-nunjucks` and `vulkano-backend-views-handlebars` (≈370 lines, ~60% identical) replaced by one `vulkano-backend-templates` (~135 lines) — shared rules once, engine syntax side by side. `vulkano-backend-views` stays as the render/vsr/View.render decision and points to it. `plugin.json`, READMEs and cross-skill links updated.
 - `references/AGENTS/BACKEND.md` § Views, `BUILD.md`: point to `vulkano-backend-templates`.
 
-**Migration:**
-
-- None (template update replaces the submodule).
-
 ## 2026-10-13 — Docs cleanup: stale descriptions, dead pointers, version history
 
 **Changed:**
@@ -409,19 +371,11 @@ Entry format:
 - `CHANGELOG.md`, `vite.entries.mjs`, `test/helpers/bootstrap.js`: pointers to removed/never-existing files fixed.
 - `references/AGENTS/BACKEND.md` § SEO wiring, `FRONTEND.md` § Analytics wiring: dropped the "(public areas only)" qualifier — no area table defines it anymore.
 
-**Migration:**
-
-- None.
-
 ## 2026-10-13 — Testing skill: useFormValidation signature
 
 **Changed:**
 
 - Skills submodule (`vulkano-testing`): composable example uses the real signature `useFormValidation(rules).validate(formData)` → boolean (was `useFormValidation(model, rules).validate(cb)`, which doesn't exist).
-
-**Migration:**
-
-- None.
 
 ## 2026-10-13 — Router auth guard: meta.auth, inside the routes.js factory
 
@@ -509,19 +463,11 @@ Entry format:
 - `.env.example`: `SITE_URL` documented as an optional, recommended var — absolute base for `sitemap.xml`/`robots.txt` once a domain is known.
 - Skills submodule (`vulkano-seo`): never skip `public/sitemap.xml` for a missing domain (fall back to relative URLs) or because the project is still in the noindex/private-mode default.
 
-**Migration:**
-
-- None. Pull the new `AGENTS.md`, `app/config/routes.js`, and `.env.example`; no project files change.
-
 ## 2026-09-20 — Minimum rules block in AGENTS.md
 
 **Changed:**
 
 - `AGENTS.md`: new § "Minimum rules (if `references/` or the skills are missing)" — no native dialogs, `useFormValidation`, thin controllers, scoped catch-all + NotFound, mirrored tests, grid + whole-pixel `rem`, non-empty `JWT_SECRET_KEY` when adding auth, `_` prefix. Applies only when `references/AGENTS/` and the skills submodule are absent.
-
-**Migration:**
-
-- None. Pull the new `AGENTS.md`; no project files change.
 
 ## 2026-09-20 — Scope rule, catch-all guidance, skill checklists
 
