@@ -10,6 +10,17 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — AGENTS.md: mission, deployment is the user's call
+
+**Changed:**
+
+- `AGENTS.md`: new § Mission — deliver a professional working solution in readable, structured code (runs, follows conventions, has tests); deployment is out of scope.
+- `AGENTS.md` § Where to look → Deploying: only when the user asks, mechanism from `PROJECT.md` § Deployment (TBD → ask; never pick one).
+
+**Migration:**
+
+- None.
+
 ## 2026-10-14 — Lint/format config applied everywhere, conventions enforced
 
 **Changed:**

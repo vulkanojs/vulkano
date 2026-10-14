@@ -4,6 +4,10 @@
 
 Vulkano Framework project — full-stack app on `@vulkano/core`: Express MVC backend + Vue 3 / vanilla JS frontend, bundled by Vite. Project name, purpose and decisions live only in [PROJECT.md](PROJECT.md) (never touched by a template update) — never in this file.
 
+## Mission
+
+Deliver a professional working solution in readable, structured code: it runs, follows this project's conventions, and has its tests. Deployment is out of scope — the user decides it (`PROJECT.md` § Deployment).
+
 ## Communication
 
 - No explanations unless asked. No pleasantries or filler. Short, direct sentences.
@@ -23,7 +27,7 @@ Skills under `.claude/skills/vulkano-skills/` hold the worked code and load auto
 - Adds/changes a controller, model, service, middleware, or a `frontend/<entrypoint>/store/`, `composables/`, `utils/` file — it needs a test: skill `vulkano-testing`.
 - Verifying UI in a browser — `references/AGENTS/DEVTOOLS.md`.
 - New or changed `.env` variable — `.env.example` first (every variable documented there).
-- Deploying — `PROJECT.md` § Deployment; going public flips `SEO_NOINDEX` + `robots.txt` together (BACKEND.md § SEO wiring).
+- Deploying — only when the user asks, with the mechanism in `PROJECT.md` § Deployment (TBD → ask; never pick one); going public flips `SEO_NOINDEX` + `robots.txt` together (BACKEND.md § SEO wiring).
 
 Skills submodule missing → the references are enough; tell the user to run `git submodule update --init`.
 
