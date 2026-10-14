@@ -1,6 +1,6 @@
-// Single source of truth for frontend entrypoints — read by vite.config.mjs:
+// Single source of truth for frontend entrypoints — read by vite.config.ts:
 // the dev server serves all of them at once, and `vp build` builds each one in
-// its own isolated Rolldown pass (builder.buildApp in vite.config.mjs).
+// its own isolated Rolldown pass (builder.buildApp in vite.config.ts).
 export const entries = {
   website: 'frontend/website/app.js',
   admin: 'frontend/admin/app.js'

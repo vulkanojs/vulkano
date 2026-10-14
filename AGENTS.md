@@ -19,7 +19,7 @@ Skills under `.claude/skills/vulkano-skills/` hold the worked code and load auto
 - Touching `app/` (controllers, scaffold, models, auth, views, autoload/libraries, config, cron, routes, SEO wiring) — `references/AGENTS/BACKEND.md`.
 - Touching `frontend/` (components, UI library, store, forms, routes, CSS, microinteractions, assets, analytics wiring) — `references/AGENTS/FRONTEND.md`.
 - New page a browser opens directly (landing, "about", blog post, product) — BACKEND.md § Views + skill `vulkano-backend-views` **first**: `res.render`, not a Vue SPA route (the SPA isn't crawlable). Then BACKEND.md § SEO wiring.
-- Creating/renaming/removing a frontend entrypoint, or editing `vite.config.mjs`, `vite.entries.mjs`, or a `vite()` call — `references/AGENTS/BUILD.md`.
+- Creating/renaming/removing a frontend entrypoint, or editing `vite.config.ts`, `vite.entries.mjs`, or a `vite()` call — `references/AGENTS/BUILD.md`.
 - Adds/changes a controller, model, service, middleware, or a `frontend/<entrypoint>/store/`, `composables/`, `utils/` file — it needs a test: skill `vulkano-testing`.
 - Verifying UI in a browser — `references/AGENTS/DEVTOOLS.md`.
 - New or changed `.env` variable — `.env.example` first (every variable documented there).
@@ -47,6 +47,6 @@ DRY, KISS, small single-purpose units. Intentionally unused variables get a `_` 
 
 ## Safety
 
-- Never claim a tool, script or command is supported because it's conventional — require evidence in `package.json`, `vite.config.mjs` or another tracked config.
+- Never claim a tool, script or command is supported because it's conventional — require evidence in `package.json`, `vite.config.ts` or another tracked config.
 - No source-mutating formatters beyond what `vp check` runs, unless the task requires it.
 - Local search (`find`, `grep`, `rg`): relative paths (`find ./`), never `find /`.

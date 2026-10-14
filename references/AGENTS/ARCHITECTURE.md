@@ -7,8 +7,10 @@ How the code is organized and what each piece is. Read when creating a file or f
 ```
 framework/
 ├── app.js                  # Entry point — calls vulkano()
-├── vite.config.mjs         # Vite config — reads vite.entries.mjs (see BUILD.md)
+├── vite.config.ts          # Vite config — reads vite.entries.mjs (see BUILD.md)
 ├── vite.entries.mjs        # One key per frontend entrypoint, e.g. { website: 'frontend/website/app.js' }
+├── oxlint.config.mts       # Oxlint rules — imported as vite.config.ts `lint` (vp lint/check + editor)
+├── oxfmt.config.mts        # Oxfmt options — imported as vite.config.ts `fmt` (vp fmt/check + editor)
 ├── nodemon.json            # Restarts Express on app/, app.js, .env changes only
 │
 ├── app/                    # Backend — Express MVC on @vulkano/core (see BACKEND.md)

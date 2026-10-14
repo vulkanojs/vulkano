@@ -41,7 +41,9 @@ function walkDir(dir, { excludedDirNames = new Set(), matchExtensions = null } =
     const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      if (excludedDirNames.has(entry.name)) continue;
+      if (excludedDirNames.has(entry.name)) {
+        continue;
+      }
       results.push(...walkDir(fullPath, { excludedDirNames, matchExtensions }));
       continue;
     }

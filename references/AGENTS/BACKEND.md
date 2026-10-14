@@ -7,6 +7,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - Routing is by convention: `/:resource/:method?/:param?` → `<Resource>Controller.<method>`. Filename plural PascalCase for resources (page controllers `Home`, `Admin` stay singular); URL segment = filename kebab-cased (`VatTypesController` → `/vat-types`).
 - Method keys: `get`, `'get :id'`, `post`, `'put :id'`, `'delete :id'`, `'post save'`. No verb = GET.
 - View controller → `app/controllers/` + `res.render()`. API → `app/controllers/api/` + `res.vsr(promise | async fn, status?)` — no `try`/`catch`. Socket → `app/controllers/sockets/` + `app/config/sockets/events.js`.
+- Every HTTP controller has `test/app/controllers/<same path>/<Name>.http.test.js` — enforced by `test/conventions.test.js`.
 - Thin: read params → call model/service → respond. Nothing top-level besides `require` and the exported object. Lookup/mapping tables are domain logic → model.
 - Create + edit share one method/template, branching on `:id`.
 

@@ -1,3 +1,6 @@
+// @ts-nocheck — vite-plus augments `vite`'s UserConfig with staged/fmt/lint,
+// but `vite` isn't linked at the root, so defineConfig's overloads fail
+// (TS2769/TS2321). Lint still applies; only type-checking is skipped here.
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -6,6 +9,8 @@ import dotenv from 'dotenv';
 import vue from '@vitejs/plugin-vue';
 import devManifest from 'vite-plugin-dev-manifest';
 import { entries } from './vite.entries.mjs';
+import fmt from './oxfmt.config.mts';
+import lint from './oxlint.config.mts';
 
 dotenv.config({ quiet: true });
 
@@ -32,14 +37,14 @@ const alias = Object.fromEntries(
   })
 );
 
-function outputOptions(singleEntry) {
+function outputOptions(singleEntry: boolean) {
   return {
     // only valid with a single input — true for every isolated production
     // build below, never for the combined dev/lint/test config
     codeSplitting: !singleEntry,
     chunkFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
     entryFileNames: allowHashForCache ? 'js/[name]-[hash].js' : 'js/[name].js',
-    assetFileNames: ({ name }) => {
+    assetFileNames: ({ name }: { name?: string }) => {
       const hash = allowHashForCache ? '-[hash]' : '';
 
       // Move files which end with the following extensions to public/images
@@ -61,17 +66,8 @@ const shared = {
   staged: {
     '*': 'vp check --fix'
   },
-  fmt: {
-    singleQuote: true,
-    trailingComma: 'none',
-    htmlWhitespaceSensitivity: 'strict'
-  },
-  lint: {
-    options: {
-      typeAware: true,
-      typeCheck: true
-    }
-  },
+  fmt,
+  lint,
   server: {
     cors: {
       origin: '*'
@@ -106,9 +102,11 @@ const shared = {
       template: {
         compilerOptions: {
           isCustomElement: (tag) =>
-            [
-              // ADD YOUR CUSTOM TAGS
-            ].includes(tag)
+            (
+              [
+                // ADD YOUR CUSTOM TAGS
+              ] as string[]
+            ).includes(tag)
         }
       }
     })
@@ -161,7 +159,7 @@ export default defineConfig(({ command, mode }) => {
     Object.entries(entries).map(([name, entry]) => [
       name,
       {
-        consumer: 'client',
+        consumer: 'client' as const,
         build: {
           outDir,
           emptyOutDir: false,

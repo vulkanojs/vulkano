@@ -59,8 +59,11 @@ function findMatchingBrace(source, openBraceIndex) {
   let i = openBraceIndex + 1;
 
   while (depth > 0) {
-    if (source[i] === '{') depth++;
-    else if (source[i] === '}') depth--;
+    if (source[i] === '{') {
+      depth++;
+    } else if (source[i] === '}') {
+      depth--;
+    }
     i++;
   }
 
@@ -73,8 +76,12 @@ function splitTopLevelEntries(body) {
   let current = '';
 
   for (const char of body) {
-    if ('([{'.includes(char)) depth++;
-    if (')]}'.includes(char)) depth--;
+    if ('([{'.includes(char)) {
+      depth++;
+    }
+    if (')]}'.includes(char)) {
+      depth--;
+    }
 
     if (char === ',' && depth === 0) {
       entries.push(current);
@@ -84,7 +91,9 @@ function splitTopLevelEntries(body) {
     }
   }
 
-  if (current.trim()) entries.push(current);
+  if (current.trim()) {
+    entries.push(current);
+  }
 
   return entries;
 }
@@ -96,7 +105,9 @@ function splitTopLevelEntries(body) {
 function removeObjectEntry(source, blockName, keyToRemove) {
   const labelMatch = source.match(new RegExp(`${blockName}\\s*[:=]\\s*\\{`));
 
-  if (!labelMatch) return source;
+  if (!labelMatch) {
+    return source;
+  }
 
   const openBraceIndex = labelMatch.index + labelMatch[0].length - 1;
   const closeBraceIndex = findMatchingBrace(source, openBraceIndex);
@@ -126,7 +137,7 @@ function removeObjectEntry(source, blockName, keyToRemove) {
 
 function collapseViteConfig(root) {
   // Entries (and their derived @<dir> aliases) live in vite.entries.mjs, not
-  // inline in vite.config.mjs — collapsing to 1 entrypoint only ever needs
+  // inline in vite.config.ts — collapsing to 1 entrypoint only ever needs
   // that one file edited.
   let content = readFile(root, 'vite.entries.mjs');
 
@@ -155,9 +166,12 @@ function keepWebsiteOnly(root) {
 }
 
 function findWebsiteBase(root) {
-  if (fs.existsSync(path.join(root, 'frontend/website/components/HelloWorld')))
+  if (fs.existsSync(path.join(root, 'frontend/website/components/HelloWorld'))) {
     return 'frontend/website';
-  if (fs.existsSync(path.join(root, 'frontend/components/HelloWorld'))) return 'frontend';
+  }
+  if (fs.existsSync(path.join(root, 'frontend/components/HelloWorld'))) {
+    return 'frontend';
+  }
 
   return null;
 }

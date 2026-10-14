@@ -10,6 +10,24 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — Lint/format config applied everywhere, conventions enforced
+
+**Changed:**
+
+- `.oxlintrc.json` and `.oxfmtrc.json` were never applied: `vp lint`/`vp fmt` and the editor's oxc extension (through the vite-plus wrapper) read only `vite.config.ts` `lint`/`fmt` — not `vite.config.mjs`, not the rc files. Now:
+  - `vite.config.mjs` → `vite.config.ts` (`// @ts-nocheck`: `defineConfig` overloads fail type-checking because `vite` isn't linked at the root).
+  - New `oxlint.config.mts` (old `.oxlintrc.json` content + `options`) and `oxfmt.config.mts` (old `.oxfmtrc.json` + `fmt`), imported as `lint`/`fmt`. Both rc files removed.
+  - `curly` and `no-unused-vars` now actually fail (fixed in `scripts/clean.js`).
+- New lint rules `no-restricted-globals` + `no-restricted-properties`: `confirm`/`alert`/`prompt` and their `window.*` versions are errors.
+- New `test/conventions.test.js`: fails on `display: flex|inline-flex` in `frontend/**/*.{scss,vue}` (outside `ui/`) and on any `app/controllers/**/<Name>Controller.js` (outside `sockets/`) without `test/app/controllers/**/<Name>.http.test.js`.
+- `FRONTEND.md` (§ UI library, § CSS) and `BACKEND.md` (§ Controllers) note what enforces each rule; `FRONTEND.md` § UI library: unavoidable use → per-line `oxlint-disable-next-line` with a reason, never per-file. `vite.config.mjs` → `vite.config.ts` in `AGENTS.md`, `ARCHITECTURE.md`, `BUILD.md` and the skills submodule.
+
+**Migration:**
+
+- If the project has `vite.config.mjs`: rename it to `vite.config.ts`, add the template's `// @ts-nocheck` header, and type `outputOptions(singleEntry: boolean)`.
+- If `oxlint.config.mts` / `oxfmt.config.mts` are missing: copy them from the template and merge in the project's own `.oxlintrc.json` / `.oxfmtrc.json` values and the `lint.options` / `fmt` of its Vite config. In `vite.config.ts` import both (`import fmt from './oxfmt.config.mts'`, `import lint from './oxlint.config.mts'`) and replace the `fmt: { … }` and `lint: { … }` blocks with `fmt,` and `lint,`. Delete `.oxlintrc.json` and `.oxfmtrc.json`. Run `vp check --fix`, then fix what `vp lint` still reports.
+- If `test/conventions.test.js` is missing: copy it from the template. If `PROJECT.md` overrides the layout system to allow Flexbox, delete its Flexbox case. Run `vp test` and add any missing controller test it reports.
+
 ## 2026-10-13 — Template sync moves to `npx @vulkano/cli update`
 
 **Changed:**

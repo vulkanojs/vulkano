@@ -18,7 +18,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 - The library (shadcn-vue, Element Plus, …) is a project choice: `PROJECT.md` § Frontend conventions, else check `package.json`.
 - Installed → every input, button, dialog, confirm and toast goes through it. Vendored code lives in `components/ui/`, split like any component, never edited for one screen (compose or extend it).
 - `views/DesignSystem/Index.vue` (route `/design-system`, dev only) = the entrypoint's design system page and component catalog — check it before building a new one; add each new reusable component to it.
-- Never `window.confirm`/`alert`/`prompt` — use the library's confirm/message components, or one shared custom modal if none is installed.
+- Never `window.confirm`/`alert`/`prompt` — use the library's confirm/message components, or one shared custom modal if none is installed. Enforced by lint (`oxlint.config.mts`). Unavoidable case → per-line exception with a reason: `// oxlint-disable-next-line no-restricted-properties -- <reason>` (`no-restricted-globals` for bare `confirm()`); never per-file.
 
 ## Store — skill `vulkano-frontend-store`
 
@@ -49,7 +49,7 @@ Rules only. Worked code lives in the skills named per section — they load auto
 ## CSS and layout — skill `vulkano-frontend-css`
 
 - BEM; block name = component folder in kebab-case.
-- Layout with CSS Grid, no Flexbox (unless `PROJECT.md` overrides). Grid system: `.row` / `.column small-N medium-N large-N` from `scss/_grid.scss`.
+- Layout with CSS Grid, no Flexbox (unless `PROJECT.md` overrides; enforced by `test/conventions.test.js` — remove its case on override). Grid system: `.row` / `.column small-N medium-N large-N` from `scss/_grid.scss`.
 - Units: `rem`, `px`, `dvh`, `vw`, `%`. Never `em`, `vh`, `ch`. A `rem` must equal whole pixels (`value × 16`).
 
 ## Design patterns — microinteractions
