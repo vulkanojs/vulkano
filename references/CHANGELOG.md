@@ -10,6 +10,18 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — Architecture enforced by tests
+
+**Changed:**
+
+- `test/conventions.test.js` adds: `app/` holds only `config`/`controllers`/`models`/`services`/`views`; `frontend/` holds exactly one folder per `vite.entries.mjs` key (each entry file exists, no loose files); entrypoints hold only `scss`/`components`/`layouts`/`views`/`store`/`composables`/`utils`; PascalCase `components/` and `views/` folders (except `ui/`) and `store/use<Entity>Store.js`; every `app/models`, `app/services`, `app/config/middlewares`, `store/`, `composables/`, `utils/` file has its mirrored `.test.js`; no relative import between `app/` and `frontend/`.
+- New `test/app/config/middlewares/seo.test.js` (the middleware had none).
+- `ARCHITECTURE.md`: notes what the test enforces.
+
+**Migration:**
+
+- If the project's `test/conventions.test.js` lacks these cases: copy it from the template. If the project documents extra folders in `PROJECT.md`, add them to `APP_DIRS`/`ENTRYPOINT_DIRS`. Run `vp test` and add every missing test it reports (e.g. `test/app/config/middlewares/seo.test.js`, copy from the template).
+
 ## 2026-10-14 — AGENTS.md: mission, deployment is the user's call
 
 **Changed:**

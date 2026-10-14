@@ -2,6 +2,8 @@
 
 How the code is organized and what each piece is. Read when creating a file or folder, or when unsure where something lives.
 
+Enforced by `test/conventions.test.js`: `app/` layers, one `frontend/` folder per `vite.entries.mjs` key, entrypoint subfolders, PascalCase component/view folders, `use<Entity>Store.js`, a mirrored test per layer file, and no imports between `app/` and `frontend/`. Adding a folder to the tree below → add it to the test's lists too.
+
 ## Project structure
 
 ```
