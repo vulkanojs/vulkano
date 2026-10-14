@@ -10,6 +10,22 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — Type-check the JS sources (checkJs)
+
+**Changed:**
+
+- New `tsconfig.json`: `allowJs` + `checkJs` + `strict` minus `noImplicitAny` (no emit), `target: ESNext` for `app/`, `frontend/`, `scripts/`. `vp check` (`typeCheck`), the `PostToolUse` hook and the editor now report type errors: missing modules, misspelled properties on typed APIs (Vue, Router, Pinia, Node), wrong argument counts, undeclared names. `test/` not included yet.
+- New `types/vulkano.d.ts` (template-owned): `@vulkano/core` backend globals. New `types/frontend.d.ts` (template-owned): `*.vue`/`*.scss` modules, `import.meta.env`. New `types/app.d.ts` (project-owned): one `declare const <Name>: any;` per auto-loaded model/service and `bootstrap.js` global.
+- `oxlint.config.mts` `globals`: added `Download`, `Jwt`, `mongoose`, `Upload`, `View` (core globals that were missing).
+- `test/conventions.test.js`: every `app/models`/`app/services` file is declared in `types/app.d.ts`.
+- `scripts/webp.js`: JSDoc on `walkDir` (strictNullChecks inferred `matchExtensions` as `null`).
+- `ARCHITECTURE.md` lists `tsconfig.json` and `types/`; `BACKEND.md` § Models: declare new globals.
+
+**Migration:**
+
+- If `tsconfig.json` / `types/` are missing: copy `tsconfig.json`, `types/vulkano.d.ts`, `types/frontend.d.ts` and `types/app.d.ts` from the template, add `declare const <Name>: any;` to `types/app.d.ts` for every file in `app/models/` and `app/services/`, and any project global set in `app/config/bootstrap.js`. Run `vp check` and fix the type errors it reports (JSDoc for ambiguous defaults, as in `scripts/webp.js`).
+- Merge the template's `globals` additions into the project's `oxlint.config.mts`.
+
 ## 2026-10-14 — Agent hook: lint the edited file in the same turn
 
 **Changed:**

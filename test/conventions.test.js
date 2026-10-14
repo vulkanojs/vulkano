@@ -88,6 +88,16 @@ describe('conventions', () => {
     expect(missing).toEqual([]);
   });
 
+  // BACKEND.md: models/services are auto-loaded globals — checkJs needs each declared
+  it('every model and service is declared in types/app.d.ts', () => {
+    const declarations = fs.readFileSync(path.join(root, 'types/app.d.ts'), 'utf8');
+    const missing = [...walk('app/models', /\.js$/), ...walk('app/services', /\.js$/)]
+      .map((file) => path.basename(file, '.js'))
+      .filter((name) => !declarations.includes(`declare const ${name}:`));
+
+    expect(missing).toEqual([]);
+  });
+
   // ARCHITECTURE.md § Project structure: app/ layers
   it('app/ holds only the documented layers', () => {
     const extra = dirs('app').filter((dir) => !APP_DIRS.includes(dir));

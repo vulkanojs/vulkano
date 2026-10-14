@@ -33,6 +33,11 @@ function rewriteReferences(content, oldPublicPath, newPublicPath) {
   return { content: newContent, changed: newContent !== content };
 }
 
+/**
+ * @param {string} dir
+ * @param {{ excludedDirNames?: Set<string>, matchExtensions?: string[] | null }} [options]
+ * @returns {string[]}
+ */
 function walkDir(dir, { excludedDirNames = new Set(), matchExtensions = null } = {}) {
   const results = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });

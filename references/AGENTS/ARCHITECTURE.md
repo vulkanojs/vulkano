@@ -13,6 +13,10 @@ framework/
 ├── vite.entries.mjs        # One key per frontend entrypoint, e.g. { website: 'frontend/website/app.js' }
 ├── oxlint.config.mts       # Oxlint rules — imported as vite.config.ts `lint` (vp lint/check + editor)
 ├── oxfmt.config.mts        # Oxfmt options — imported as vite.config.ts `fmt` (vp fmt/check + editor)
+├── tsconfig.json           # checkJs for app/, frontend/, scripts/ — type errors in vp check, the hook and the editor
+├── types/vulkano.d.ts      # Ambient types (template): @vulkano/core backend globals
+├── types/frontend.d.ts     # Ambient types (template): *.vue, *.scss, import.meta.env
+├── types/app.d.ts          # Ambient types (project): one declare per model/service, bootstrap.js globals
 ├── nodemon.json            # Restarts Express on app/, app.js, .env changes only
 │
 ├── app/                    # Backend — Express MVC on @vulkano/core (see BACKEND.md)

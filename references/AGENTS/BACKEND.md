@@ -57,7 +57,7 @@ How to do SEO well = any SEO skill. Where Vulkano wires it:
 
 ## Autoload and libraries
 
-- `app/models/*` and `app/services/*` are auto-loaded globals (`Order`, `Upload`) — never `require()` them.
+- `app/models/*` and `app/services/*` are auto-loaded globals (`Order`, `Upload`) — never `require()` them New one → add `declare const <Name>: any;` to `types/app.d.ts` (checkJs; `test/conventions.test.js` checks it).
 - Core libs are globals too (no `require`, core README § Built-in Global Libs): `VSError` (errors), `Paginate`, `Jwt`, `Encrypter` (reversible encryption — never passwords), `Filter` (sanitize input), `Merge`, `ApiClient` (external HTTP), `Upload`/`Download` (files), `View`, `Crontab`, `i18n`, `mongoose`. Use them before adding an npm dependency.
 - Shared helper logic → `app/services/<Name>.js`. A true global → `global.X` in `app/config/bootstrap.js`.
 - Cron jobs: `Crontab.schedule(...)` in `app/config/bootstrap.js` (core README § Cron Jobs).
