@@ -66,7 +66,7 @@ framework/
 │   └── sitemap.xml         # not shipped — created by the project (see BACKEND.md § SEO wiring)
 │
 ├── test/                   # Vitest — mirrors source path (test/app/…, test/frontend/…, test/scripts/…)
-├── scripts/                # Tooling (webp.js, clean…)
+├── scripts/                # Tooling (webp.js, clean…, agent-check.js — Claude Code hook)
 └── references/             # Agent docs (this folder)
 ```
 

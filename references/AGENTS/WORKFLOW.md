@@ -10,3 +10,7 @@
 - Specs, plans and sdd go under `.superpowers/specs/`, `.superpowers/plans/`, `.superpowers/sdd/` — overrides the brainstorming skill's `docs/superpowers/` default.
 - Execute one task at a time: after each, mark it done in the plan file and note the next one. On "continue"/"next task", read the plan status first.
 - When a plan task touches `app/` or `frontend/` code, load the matching `vulkano-*` skill **while writing that task** and bake its conventions into the task's code and into its reviewer brief — implementer and reviewer subagents start with zero context and won't find the skill on their own.
+
+## Hooks
+
+- `.claude/settings.json` runs `scripts/agent-check.js` after every `Edit`/`Write`: `vp check --fix` on that file. A hook error is a failed check — fix it before moving on, never work around it.

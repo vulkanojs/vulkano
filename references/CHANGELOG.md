@@ -10,6 +10,17 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — Agent hook: lint the edited file in the same turn
+
+**Changed:**
+
+- New `.claude/settings.json` `PostToolUse` hook (`Edit|Write`) → `scripts/agent-check.js`: runs `vp check --fix` on the edited file (`.js/.mjs/.mts/.ts/.vue/.scss/.json` under `app/`, `frontend/`, `scripts/`, `test/`); remaining errors exit 2 so the agent sees them and fixes them before moving on. Tests: `test/scripts/agent-check.test.js`.
+- `WORKFLOW.md` § Hooks: a hook error is a failed check. `ARCHITECTURE.md`: `scripts/agent-check.js` listed.
+
+**Migration:**
+
+- If `.claude/settings.json` lacks the `PostToolUse` hook: copy `scripts/agent-check.js` and `test/scripts/agent-check.test.js` from the template, then merge the template's `hooks.PostToolUse` entry into the project's `.claude/settings.json` without removing the project's own keys.
+
 ## 2026-10-14 — Architecture enforced by tests
 
 **Changed:**
