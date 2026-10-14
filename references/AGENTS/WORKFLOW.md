@@ -14,3 +14,7 @@
 ## Hooks
 
 - `.claude/settings.json` runs `scripts/agent-check.js` after every `Edit`/`Write`: `vp check --fix` on that file. A hook error is a failed check — fix it before moving on, never work around it.
+
+## Review
+
+- Subagent `vulkano-reviewer` (`.claude/agents/`) reviews a change against these rules — what lint, types and tests can't judge (layers, server-side auth, render vs vsr, test quality, disable reasons, changelog). Run it after a multi-file change or each plan task, before handoff. It reports; you fix.

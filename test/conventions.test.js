@@ -88,9 +88,12 @@ describe('conventions', () => {
     expect(missing).toEqual([]);
   });
 
-  // BACKEND.md: models/services are auto-loaded globals — checkJs needs each declared
+  // BACKEND.md: models/services are auto-loaded globals — checkJs needs each declared.
+  // A service named like a core lib overrides it and reuses types/vulkano.d.ts.
   it('every model and service is declared in types/app.d.ts', () => {
-    const declarations = fs.readFileSync(path.join(root, 'types/app.d.ts'), 'utf8');
+    const declarations = ['types/app.d.ts', 'types/vulkano.d.ts']
+      .map((file) => fs.readFileSync(path.join(root, file), 'utf8'))
+      .join('\n');
     const missing = [...walk('app/models', /\.js$/), ...walk('app/services', /\.js$/)]
       .map((file) => path.basename(file, '.js'))
       .filter((name) => !declarations.includes(`declare const ${name}:`));

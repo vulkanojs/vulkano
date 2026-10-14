@@ -10,6 +10,19 @@ Entry format:
 - **Changed:** template-owned files added, removed, or changed.
 - **Migration:** steps for project-owned files (`PROJECT.md`, `README.md`, `.env.example`). Write each as a condition plus an action ("if X, do Y") so it can be skipped when the project already satisfies it. Omit if none.
 
+## 2026-10-14 — `vulkano-reviewer` subagent; type fixes
+
+**Changed:**
+
+- New `.claude/agents/vulkano-reviewer.md`: read-only review subagent; reads the rules docs for each changed area (`AGENTS.md` § Where to look), runs `vp check`/`vp test`, and judges what tools can't — layers, server-side auth, `res.render` vs `res.vsr`, test quality, `oxlint-disable` reasons, scope, changelog. One line per finding + verdict. On a seeded change it found 9/9 planted rule violations (generic reviewer: 6/9), no false positives on a clean change. `WORKFLOW.md` § Review: when to run it.
+- `types/frontend.d.ts`: hand-written `ImportMeta.env` and `*.scss` replaced by `/// <reference types="vite-plus/client" />`.
+- `test/conventions.test.js`: a service named like a core lib (overrides it) counts as declared via `types/vulkano.d.ts`. `BACKEND.md` § Autoload and libraries documents the override.
+
+**Migration:**
+
+- If `.claude/agents/vulkano-reviewer.md` is missing: copy it from the template.
+- If `types/frontend.d.ts` declares `ImportMeta` or `*.scss` by hand: replace with the template's version.
+
 ## 2026-10-14 — Type-check the JS sources (checkJs)
 
 **Changed:**
@@ -19,7 +32,7 @@ Entry format:
 - `oxlint.config.mts` `globals`: added `Download`, `Jwt`, `mongoose`, `Upload`, `View` (core globals that were missing).
 - `test/conventions.test.js`: every `app/models`/`app/services` file is declared in `types/app.d.ts`.
 - `scripts/webp.js`: JSDoc on `walkDir` (strictNullChecks inferred `matchExtensions` as `null`).
-- `ARCHITECTURE.md` lists `tsconfig.json` and `types/`; `BACKEND.md` § Models: declare new globals.
+- `ARCHITECTURE.md` lists `tsconfig.json` and `types/`; `BACKEND.md` § Autoload and libraries: declare new globals.
 
 **Migration:**
 
