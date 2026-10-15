@@ -2,10 +2,18 @@
   <img src="https://avatars.githubusercontent.com/u/42077334?s=200&v=4" alt="Vulkano Logo" width="100">
 </p>
 
-<h1 align="center">Vulkano Framework</h1>
+<h1 align="center">🌋 Vulkano Framework — AI Harness</h1>
 
 <p align="center">
-  Full-stack MVC framework — Express backend + Vue 3 frontend, wired together with Vite.
+  <strong>The full-stack framework your AI agent already knows how to drive.</strong><br>
+  Express MVC backend + Vue 3 frontend, bundled by Vite — shipped with the rules, skills, hooks and tests that keep AI-written code on convention.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/AI--ready-Claude%20Code-ff5722?style=for-the-badge" alt="AI-ready">
+  <img src="https://img.shields.io/badge/Node-%3E%3D24-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node >=24">
+  <img src="https://img.shields.io/badge/Vue-3-42b883?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3">
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
 </p>
 
 <p align="center">
@@ -21,6 +29,21 @@
 Vulkano is a full-stack framework that gives you a convention-based Express API backend ([`@vulkano/core`](https://github.com/vulkanojs/vulkano-core)) and a Vue 3 frontend — both running from the same project, bundled by Vite.
 
 Inspired by [KumbiaPHP](https://www.kumbiaphp.com).
+
+---
+
+## Why an AI Harness?
+
+AI agents write code fast. Left alone, they also guess where files go, reinvent patterns, and drift from conventions. Vulkano ships the harness that keeps them on rails:
+
+- **Rules, not guesswork** — [`AGENTS.md`](AGENTS.md) routes the agent to the right doc in [`references/AGENTS/`](references/AGENTS/) for the area it touches: architecture, backend, frontend, build, workflow.
+- **Skills with worked code** — `.claude/skills/vulkano-skills/` holds ready-made patterns (controllers, models, auth, views, components, forms, stores, testing) that load automatically when a task matches.
+- **Instant feedback** — a `PostToolUse` hook runs `vp check` on every file the agent edits ([`scripts/agent-check.js`](scripts/agent-check.js)), so lint and type errors surface immediately.
+- **Conventions enforced by tests** — [`test/conventions.test.js`](test/conventions.test.js) fails the build when layers, entrypoints, naming or mirrored tests break the rules.
+- **A reviewer that knows the rules** — the `vulkano-reviewer` subagent checks diffs against `references/AGENTS/` for what lint, types and tests can't judge.
+- **Project memory that survives updates** — [`PROJECT.md`](PROJECT.md) holds your project's decisions; template updates never touch it.
+
+The result: you describe the feature, the agent builds it the Vulkano way.
 
 ---
 
