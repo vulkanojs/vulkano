@@ -1,21 +1,22 @@
 # Dependency policy
 # - `@vulkano/core` and the `vite-plus` family (vite, vitest, vite-plus) are pinned to exact versions and move together:
-#   vite / vitest / vite-plus must share the same version.
+#   vite (vite-plus-core) and vite-plus share the same version; vitest matches the version vite-plus depends on
+#   (`npm view vite-plus@<version> dependencies.vitest`).
 # - `pnpm-lock.yaml` must always match this file: after editing a version here run
 #   `pnpm install --lockfile-only --ignore-scripts` and commit both. A stale lockfile makes every `pnpm <script>`
 #   re-install (rewrites the lockfile and runs `postinstall`).
 # - Update deliberately: bump the pinned version here, regenerate the lockfile, then run `vp check`, `vp test`, `vp build`.
 
-minimumReleaseAge: 7
+minimumReleaseAge: 4320 # minutes (3 days)
 minimumReleaseAgeExclude:
   - '@vulkano/core'
 
 catalogMode: prefer
 
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.3.3
-  vitest: npm:@voidzero-dev/vite-plus-test@0.3.3
-  vite-plus: 0.3.3
+  vite: npm:@voidzero-dev/vite-plus-core@1.4.0
+  vitest: 5.0.5
+  vite-plus: 1.4.0
   vite-plugin-dev-manifest: ^1.5.0
   sharp: ^0.35.5
   '@vitejs/plugin-vue': ^6.0.9
@@ -25,7 +26,7 @@ catalog:
   vue: ^3.5.42
   vue-router: 5.3.1
   pinia: ^4.0.3
-  '@vulkano/core': 2.1.6
+  '@vulkano/core': 2.2.1
   '@lucide/vue': 1.46.0
 overrides:
   qs: '>=6.16.0'
