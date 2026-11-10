@@ -9,7 +9,7 @@
 
 - Specs, plans and sdd go under `.superpowers/specs/`, `.superpowers/plans/`, `.superpowers/sdd/` — overrides the brainstorming skill's `docs/superpowers/` default.
 - Execute one task at a time: after each, mark it done in the plan file and note the next one. On "continue"/"next task", read the plan status first.
-- When a plan task touches `app/` or `frontend/` code, load the matching `vulkano-*` skill **while writing that task** and bake its conventions into the task's code and into its reviewer brief — implementer and reviewer subagents start with zero context and won't find the skill on their own.
+- When a plan task touches `app/` or `frontend/` code, name the matching `vulkano-*` skill(s) in the task. When executing with subagents, pass each skill's path (`.claude/skills/vulkano-skills/<skill>/SKILL.md`) in the implementer and reviewer briefs so they read it themselves — the controller does not load it in its own thread unless it writes that code itself.
 
 ## Hooks
 
