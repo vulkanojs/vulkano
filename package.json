@@ -18,7 +18,7 @@
     "@lucide/vue": "catalog:",
     "@vulkano/core": "catalog:",
     "concurrently": "catalog:",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.9",
     "pinia": "catalog:",
     "vite-plugin-dev-manifest": "catalog:",
     "vue": "catalog:",
@@ -34,5 +34,5 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.1.1"
+  "packageManager": "pnpm@12.18.0"
 }
