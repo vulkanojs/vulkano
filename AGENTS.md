@@ -22,6 +22,7 @@ Skills under `.claude/skills/vulkano-skills/` hold the worked code and load auto
 - Unsure where something lives, or creating a file/folder — `references/AGENTS/ARCHITECTURE.md`.
 - Touching `app/` (controllers, scaffold, models, auth, views, autoload/libraries, config, cron, routes, SEO wiring) — `references/AGENTS/BACKEND.md`.
 - Touching `frontend/` (components, UI library, store, forms, routes, CSS, microinteractions, assets, analytics wiring) — `references/AGENTS/FRONTEND.md`.
+- Querying or inspecting the database directly (mongosh, a script, ad-hoc `node -e`) — collections are singular (BACKEND.md § Models); list the collections first, never guess the name.
 - New page a browser opens directly (landing, "about", blog post, product) — BACKEND.md § Views + skill `vulkano-backend-views` **first**: `res.render`, not a Vue SPA route (the SPA isn't crawlable). Then BACKEND.md § SEO wiring.
 - Creating/renaming/removing a frontend entrypoint, or editing `vite.config.ts`, `vite.entries.mjs`, or a `vite()` call — `references/AGENTS/BUILD.md`.
 - Adds/changes a controller, model, service, middleware, or a `frontend/<entrypoint>/store/`, `composables/`, `utils/` file — it needs a test: skill `vulkano-testing`.
